@@ -1,0 +1,10 @@
+C:\Users\andre\Desktop\程式設計\Visual Studio\專案庫\Calculator\Debug\Calculator.vcxprojAssemblyReference.cache
+C:\Users\andre\Desktop\程式設計\Visual Studio\專案庫\Calculator\Debug\Calculator.exe
+C:\Users\andre\Desktop\程式設計\Visual Studio\專案庫\Calculator\Debug\Calculator.pdb
+C:\Users\andre\Desktop\程式設計\Visual Studio\專案庫\Calculator\Debug\Calculator.MyForm.resources
+C:\Users\andre\Desktop\程式設計\Visual Studio\專案庫\Calculator\Debug\Calculator.vcxproj.GenerateResource.cache
+C:\Users\andre\Desktop\Git資料庫\myLaptop\Calculator\Debug\Calculator.vcxprojAssemblyReference.cache
+C:\Users\andre\Desktop\Git資料庫\myLaptop\Calculator\Debug\Calculator.MyForm.resources
+C:\Users\andre\Desktop\Git資料庫\myLaptop\Calculator\Debug\Calculator.vcxproj.GenerateResource.cache
+C:\Users\andre\Desktop\Git資料庫\myLaptop\Calculator\Debug\Calculator.exe
+C:\Users\andre\Desktop\Git資料庫\myLaptop\Calculator\Debug\Calculator.pdb
