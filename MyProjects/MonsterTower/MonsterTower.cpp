@@ -48,11 +48,11 @@ struct Skill
     std::string str_Name;
     bool bl_Usable;
     bool bl_Unlocked;
-    int int_LV;
-    int int_CurrCD = 0;
-    int int_CD;
-    int int_SPCost;
-    int int_Count;
+    int  int_LV;
+    int  int_CurrCD = 0;
+    int  int_CD;
+    int  int_SPCost;
+    int  int_Count;
 };
 
 //****************************************************
@@ -119,12 +119,12 @@ int main()
     while(true)
     {
         int int_Round = 1;
-        int int_RandNum = rand()%int_Stage + 1;
+        int int_RandNum = rand() % int_Stage + 1;
         Monster mon_Main[int_RandNum];
 
         for(int i = 0; i < int_RandNum; i++)
         {
-            mon_Main[i].int_Number = i+1;
+            mon_Main[i].int_Number = i + 1;
 
             fn_MonLV(mon_Main[i].int_LV);
             fn_MonHP(mon_Main[i]);
@@ -137,7 +137,7 @@ int main()
                 fn_SubtractMonFrezTime(mon_Main[i]);
                 fn_PlrRegainSP();
 
-                fn_Display(i+1, int_Stage, int_Round, mon_Main[i]);
+                fn_Display(i + 1, int_Stage, int_Round, mon_Main[i]);
                 fn_Fight(mon_Main[i]);
 
                 int_Round++;
@@ -370,6 +370,7 @@ void  fn_Fight(Monster &mon_Main)
                 fn_CheckUnlocked(bl_NoUnlockedSkl);
 
                 if(!bl_NoUnlockedSkl) fn_CheckUsableSkl(bl_NoUsableSkl, int_Count);
+
                 if(!bl_NoUsableSkl) fn_ExeSkill(int_Count, mon_Main);
         }
     }
@@ -402,7 +403,7 @@ void  fn_UsableSklDisplay(int int_Num, int int_Count)
 {
     if(skl_Main[int_Num].bl_Unlocked)
     {
-        std::cout<< '(' << int_Count << ") " <<skl_Main[int_Num].str_Name << "\n    ";
+        std::cout<< '(' << int_Count << ") " << skl_Main[int_Num].str_Name << "\n    ";
 
         skl_Main[int_Num].int_Count = int_Count;
     }
@@ -422,7 +423,7 @@ void  fn_MonLV(int &mon_LV)
 
 void  fn_MonHP(Monster &mon_Main)
 {
-    if(mon_Main.int_LV >= 5) mon_Main.int_HP = mon_Main.int_LV * 10 * (rand()%5 + 1);
+    if(mon_Main.int_LV >= 5) mon_Main.int_HP = mon_Main.int_LV * 10 * (rand() % 5 + 1);
     else mon_Main.int_HP = mon_Main.int_LV * 20;
 
     mon_Main.int_CurrHP = mon_Main.int_HP;
@@ -432,7 +433,7 @@ void  fn_MonHP(Monster &mon_Main)
 
 void  fn_MonATK(Monster &mon_Main)
 {
-    mon_Main.int_ATK = mon_Main.int_LV * (rand()%10 +1);
+    mon_Main.int_ATK = mon_Main.int_LV * (rand() % 10 +1);
     mon_Main.int_CurrATK = mon_Main.int_ATK;
 
     return;
@@ -472,7 +473,7 @@ void  fn_PlrEXP(Monster &mon_Main)
 
 void  fn_PlrATK()
 {
-    plr_Main.int_ATK += 5 * (rand()%3 + 1);
+    plr_Main.int_ATK += 5 * (rand() % 3 + 1);
     plr_Main.int_CurrATK = plr_Main.int_ATK;
 
     return;
@@ -760,12 +761,12 @@ void  fn_UpgradeSklDisplay()
     {
         if(skl_Main[i].bl_Unlocked == false)
         {
-            std::cout<< '(' << i+1 << ") Unlock "
+            std::cout<< '(' << i + 1 << ") Unlock "
                      << skl_Main[i].str_Name << '\n';
         }
         else
         {
-            std::cout<< '(' << i+1 << ") Upgrade "
+            std::cout<< '(' << i + 1 << ") Upgrade "
                      << skl_Main[i].str_Name << '\n';
         }
     }
