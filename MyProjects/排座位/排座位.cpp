@@ -182,7 +182,7 @@ int main()
             {
                 std::cout<< "\n 輸入\"again\"可再次產生新座位"
                          << "\n 輸入\"reset\"可重新設定"
-                         << "\n輸入\"end\"可結束程式\n\n回答：";
+                         << "\n 輸入\"end\"可結束程式\n\n回答：";
                 std::cin>> str_Ans;
 
                 std::transform(str_Ans.begin(), str_Ans.end(), str_Ans.begin(), ::tolower);
@@ -213,16 +213,14 @@ void  fn_SetSeatNum()
         {
             do
             {
-                int_SeatNum[i-1] = rand()%43 + 1;
+                int_SeatNum[i - 1] = rand() % 43 + 1;
             }
-            while(int_SeatNum[i-1] == 41 ||
-                  int_SeatNum[i-1] == 10 ||
-                  int_SeatNum[i-1] == 20 ||
-                  int_SeatNum[i-1] == 5);
+            while(int_SeatNum[i - 1] == 41 || int_SeatNum[i - 1] == 10 || 
+				  int_SeatNum[i - 1] == 20 || int_SeatNum[i - 1] == 5);
 
             for(j = 1; j < i; j++)
             {
-                if(int_SeatNum[i-1] == int_SeatNum[j-1]) break;
+                if(int_SeatNum[i - 1] == int_SeatNum[j - 1]) break;
             }
         }
         while(j != i);
@@ -245,6 +243,7 @@ void  fn_FillNum(int int_Num)
                     if(i == 0 && j == 3)
                     {
                         intarr_V1[0][3] = 20;
+                        
                         continue;
                     }
 
@@ -277,6 +276,7 @@ void  fn_FillNum(int int_Num)
                     if(i == 5 && j == 3)
                     {
                         intarr_V2[5][3] = 20;
+                        
                         continue;
                     }
 
