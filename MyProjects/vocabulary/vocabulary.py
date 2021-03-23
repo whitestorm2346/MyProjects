@@ -56,7 +56,7 @@ def ChangeFile(fbox, fname, optnumlst, allfilelst):
     print('\n*Choose the number of files to open it\n')
 
     with open(fbox, 'r') as f:
-        print('\n'+f.read()+'\n')
+        print('\n' + f.read() + '\n')
 
     while True:
 
@@ -67,14 +67,13 @@ def ChangeFile(fbox, fname, optnumlst, allfilelst):
             break
         
         else:
-            print('\n*Illegal inputs\n'
-            +'*Please input again!')
+            print('\n*Illegal inputs\n*Please input again!')
     
-    fname = allfilelst[choose-1][1]
+    fname = allfilelst[choose - 1][1]
     
     return fname
     
-#Main prograe
+#Main program
 allfile = []    #append each contents
 
 ScanWord(filebox, allfile)
@@ -82,12 +81,12 @@ ScanWord(filebox, allfile)
 optnum = []    #append the amount of files
 
 for i in range(len(allfile)):
-    optnum.append(i+1)
+    optnum.append(i + 1)
 
 print('\n*Choose the number of files to open it\n')
 
 with open(filebox, 'r') as f:
-    print('\n'+f.read()+'\n')
+    print('\n' + f.read() + '\n')
 
 while True:
 
@@ -98,10 +97,9 @@ while True:
         break
         
     else:
-        print('\n*Illegal inputs\n'
-        +'*Please input again!')
+        print('\n*Illegal inputs\n*Please input again!')
     
-filename = allfile[choose-1][1]
+filename = allfile[choose - 1][1]
 
 save = []
 
@@ -129,9 +127,8 @@ while True:
       
         if options == 1: 
           
-            print('\n*Input a new word\n'+
-                '*Input \"END\" to stop adding the word \n'
-                +'  and back to the options\n')
+            print('\n*Input a new word\n*Input \"END\" to stop adding the word '
+                  + '\n  and back to the options\n')
         
             while True:  
                  
@@ -154,8 +151,7 @@ while True:
                         words.append(word_a)
                         
                     else:
-                        print('\n*The word has already exist!\n'
-                            +' Please add other words\n')
+                        print('\n*The word has already exist!\n Please add other words\n')
       
         if options == 2:  
                    
@@ -189,8 +185,7 @@ while True:
         if options == 3: 
             
             with open(filename, 'r') as f:
-                print('\n'+30*'='+'\n\n'+f.read()+'\n\n'
-                    +30*'='+'\n')
+                print('\n' + 30 * '=' + '\n\n' + f.read() + '\n\n' + 30 * '=' + '\n')
     
         if options == 4:     
              
@@ -199,8 +194,7 @@ while True:
             ScanFile(filename, save)                            
             CleanFile(filename)
             
-            print('\n*Clean file successfully!\n'
-                +'\n*The lated archive saved successfully!\n')
+            print('\n*Clean file successfully!\n\n*The lated archive saved successfully!\n')
                 
         if options == 5:
             
@@ -221,36 +215,15 @@ while True:
              
             words2 = []
             numlst = []
-            modes = [1, 2, 3, 4]
-            
-        #    print('\n*Input a number of the options\n'
-        #        +' (1)Spelling Test\n'    
-        #        +' (2)Meaning Test\n'    
-        #        +' (3)Part of speech Test\n'    
-        #        +' (4)Random Test\n')
-            
-        #    while True:
-              
-        #        mode = int(input())
-                
-        #        if mode in modes:
-        #            print('\n*Choose mode successfully!\n')
-                    
-        #            break
-                    
-        #        else:
-        #            print('\n*Illegal inputs\n'
-        #                +'*Please input again!\n')
                     
             ScanWord(filename, words2)          
             
-            for i in range(1, len(words2)+1):
+            for i in range(1, len(words2) + 1):
                 numlst.append(i)
                 
             random.shuffle(numlst)
                 
-            print('\n'+30*'='+'\n'
-                +'\n*Test Start!\n')
+            print('\n' + 30 * '=' + '\n\n*Test Start!\n')
                 
             life = 10
             count = 0
@@ -260,16 +233,14 @@ while True:
                       
                 if life == 0:
                   
-                    print('\n*Test Over!'+
-                        '\n Please practice more!\n\n'+30*'='+'\n')
+                    print('\n*Test Over!\n Please practice more!\n\n' + 30 * '=' + '\n')
                         
                     break
                 
                 elif count == len(numlst):
                   
-                    print('\n*Congratulations!'
-                        +'\n You have answered all the questions!'
-                        +'\n Test Over!\n\n'+30*'='+'\n')
+                    print('\n*Congratulations!\n You have answered all the questions!'
+                          + '\n Test Over!\n\n' + 30 * '=' + '\n')
                         
                     break
                 
@@ -280,7 +251,7 @@ while True:
                     rword = words2[rnum][0]
                     lst = list(rword)
             
-                    for i in range(1, len(lst)-1):
+                    for i in range(1, len(lst) - 1):
                         lst[i] = '_'
                   
                     sub = str()
@@ -288,23 +259,24 @@ while True:
                     for i in range(0, len(lst)):
                         sub += str(lst[i])
                 
-                    print(str(count+1)+'. '+sub+' '+words2[rnum][1]+' '+words2[rnum][2]+'\n')
+                    print(str(count+1) + '. ' + sub + ' ' + words2[rnum][1] + ' ' + words2[rnum][2] + '\n')
                 
                     ans = str(input())
                 
-                    if ans == rword:                  
+                    if ans == rword:   
+                        
                         count += 1
                         count2 += 1
-                        print('\n*Correct!    Score:'+str(count2)
-                        +'\n\n'+30*'–'+'\n')
+
+                        print('\n*Correct!    Score:' + str(count2) + '\n\n' + 30 * '–' + '\n')
                     
-                    else:              
+                    else:
+                        
                         life -= 1
                         count += 1
-                        print('\n*Wrong answer!\n\n Correct answer:'
-                            +rword+'\n Life:'+str(life)
-                            +'    Score:'+str(count2)+'\n\n'
-                            +30*'–'+'\n')
+
+                        print('\n*Wrong answer!\n\n Correct answer:' + rword + '\n Life:' + str(life)
+                              + '    Score:' + str(count2) + '\n\n' + 30 * '–' + '\n')
                                    
         if options == 8:                                           
             filename = ChangeFile(filebox, filename, optnum, allfile)
@@ -313,7 +285,6 @@ while True:
             break
     
     else:
-        print('\n*Illegal inputs\n'
-            +'*Please input again!\n')
+        print('\n*Illegal inputs\n*Please input again!\n')
 
 print('\n*Finish successfully!')
