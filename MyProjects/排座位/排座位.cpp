@@ -215,7 +215,7 @@ void  fn_SetSeatNum()
             {
                 int_SeatNum[i - 1] = rand() % 43 + 1;
             }
-            while(int_SeatNum[i - 1] == 41 || int_SeatNum[i - 1] == 10 || 
+            while(int_SeatNum[i - 1] == 41 || int_SeatNum[i - 1] == 10 ||
 				  int_SeatNum[i - 1] == 20 || int_SeatNum[i - 1] == 5);
 
             for(j = 1; j < i; j++)
@@ -243,7 +243,7 @@ void  fn_FillNum(int int_Num)
                     if(i == 0 && j == 3)
                     {
                         intarr_V1[0][3] = 20;
-                        
+
                         continue;
                     }
 
@@ -276,7 +276,7 @@ void  fn_FillNum(int int_Num)
                     if(i == 5 && j == 3)
                     {
                         intarr_V2[5][3] = 20;
-                        
+
                         continue;
                     }
 
