@@ -1,10 +1,11 @@
 #include <iostream>
+#define CirQue_Size 7
 
 template <typename Type>
     class CirQue
     {
     public:
-        Type typ_Arr[7];
+        Type typ_Arr[CirQue_Size + 1];
         int int_FrontIndex;
         int int_BackIndex;
 
@@ -23,14 +24,10 @@ int main()
     for(int i = 10; i < 17; i++)
     {
         cque_1.fn_Push(i);
-
-        std::cout<< cque_1.fn_Back() << '\n';
     }
 
     for(int i = 0; i < 7; i++)
     {
-        std::cout<< cque_1.fn_Front() << '\n';
-
         cque_1.fn_Pop();
     }
 
@@ -46,7 +43,7 @@ template <typename Type>
 template <typename Type>
     void CirQue<Type>::fn_Push(Type typ_Ele)
     {
-        if(int_BackIndex == (int_FrontIndex + 7) % 8)
+        if(int_BackIndex == (int_FrontIndex + CirQue_Size) % (CirQue_Size + 1))
         {
             std::cerr<< "No space can save this element!\n";
 
@@ -54,13 +51,13 @@ template <typename Type>
         }
         else
         {
-            //std::cerr<< "Push " << typ_Ele << " into the queue.\n";
+            std::cerr<< "Push " << typ_Ele << " into the queue.\n";
 
             typ_Arr[int_BackIndex] = typ_Ele;
 
-            ++int_BackIndex %= 8;
+            ++int_BackIndex %= (CirQue_Size + 1);
 
-            //std::cerr<< "BackIndex: " << int_BackIndex << '\n';
+            std::cerr<< "BackIndex: " << int_BackIndex << '\n';
 
             return;
         }
@@ -77,13 +74,13 @@ template <typename Type>
         }
         else
         {
-            //std::cerr<< "Pop " << typ_Arr[int_FrontIndex] << " out.\n";
+            std::cerr<< "Pop " << typ_Arr[int_FrontIndex] << " out.\n";
 
             typ_Arr[int_FrontIndex] = NULL;
 
-            ++int_FrontIndex %= 8;
+            ++int_FrontIndex %= (CirQue_Size + 1);
 
-            //std::cerr<< "FrontIndex: " << int_FrontIndex << '\n';
+            std::cerr<< "FrontIndex: " << int_FrontIndex << '\n';
 
             return;
         }
@@ -92,7 +89,7 @@ template <typename Type>
 template <typename Type>
     Type CirQue<Type>::fn_Front()
     {
-        //std::cerr<< "Front: " << typ_Arr[int_FrontIndex] << '\n';
+        std::cerr<< "Front: " << typ_Arr[int_FrontIndex] << '\n';
 
         return typ_Arr[int_FrontIndex];
     }
@@ -100,7 +97,7 @@ template <typename Type>
 template <typename Type>
     Type CirQue<Type>::fn_Back()
     {
-        //std::cerr<< "Back: " << typ_Arr[int_BackIndex - 1] << '\n';
+        std::cerr<< "Back: " << typ_Arr[int_BackIndex - 1] << '\n';
 
         return typ_Arr[int_BackIndex - 1];
     }
