@@ -247,12 +247,7 @@ void  fn_FillNum(int int_Num)
                         continue;
                     }
 
-                    if((i == 5 && j == 0) || (i == 5 && j == 6))
-                    {
-                        std::cout<< '\t';
-
-                        continue;
-                    }
+                    if((i == 5 && j == 0) || (i == 5 && j == 6)) continue;
 
                     intarr_V1[i][j] = int_SeatNum[int_Count];
                     int_Count++;
@@ -266,12 +261,7 @@ void  fn_FillNum(int int_Num)
             {
                 for(int j = 0; j < 7; j++)
                 {
-                    if((i == 0 && j == 6) || (i == 0 && j == 0))
-                    {
-                        std::cout<< '\t';
-
-                        continue;
-                    }
+                    if((i == 0 && j == 6) || (i == 0 && j == 0)) continue;
 
                     if(i == 5 && j == 3)
                     {
