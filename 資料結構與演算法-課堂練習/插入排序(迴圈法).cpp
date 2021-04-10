@@ -1,10 +1,9 @@
 #include <iostream>
 
-template <typename Type>    // 修改這邊以改變排序方式
-    bool fn_Compare(Type typ_Num1, Type typ_Num2)
-    {
-        return typ_Num1 > typ_Num2;
-    }
+bool fn_Compare(int int_Num1, int int_Num2)   // 修改這邊以改變排序方式
+{
+    return int_Num1 > int_Num2;
+}
 
 int main()
 {
@@ -14,7 +13,7 @@ int main()
     {
         for(int j = i; j > 0; j--)
         {
-            if(fn_Compare<int>(intarr_Num[j], intarr_Num[j - 1]))
+            if(fn_Compare(intarr_Num[j], intarr_Num[j - 1]))
             {
                 int int_Temp = intarr_Num[j - 1];
 
