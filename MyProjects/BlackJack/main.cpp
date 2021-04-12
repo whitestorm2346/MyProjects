@@ -44,8 +44,7 @@ int main()
 
     while(true)
     {
-        std::cout<< "\n(1) New Game\n"
-                 << "(2) Quit Game\n\n";
+        std::cout<< "\n(1) New Game\n(2) Quit Game\n\n";
         std::cin>> int_Ans;
 
         if(int_Ans == 2)
@@ -117,24 +116,23 @@ int main()
                      << "(2) End up adding the card\n\n";
             std::cin>> int_Ans;
 
-            if(int_Ans == 1)
+            switch(int_Ans)
             {
-                fn_SetCard(plr_Main.crd_Add[plr_Main.int_CardCount - 2], plr_Main.bl_HaveAce);
+                case 1:
+                    fn_SetCard(plr_Main.crd_Add[plr_Main.int_CardCount - 2], plr_Main.bl_HaveAce);
 
-                plr_Main.int_CardCount++;
-            }
-            else if(int_Ans == 2)
-            {
-                bl_SeeBkrCard = true;
+                    plr_Main.int_CardCount++;
 
-                if(plr_Main.bl_HaveAce && plr_Main.int_PointCount <= 11)
-                {
-                    plr_Main.int_PointCount += 10;
-                }
+                    break;
 
-                fn_Line();
+                case 2:
+                    bl_SeeBkrCard = true;
 
-                break;
+                    if(plr_Main.bl_HaveAce && plr_Main.int_PointCount <= 11) plr_Main.int_PointCount += 10;
+
+                    fn_Line();
+
+                    break;
             }
         }
 
@@ -155,10 +153,7 @@ int main()
             int int_PlrSignboard = plr_Main.int_PointCount - plr_Main.crd_Invisible.int_Count;
             int int_Temp;
 
-            if(plr_Banker.bl_HaveAce && plr_Banker.int_PointCount <= 11)
-            {
-                int_Temp = plr_Banker.int_PointCount + 10;
-            }
+            if(plr_Banker.bl_HaveAce && plr_Banker.int_PointCount <= 11) int_Temp = plr_Banker.int_PointCount + 10;
 
             if(int_Temp > 21)
             {
@@ -199,10 +194,7 @@ bool  fn_CheckUsedCard(int int_Num1, int int_Num2)
 {
     bool bl_UsedCard = false;
 
-    if(intarr_UsedCard[int_Num1][int_Num2] == 1)
-    {
-        bl_UsedCard = true;
-    }
+    if(intarr_UsedCard[int_Num1][int_Num2] == 1) bl_UsedCard = true;
 
     return bl_UsedCard;
 }
@@ -258,7 +250,7 @@ void  fn_CardDisplay(bool bl_SeeBkrCard)
         std::cout<< plr_Banker.crd_Invisible.str_Suit << ' '
                  << plr_Banker.crd_Invisible.str_Word << "\n    ";
 
-        for(int i = 0; i < plr_Banker.int_CardCount-2; i++)
+        for(int i = 0; i < plr_Banker.int_CardCount - 2; i++)
         {
             std::cout<< plr_Banker.crd_Add[i].str_Suit << ' '
                      << plr_Banker.crd_Add[i].str_Word << "\n    ";
@@ -270,7 +262,7 @@ void  fn_CardDisplay(bool bl_SeeBkrCard)
                  << plr_Banker.crd_Visible.str_Word << "\n    ";
         std::cout<< "??? ???\n";
 
-        for(int i = 0; i < plr_Banker.int_CardCount-2; i++)
+        for(int i = 0; i < plr_Banker.int_CardCount - 2; i++)
         {
             std::cout<< plr_Banker.crd_Add[i].str_Suit << ' '
                      << plr_Banker.crd_Add[i].str_Word << "\n    ";
@@ -283,7 +275,7 @@ void  fn_CardDisplay(bool bl_SeeBkrCard)
     std::cout<< plr_Main.crd_Invisible.str_Suit << ' '
              << plr_Main.crd_Invisible.str_Word << "\n    ";
 
-    for(int i = 0; i < plr_Main.int_CardCount-2; i++)
+    for(int i = 0; i < plr_Main.int_CardCount - 2; i++)
     {
         std::cout<< plr_Main.crd_Add[i].str_Suit << ' '
                  << plr_Main.crd_Add[i].str_Word << "\n    ";
@@ -322,8 +314,7 @@ void  fn_Intro()
 {
     fn_Line();
 
-    std::cout<< "\n                   "
-             << "Black Jack\n\n";
+    std::cout<< "\n                   Black Jack\n\n";
 
     fn_Line();
 
@@ -336,8 +327,7 @@ void  fn_GameOver(bool bl_WinOrLose)
     {
         fn_Line();
 
-        std::cout<< "\n                   "
-                 << "You  Win!\n\n";
+        std::cout<< "\n                   You  Win!\n\n";
 
         fn_Line();
     }
@@ -345,8 +335,7 @@ void  fn_GameOver(bool bl_WinOrLose)
     {
         fn_Line();
 
-        std::cout<< "\n                   "
-                 << "You Lose!\n\n";
+        std::cout<< "\n                   You Lose!\n\n";
 
         fn_Line();
     }
@@ -358,8 +347,7 @@ void  fn_EndGame()
 {
     fn_Line();
 
-    std::cout<< "\n               "
-             << "See You Next Time!\n\n";
+    std::cout<< "\n               See You Next Time!\n\n";
 
     fn_Line();
 
@@ -398,10 +386,10 @@ void  fn_SetCard(Card &crd_Poker, bool &bl_HaveAce)
         default:
             if((int_Num2 + 1) >= 10)
             {
-                crd_Poker.str_Word = ((int_Num2 + 1) / 10 + '0');
-                crd_Poker.str_Word += ((int_Num2 + 1) % 10 + '0');
+                crd_Poker.str_Word  = static_cast<char>((int_Num2 + 1) / 10 + 48);
+                crd_Poker.str_Word += static_cast<char>((int_Num2 + 1) % 10 + 48);
             }
-            else crd_Poker.str_Word = int_Num2 + 1 + '0';
+            else crd_Poker.str_Word = static_cast<char>(int_Num2 + 1 + 48);
     }
 
     return;
