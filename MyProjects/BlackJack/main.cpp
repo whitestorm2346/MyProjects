@@ -122,6 +122,8 @@ int main()
 
                     plr_Main.int_CardCount++;
 
+                    std::cout<< "\n[system] You add a card\n\n";
+
                     break;
 
                 case 2:
@@ -136,7 +138,12 @@ int main()
             }
         }
 
-        if(bl_GameOver) fn_GameOver(bl_WinGame);
+        if(bl_GameOver)
+        {
+            fn_GameOver(bl_WinGame);
+
+            continue;
+        }
         else
         {
             fn_Line();
@@ -144,11 +151,13 @@ int main()
             std::cout<< "\n[system] Banker\'s turn!\n\n";
         }
 
-        while(!bl_BkrRoundEnd)
+        while(bl_PlrRoundEnd)
         {
             fn_Line();
             fn_CardDisplay(bl_SeeBkrCard);
             fn_CountPoint(plr_Banker);
+
+            if(bl_BkrRoundEnd) break;
 
             int int_PlrSignboard = plr_Main.int_PointCount - plr_Main.crd_Invisible.int_Count;
             int int_Temp;
@@ -161,27 +170,41 @@ int main()
             {
                 bl_GameOver = true;
                 bl_WinGame = true;
+                bl_BkrRoundEnd = true;
 
-                break;
+                std::cout<< "\n[system] Banker loss!\n\n";
             }
             else if(plr_Banker.int_CardCount >= 5)
             {
                 bl_GameOver = true;
                 bl_WinGame = false;
+                bl_BkrRoundEnd = true;
 
-                break;
+                std::cout<< "\n[system] Banker win!\n\n";
             }
-            else if(int_Temp >= 18) fn_Catch(bl_GameOver, bl_WinGame);
-            else if(int_Temp >= int_PlrSignboard + 10) fn_Catch(bl_GameOver, bl_WinGame);
+            else if(int_Temp >= 18)
+            {
+                fn_Catch(bl_GameOver, bl_WinGame);
+
+                bl_BkrRoundEnd = true;
+            }
+            else if(int_Temp >= int_PlrSignboard + 10)
+            {
+                fn_Catch(bl_GameOver, bl_WinGame);
+
+                bl_BkrRoundEnd = true;
+            }
             else
             {
                 fn_SetCard(plr_Banker.crd_Add[plr_Banker.int_CardCount - 2], plr_Banker.bl_HaveAce);
 
                 plr_Banker.int_CardCount++;
+
+                std::cout<< "\n[system] The banker add a card\n\n";
             }
         }
 
-        if(!bl_BkrRoundEnd && bl_GameOver) fn_GameOver(bl_WinGame);
+        if(bl_GameOver) fn_GameOver(bl_WinGame);
     }
 
     return 0;
