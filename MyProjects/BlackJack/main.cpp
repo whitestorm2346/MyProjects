@@ -126,6 +126,7 @@ int main()
 
                 case 2:
                     bl_SeeBkrCard = true;
+                    bl_PlrRoundEnd = true;
 
                     if(plr_Main.bl_HaveAce && plr_Main.int_PointCount <= 11) plr_Main.int_PointCount += 10;
 
@@ -154,6 +155,8 @@ int main()
 
             if(plr_Banker.bl_HaveAce && plr_Banker.int_PointCount <= 11) int_Temp = plr_Banker.int_PointCount + 10;
 
+            fn_Delay(3000);
+
             if(int_Temp > 21)
             {
                 bl_GameOver = true;
@@ -161,25 +164,20 @@ int main()
 
                 break;
             }
-            else if(int_Temp >= 18)
+            else if(plr_Banker.int_CardCount >= 5)
             {
-                fn_Catch(bl_GameOver, bl_WinGame);
-            }
-            else if(int_Temp < int_PlrSignboard + 11)
-            {
-                fn_SetCard(plr_Banker.crd_Add[plr_Banker.int_CardCount - 2], plr_Banker.bl_HaveAce);
+                bl_GameOver = true;
+                bl_WinGame = false;
 
-                plr_Banker.int_CardCount++;
+                break;
             }
-            else if(int_Temp > (int_PlrSignboard + 11) || int_Temp < 16)
-            {
-                fn_SetCard(plr_Banker.crd_Add[plr_Banker.int_CardCount - 2], plr_Banker.bl_HaveAce);
-
-                plr_Banker.int_CardCount++;
-            }
+            else if(int_Temp >= 18) fn_Catch(bl_GameOver, bl_WinGame);
+            else if(int_Temp >= int_PlrSignboard + 10) fn_Catch(bl_GameOver, bl_WinGame);
             else
             {
-                fn_Catch(bl_GameOver, bl_WinGame);
+                fn_SetCard(plr_Banker.crd_Add[plr_Banker.int_CardCount - 2], plr_Banker.bl_HaveAce);
+
+                plr_Banker.int_CardCount++;
             }
         }
 
@@ -305,7 +303,12 @@ void  fn_CountPoint(Player &plr_Func)
 
 void  fn_Catch(bool &bl_GameOver, bool &bl_WinOrLose)
 {
+    bl_GameOver = true;
 
+    if(plr_Banker.bl_HaveAce && plr_Banker.int_PointCount <= 11) plr_Banker.int_PointCount += 10;
+
+    if(plr_Banker.int_PointCount >= plr_Main.int_PointCount) bl_WinOrLose = false;
+    else bl_WinOrLose = true;
 
     return;
 }
