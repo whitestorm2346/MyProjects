@@ -24,6 +24,7 @@ int   intarr_UsedCard[4][13] = {};
 
 bool  fn_CheckUsedCard(int int_Num1, int int_Num2);
 void  fn_Line();
+void  fn_Delay(int int_Time);
 void  fn_ResetBkr();
 void  fn_ResetPlr();
 void  fn_CardDisplay(bool bl_SeeBkrCard);
@@ -111,9 +112,7 @@ int main()
 
             bl_FirstRound = false;
 
-            std::cout<< "Add more cards or not?\n"
-                     << "(1) Add a card\n"
-                     << "(2) End up adding the card\n\n";
+            std::cout<< "Add more cards or not?\n(1) Add a card\n(2) End up adding the card\n\n";
             std::cin>> int_Ans;
 
             switch(int_Ans)
@@ -211,6 +210,15 @@ void  fn_Line()
     return;
 }
 
+void  fn_Delay(int int_Time)
+{
+    clock_t now = clock();
+
+    while(clock() - now < int_Time);
+
+    return;
+}
+
 void  fn_ResetBkr()
 {
     plr_Banker.int_CardCount = 2;
@@ -245,40 +253,32 @@ void  fn_CardDisplay(bool bl_SeeBkrCard)
 
     if(bl_SeeBkrCard)
     {
-        std::cout<< plr_Banker.crd_Visible.str_Suit << ' '
-                 << plr_Banker.crd_Visible.str_Word << "\n    ";
-        std::cout<< plr_Banker.crd_Invisible.str_Suit << ' '
-                 << plr_Banker.crd_Invisible.str_Word << "\n    ";
+        std::cout<< plr_Banker.crd_Visible.str_Suit << ' ' << plr_Banker.crd_Visible.str_Word << "\n    ";
+        std::cout<< plr_Banker.crd_Invisible.str_Suit << ' ' << plr_Banker.crd_Invisible.str_Word << "\n    ";
 
         for(int i = 0; i < plr_Banker.int_CardCount - 2; i++)
         {
-            std::cout<< plr_Banker.crd_Add[i].str_Suit << ' '
-                     << plr_Banker.crd_Add[i].str_Word << "\n    ";
+            std::cout<< plr_Banker.crd_Add[i].str_Suit << ' ' << plr_Banker.crd_Add[i].str_Word << "\n    ";
         }
     }
     else
     {
-        std::cout<< plr_Banker.crd_Visible.str_Suit << ' '
-                 << plr_Banker.crd_Visible.str_Word << "\n    ";
+        std::cout<< plr_Banker.crd_Visible.str_Suit << ' ' << plr_Banker.crd_Visible.str_Word << "\n    ";
         std::cout<< "??? ???\n";
 
         for(int i = 0; i < plr_Banker.int_CardCount - 2; i++)
         {
-            std::cout<< plr_Banker.crd_Add[i].str_Suit << ' '
-                     << plr_Banker.crd_Add[i].str_Word << "\n    ";
+            std::cout<< plr_Banker.crd_Add[i].str_Suit << ' ' << plr_Banker.crd_Add[i].str_Word << "\n    ";
         }
     }
 
     std::cout<< "\nYour Cards:\n\n    ";
-    std::cout<< plr_Main.crd_Visible.str_Suit << ' '
-             << plr_Main.crd_Visible.str_Word << "\n    ";
-    std::cout<< plr_Main.crd_Invisible.str_Suit << ' '
-             << plr_Main.crd_Invisible.str_Word << "\n    ";
+    std::cout<< plr_Main.crd_Visible.str_Suit << ' ' << plr_Main.crd_Visible.str_Word << "\n    ";
+    std::cout<< plr_Main.crd_Invisible.str_Suit << ' ' << plr_Main.crd_Invisible.str_Word << "\n    ";
 
     for(int i = 0; i < plr_Main.int_CardCount - 2; i++)
     {
-        std::cout<< plr_Main.crd_Add[i].str_Suit << ' '
-                 << plr_Main.crd_Add[i].str_Word << "\n    ";
+        std::cout<< plr_Main.crd_Add[i].str_Suit << ' ' << plr_Main.crd_Add[i].str_Word << "\n    ";
     }
 
     std::cout<< '\n';
