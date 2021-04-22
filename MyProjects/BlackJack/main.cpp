@@ -20,19 +20,7 @@ struct Player
     int  int_Money;
     bool bl_HaveAce = false;
 
-    void fn_Reset()
-    {
-        this->int_CardCount = 2;
-        this->int_PointCount = 0;
-        this->bl_HaveAce = false;
-
-        for(int i = 0; i < 3; i++)
-        {
-            this->crd_Add[i].int_Count = 0;
-        }
-
-        return;
-    }
+    void fn_Reset();
 } plr_Banker, plr_Main;
 
 bool  fn_CheckUsedCard(int int_Num1, int int_Num2, int* intarr_CheckUsedCard);
@@ -273,6 +261,20 @@ int main()
     }
 
     return 0;
+}
+
+void Player::fn_Reset()
+{
+    this->int_CardCount = 2;
+    this->int_PointCount = 0;
+    this->bl_HaveAce = false;
+
+    for(int i = 0; i < 3; i++)
+    {
+        this->crd_Add[i].int_Count = 0;
+    }
+
+    return;
 }
 
 bool  fn_CheckUsedCard(int int_Num1, int int_Num2, int* intarr_UsedCard)
