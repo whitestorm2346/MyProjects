@@ -18,6 +18,20 @@ struct Player
     int  int_CardCount;
     int  int_PointCount = 0;
     bool bl_HaveAce = false;
+
+    void fn_Reset()
+    {
+        this->int_CardCount = 2;
+        this->int_PointCount = 0;
+        this->bl_HaveAce = false;
+
+        for(int i = 0; i < 3; i++)
+        {
+            this->crd_Add[i].int_Count = 0;
+        }
+
+        return;
+    }
 } plr_Banker, plr_Main;
 
 int   intarr_UsedCard[4][13] = {};
@@ -25,8 +39,6 @@ int   intarr_UsedCard[4][13] = {};
 bool  fn_CheckUsedCard(int int_Num1, int int_Num2);
 void  fn_Line();
 void  fn_Delay(int int_Time);
-void  fn_ResetBkr();
-void  fn_ResetPlr();
 void  fn_CardDisplay(bool bl_SeeBkrCard);
 void  fn_CountPoint(Player &plr_Func);
 void  fn_Catch(bool &bl_GameOver, bool &bl_WinOrLose);
@@ -57,8 +69,8 @@ int main()
 
         intarr_UsedCard[4][13] = {};
 
-        fn_ResetBkr();
-        fn_ResetPlr();
+        plr_Banker.fn_Reset();
+        plr_Main.fn_Reset();
         fn_SetCard(plr_Banker.crd_Visible, plr_Banker.bl_HaveAce);
         fn_SetCard(plr_Banker.crd_Invisible, plr_Banker.bl_HaveAce);
         fn_SetCard(plr_Main.crd_Visible, plr_Main.bl_HaveAce);
@@ -172,7 +184,7 @@ int main()
                 bl_WinGame = true;
                 bl_BkrRoundEnd = true;
 
-                std::cout<< "\n[system] Banker loss!\n\n";
+                std::cout<< "\n[system] The banker\'s points has exceed 21 points!\n\n";
             }
             else if(plr_Banker.int_CardCount >= 5)
             {
@@ -180,16 +192,20 @@ int main()
                 bl_WinGame = false;
                 bl_BkrRoundEnd = true;
 
-                std::cout<< "\n[system] Banker win!\n\n";
+                std::cout<< "\n[system] The banker got a \"Charlie\"!\n\n";
             }
             else if(int_Temp >= 18)
             {
+                std::cout<< "\n[system] The banker catch your cards\n\n";
+
                 fn_Catch(bl_GameOver, bl_WinGame);
 
                 bl_BkrRoundEnd = true;
             }
             else if(int_Temp >= int_PlrSignboard + 10)
             {
+                std::cout<< "\n[system] The banker catch your cards\n\n";
+
                 fn_Catch(bl_GameOver, bl_WinGame);
 
                 bl_BkrRoundEnd = true;
@@ -240,34 +256,6 @@ void  fn_Delay(int int_Time)
     return;
 }
 
-void  fn_ResetBkr()
-{
-    plr_Banker.int_CardCount = 2;
-    plr_Banker.int_PointCount = 0;
-    plr_Banker.bl_HaveAce = false;
-
-    for(int i = 0; i < 3; i++)
-    {
-        plr_Banker.crd_Add[i].int_Count = 0;
-    }
-
-    return;
-}
-
-void  fn_ResetPlr()
-{
-    plr_Main.int_CardCount = 2;
-    plr_Main.int_PointCount = 0;
-    plr_Main.bl_HaveAce = false;
-
-    for(int i = 0; i < 3; i++)
-    {
-        plr_Main.crd_Add[i].int_Count = 0;
-    }
-
-    return;
-}
-
 void  fn_CardDisplay(bool bl_SeeBkrCard)
 {
     std::cout<< "\nBanker\'s Cards:\n\n    ";
@@ -295,7 +283,7 @@ void  fn_CardDisplay(bool bl_SeeBkrCard)
 
     std::cout<< "\nYour Cards:\n\n    ";
     std::cout<< plr_Main.crd_Visible.str_Suit << ' ' << plr_Main.crd_Visible.str_Word << "\n    ";
-    std::cout<< plr_Main.crd_Invisible.str_Suit << ' ' << plr_Main.crd_Invisible.str_Word << "\n    ";
+    std::cout<< plr_Main.crd_Invisible.str_Suit << ' ' << plr_Main.crd_Invisible.str_Word << " (covered)\n    ";
 
     for(int i = 0; i < plr_Main.int_CardCount - 2; i++)
     {
