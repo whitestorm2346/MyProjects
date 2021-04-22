@@ -68,9 +68,9 @@ int main()
 
         int intarr_UsedCard[4][13] = {};
         int* intptr_UsedCard = reinterpret_cast<int*>(intarr_UsedCard);
-        int int_BetMoney, int int_;
+        int int_BetMoney, int_BetNum = 1;
 
-        std::cout<< "Input a number of money you want to bet\n;
+        std::cout<< "Input a number of money you want to bet\n";
         std::cin>> int_BetMoney;
         std::cout<< "\n\n";
 
@@ -111,6 +111,7 @@ int main()
             {
                 bl_BkrRoundEnd = true;
                 bl_GameOver = true;
+                int_BetNum = 2;
                 int_Result = 1;
 
                 std::cout<< "\n[system] You got 21 Points in the first round!\n\n";
@@ -132,6 +133,7 @@ int main()
             {
                 bl_BkrRoundEnd = true;
                 bl_GameOver = true;
+                int_BetNum = 2;
                 int_Result = 1;
 
                 std::cout<< "\n[system] You got a \"Charlie\"!\n\n";
@@ -169,7 +171,7 @@ int main()
 
         if(bl_GameOver)
         {
-            fn_GameOver(int_Result, plr_Main, int_BetMoney);
+            fn_GameOver(int_Result, plr_Main, int_BetMoney, int_BetNum);
 
             continue;
         }
@@ -231,7 +233,7 @@ int main()
             }
         }
 
-        if(bl_GameOver) fn_GameOver(int_Result, plr_Main, int_BetMoney);
+        if(bl_GameOver) fn_GameOver(int_Result, plr_Main, int_BetMoney, int_BetNum);
     }
 
     return 0;
@@ -349,8 +351,16 @@ void  fn_GameOver(int int_WinOrLose, Player plr_Main, int int_BetMoney, int int_
         case  0:
             std::cout<< "\n                   You Lose!\n\n";
 
+            plr_Main.int_Money -= int_BetMoney * int_Num;
+
             break;
-        case  1: std::cout<< "\n                   You  Win!\n\n"; break;
+
+        case  1:
+            std::cout<< "\n                   You  Win!\n\n";
+
+            plr_Main.int_Money -= int_BetMoney * int_Num;
+
+            break;
     }
 
     fn_Line();
