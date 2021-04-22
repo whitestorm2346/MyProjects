@@ -17,6 +17,7 @@ struct Player
     Card crd_Add[3];
     int  int_CardCount;
     int  int_PointCount = 0;
+    int  int_Money = 10000;
     bool bl_HaveAce = false;
 
     void fn_Reset()
@@ -41,7 +42,7 @@ void  fn_CardDisplay(bool bl_SeeBkrCard);
 void  fn_CountPoint(Player &plr_Func);
 void  fn_Catch(bool &bl_GameOver, int &int_WinOrLose);
 void  fn_Intro();
-void  fn_GameOver(int int_WinOrLose);
+void  fn_GameOver(int int_WinOrLose, Player plr_Main, int int_BetMoney, int int_Num);
 void  fn_EndGame();
 void  fn_SetCard(Card &crd_Poker, bool &bl_HaveAce, int* intarr_CheckUsedCard);
 
@@ -67,6 +68,11 @@ int main()
 
         int intarr_UsedCard[4][13] = {};
         int* intptr_UsedCard = reinterpret_cast<int*>(intarr_UsedCard);
+        int int_BetMoney, int int_;
+
+        std::cout<< "Input a number of money you want to bet\n;
+        std::cin>> int_BetMoney;
+        std::cout<< "\n\n";
 
         plr_Banker.fn_Reset();
         plr_Main.fn_Reset();
@@ -163,7 +169,7 @@ int main()
 
         if(bl_GameOver)
         {
-            fn_GameOver(int_Result);
+            fn_GameOver(int_Result, plr_Main, int_BetMoney);
 
             continue;
         }
@@ -225,7 +231,7 @@ int main()
             }
         }
 
-        if(bl_GameOver) fn_GameOver(int_Result);
+        if(bl_GameOver) fn_GameOver(int_Result, plr_Main, int_BetMoney);
     }
 
     return 0;
@@ -329,14 +335,21 @@ void  fn_Intro()
     return;
 }
 
-void  fn_GameOver(int int_WinOrLose)
+void  fn_GameOver(int int_WinOrLose, Player plr_Main, int int_BetMoney, int int_Num)
 {
     fn_Line();
 
     switch(int_WinOrLose)
     {
-        case -1: std::cout<< "\n                     Draw!  \n\n"; break;
-        case  0: std::cout<< "\n                   You Lose!\n\n"; break;
+        case -1:
+            std::cout<< "\n                     Draw!  \n\n";
+
+            break;
+
+        case  0:
+            std::cout<< "\n                   You Lose!\n\n";
+
+            break;
         case  1: std::cout<< "\n                   You  Win!\n\n"; break;
     }
 
