@@ -17,7 +17,7 @@ struct Player
     Card crd_Add[3];
     int  int_CardCount;
     int  int_PointCount = 0;
-    int  int_Money = 10000;
+    int  int_Money;
     bool bl_HaveAce = false;
 
     void fn_Reset()
@@ -42,7 +42,7 @@ void  fn_CardDisplay(bool bl_SeeBkrCard);
 void  fn_CountPoint(Player &plr_Func);
 void  fn_Catch(bool &bl_GameOver, int &int_WinOrLose);
 void  fn_Intro();
-void  fn_GameOver(int int_WinOrLose, Player plr_Main, int int_BetMoney, int int_Num);
+void  fn_GameOver(int int_WinOrLose, int int_BetMoney, int int_Num);
 void  fn_EndGame();
 void  fn_SetCard(Card &crd_Poker, bool &bl_HaveAce, int* intarr_CheckUsedCard);
 
@@ -53,6 +53,8 @@ int main()
     int int_Ans;
 
     fn_Intro();
+
+    plr_Main.int_Money = 10000;
 
     while(true)
     {
@@ -70,8 +72,20 @@ int main()
         int* intptr_UsedCard = reinterpret_cast<int*>(intarr_UsedCard);
         int int_BetMoney, int_BetNum = 1;
 
-        std::cout<< "Input a number of money you want to bet\n";
-        std::cin>> int_BetMoney;
+        fn_Line();
+
+        std::cout<< "\nYour Money: " << plr_Main.int_Money << '\n';
+
+
+        while(true)
+        {
+            std::cout<< "\nInput a number of money you want to lay a bet.\n\nBet money: ";
+            std::cin>> int_BetMoney;
+
+            if(int_BetMoney > 0 && int_BetMoney <= plr_Main.int_Money) break;
+            else std::cout<< "\n[system] Please input a correct number of money!\n";
+        }
+
         std::cout<< "\n\n";
 
         plr_Banker.fn_Reset();
@@ -171,7 +185,7 @@ int main()
 
         if(bl_GameOver)
         {
-            fn_GameOver(int_Result, plr_Main, int_BetMoney, int_BetNum);
+            fn_GameOver(int_Result, int_BetMoney, int_BetNum);
 
             continue;
         }
@@ -223,17 +237,39 @@ int main()
                 std::cout<< "\n[system] The banker add a card\n\n";
             }
 
+            fn_CountPoint(plr_Banker);
+
+            int_Temp = plr_Banker.int_PointCount;
+
+            if(plr_Banker.bl_HaveAce && plr_Banker.int_PointCount <= 11) int_Temp += 10;
+
             if(int_Temp > 21)
             {
                 bl_GameOver = true;
                 bl_BkrRoundEnd = true;
                 int_Result = 1;
 
+                fn_Line();
+                fn_CardDisplay(bl_SeeBkrCard);
+
                 std::cout<< "\n[system] The banker\'s points has exceed 21 points!\n\n";
+
+                break;
             }
         }
 
-        if(bl_GameOver) fn_GameOver(int_Result, plr_Main, int_BetMoney, int_BetNum);
+        if(bl_GameOver) fn_GameOver(int_Result, int_BetMoney, int_BetNum);
+
+        if(plr_Main.int_Money <= 0)
+        {
+            fn_Line();
+
+            std::cout<< "\n\n           You Lose All Your Money!\n\n";
+
+            fn_Line();
+
+            break;
+        }
     }
 
     return 0;
@@ -337,30 +373,26 @@ void  fn_Intro()
     return;
 }
 
-void  fn_GameOver(int int_WinOrLose, Player plr_Main, int int_BetMoney, int int_Num)
+void  fn_GameOver(int int_WinOrLose, int int_BetMoney, int int_Num)
 {
     fn_Line();
 
     switch(int_WinOrLose)
     {
         case -1:
-            std::cout<< "\n                     Draw!  \n\n";
-
-            break;
+            std::cout<< "\n                     Draw!  \n\n"; break;
 
         case  0:
             std::cout<< "\n                   You Lose!\n\n";
 
-            plr_Main.int_Money -= int_BetMoney * int_Num;
+            plr_Main.int_Money -= int_BetMoney;
 
             break;
 
         case  1:
             std::cout<< "\n                   You  Win!\n\n";
 
-            plr_Main.int_Money -= int_BetMoney * int_Num;
-
-            break;
+            plr_Main.int_Money += int_BetMoney * int_Num;
     }
 
     fn_Line();
