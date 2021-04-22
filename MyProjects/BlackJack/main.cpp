@@ -39,9 +39,9 @@ void  fn_Line();
 void  fn_Delay(int int_Time);
 void  fn_CardDisplay(bool bl_SeeBkrCard);
 void  fn_CountPoint(Player &plr_Func);
-void  fn_Catch(bool &bl_GameOver, bool &bl_WinOrLose);
+void  fn_Catch(bool &bl_GameOver, int &int_WinOrLose);
 void  fn_Intro();
-void  fn_GameOver(bool bl_WinOrLose);
+void  fn_GameOver(int int_WinOrLose);
 void  fn_EndGame();
 void  fn_SetCard(Card &crd_Poker, bool &bl_HaveAce, int* intarr_CheckUsedCard);
 
@@ -75,7 +75,7 @@ int main()
         fn_SetCard(plr_Main.crd_Visible, plr_Main.bl_HaveAce, intptr_UsedCard);
         fn_SetCard(plr_Main.crd_Invisible, plr_Main.bl_HaveAce, intptr_UsedCard);
 
-        bool bl_WinGame;
+        int  int_Result;
         bool bl_PlrRoundEnd = false;
         bool bl_BkrRoundEnd = false;
         bool bl_FirstRound = true;
@@ -89,12 +89,13 @@ int main()
             fn_Line();
             fn_CardDisplay(bl_SeeBkrCard);
             fn_CountPoint(plr_Main);
+            fn_CountPoint(plr_Banker);
 
             if(bl_FirstRound && plr_Banker.bl_HaveAce && plr_Banker.int_PointCount == 11)
             {
                 bl_BkrRoundEnd = true;
-                bl_WinGame = false;
                 bl_GameOver = true;
+                int_Result = 0;
 
                 std::cout<< "\n[system] The banker got 21 Points in the first round!\n\n";
 
@@ -103,8 +104,8 @@ int main()
             else if(bl_FirstRound && plr_Main.bl_HaveAce && plr_Main.int_PointCount == 11)
             {
                 bl_BkrRoundEnd = true;
-                bl_WinGame = true;
                 bl_GameOver = true;
+                int_Result = 1;
 
                 std::cout<< "\n[system] You got 21 Points in the first round!\n\n";
 
@@ -114,8 +115,8 @@ int main()
             if(plr_Main.int_PointCount > 21)
             {
                 bl_BkrRoundEnd = true;
-                bl_WinGame = false;
                 bl_GameOver = true;
+                int_Result = 0;
 
                 std::cout<< "\n[system] Your points have exceed 21 points!\n\n";
 
@@ -124,8 +125,8 @@ int main()
             else if(plr_Main.int_CardCount == 5)
             {
                 bl_BkrRoundEnd = true;
-                bl_WinGame = true;
                 bl_GameOver = true;
+                int_Result = 1;
 
                 std::cout<< "\n[system] You got a \"Charlie\"!\n\n";
 
@@ -162,7 +163,7 @@ int main()
 
         if(bl_GameOver)
         {
-            fn_GameOver(bl_WinGame);
+            fn_GameOver(int_Result);
 
             continue;
         }
@@ -176,8 +177,9 @@ int main()
         while(bl_PlrRoundEnd)
         {
             fn_Line();
-            fn_CardDisplay(bl_SeeBkrCard);
             fn_CountPoint(plr_Banker);
+            fn_CardDisplay(bl_SeeBkrCard);
+            fn_Delay(3000);
 
             if(bl_BkrRoundEnd) break;
 
@@ -186,21 +188,11 @@ int main()
 
             if(plr_Banker.bl_HaveAce && plr_Banker.int_PointCount <= 11) int_Temp += 10;
 
-            fn_Delay(3000);
-
-            if(int_Temp > 21)
+            if(plr_Banker.int_CardCount >= 5)
             {
                 bl_GameOver = true;
-                bl_WinGame = true;
                 bl_BkrRoundEnd = true;
-
-                std::cout<< "\n[system] The banker\'s points has exceed 21 points!\n\n";
-            }
-            else if(plr_Banker.int_CardCount >= 5)
-            {
-                bl_GameOver = true;
-                bl_WinGame = false;
-                bl_BkrRoundEnd = true;
+                int_Result = 0;
 
                 std::cout<< "\n[system] The banker got a \"Charlie\"!\n\n";
             }
@@ -208,7 +200,7 @@ int main()
             {
                 std::cout<< "\n[system] The banker catch your cards\n\n";
 
-                fn_Catch(bl_GameOver, bl_WinGame);
+                fn_Catch(bl_GameOver, int_Result);
 
                 bl_BkrRoundEnd = true;
 
@@ -222,9 +214,18 @@ int main()
 
                 std::cout<< "\n[system] The banker add a card\n\n";
             }
+
+            if(int_Temp > 21)
+            {
+                bl_GameOver = true;
+                bl_BkrRoundEnd = true;
+                int_Result = 1;
+
+                std::cout<< "\n[system] The banker\'s points has exceed 21 points!\n\n";
+            }
         }
 
-        if(bl_GameOver) fn_GameOver(bl_WinGame);
+        if(bl_GameOver) fn_GameOver(int_Result);
     }
 
     return 0;
@@ -304,14 +305,15 @@ void  fn_CountPoint(Player &plr_Func)
     return;
 }
 
-void  fn_Catch(bool &bl_GameOver, bool &bl_WinOrLose)
+void  fn_Catch(bool &bl_GameOver, int &int_WinOrLose)
 {
     bl_GameOver = true;
 
     if(plr_Banker.bl_HaveAce && plr_Banker.int_PointCount <= 11) plr_Banker.int_PointCount += 10;
 
-    if(plr_Banker.int_PointCount >= plr_Main.int_PointCount) bl_WinOrLose = false;
-    else bl_WinOrLose = true;
+    if(plr_Banker.int_PointCount > plr_Main.int_PointCount) int_WinOrLose = 0;
+    else if(plr_Banker.int_PointCount == plr_Main.int_PointCount) int_WinOrLose = -1;
+    else int_WinOrLose = 1;
 
     return;
 }
@@ -327,24 +329,18 @@ void  fn_Intro()
     return;
 }
 
-void  fn_GameOver(bool bl_WinOrLose)
+void  fn_GameOver(int int_WinOrLose)
 {
-    if(bl_WinOrLose)
+    fn_Line();
+
+    switch(int_WinOrLose)
     {
-        fn_Line();
-
-        std::cout<< "\n                   You  Win!\n\n";
-
-        fn_Line();
+        case -1: std::cout<< "\n                     Draw!  \n\n"; break;
+        case  0: std::cout<< "\n                   You Lose!\n\n"; break;
+        case  1: std::cout<< "\n                   You  Win!\n\n"; break;
     }
-    else
-    {
-        fn_Line();
 
-        std::cout<< "\n                   You Lose!\n\n";
-
-        fn_Line();
-    }
+    fn_Line();
 
     return;
 }
