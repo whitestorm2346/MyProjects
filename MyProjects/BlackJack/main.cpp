@@ -3,6 +3,8 @@
 #include <ctime>
 #include <cstdlib>
 
+#define DelayTime 2
+
 struct Card
 {
     std::string str_Suit;
@@ -46,6 +48,17 @@ int main()
 
     while(true)
     {
+        if(plr_Main.int_Money <= 0)
+        {
+            fn_Line();
+
+            std::cout<< "\n           You Lost All Your Money!\n\n";
+
+            fn_Line();
+
+            break;
+        }
+
         std::cout<< "\n(1) New Game\n(2) Quit Game\n\n";
         std::cin>> int_Ans;
 
@@ -94,16 +107,17 @@ int main()
         {
             int int_Ans;
 
-            fn_Line();
-            fn_CardDisplay(bl_SeeBkrCard);
-            fn_CountPoint(plr_Main);
-            fn_CountPoint(plr_Banker);
-
             if(bl_FirstRound && plr_Banker.bl_HaveAce && plr_Banker.int_PointCount == 11)
             {
                 bl_BkrRoundEnd = true;
+                bl_SeeBkrCard = true;
                 bl_GameOver = true;
                 int_Result = 0;
+
+                fn_Line();
+                fn_CardDisplay(bl_SeeBkrCard);
+                fn_CountPoint(plr_Main);
+                fn_CountPoint(plr_Banker);
 
                 std::cout<< "\n[system] The banker got 21 Points in the first round!\n\n";
 
@@ -112,13 +126,26 @@ int main()
             else if(bl_FirstRound && plr_Main.bl_HaveAce && plr_Main.int_PointCount == 11)
             {
                 bl_BkrRoundEnd = true;
+                bl_SeeBkrCard = true;
                 bl_GameOver = true;
                 int_BetNum = 2;
                 int_Result = 1;
 
+                fn_Line();
+                fn_CardDisplay(bl_SeeBkrCard);
+                fn_CountPoint(plr_Main);
+                fn_CountPoint(plr_Banker);
+
                 std::cout<< "\n[system] You got 21 Points in the first round!\n\n";
 
                 break;
+            }
+            else
+            {
+                fn_Line();
+                fn_CardDisplay(bl_SeeBkrCard);
+                fn_CountPoint(plr_Main);
+                fn_CountPoint(plr_Banker);
             }
 
             if(plr_Main.int_PointCount > 21)
@@ -189,7 +216,7 @@ int main()
             fn_Line();
             fn_CountPoint(plr_Banker);
             fn_CardDisplay(bl_SeeBkrCard);
-            fn_Delay(3000);
+            fn_Delay(DelayTime * 1000);
 
             if(bl_BkrRoundEnd) break;
 
@@ -205,6 +232,8 @@ int main()
                 int_Result = 0;
 
                 std::cout<< "\n[system] The banker got a \"Charlie\"!\n\n";
+
+                break;
             }
             else if(int_Temp >= 18 || int_Temp >= int_PlrSignboard + 10)
             {
@@ -247,17 +276,6 @@ int main()
         }
 
         if(bl_GameOver) fn_GameOver(int_Result, int_BetMoney, int_BetNum);
-
-        if(plr_Main.int_Money <= 0)
-        {
-            fn_Line();
-
-            std::cout<< "\n\n           You Lose All Your Money!\n\n";
-
-            fn_Line();
-
-            break;
-        }
     }
 
     return 0;
@@ -282,6 +300,7 @@ bool  fn_CheckUsedCard(int int_Num1, int int_Num2, int* intarr_UsedCard)
     bool bl_UsedCard = false;
 
     if(*(intarr_UsedCard + int_Num1 * 13 + int_Num2) == 1) bl_UsedCard = true;
+    else *(intarr_UsedCard + int_Num1 * 13 + int_Num2) = 1;
 
     return bl_UsedCard;
 }
@@ -312,7 +331,7 @@ void  fn_CardDisplay(bool bl_SeeBkrCard)
     std::cout<< "\nBanker\'s Cards:\n\n    ";
     std::cout<< plr_Banker.crd_Visible.str_Suit << ' ' << plr_Banker.crd_Visible.str_Word << "\n    ";
 
-    if(!bl_SeeBkrCard) std::cout<< "??? ???\n";
+    if(!bl_SeeBkrCard) std::cout<< "??????  ?\n";
     else std::cout<< plr_Banker.crd_Invisible.str_Suit << ' ' << plr_Banker.crd_Invisible.str_Word << "\n    ";
 
     for(int i = 0; i < plr_Banker.int_CardCount - 2; i++)
@@ -382,7 +401,9 @@ void  fn_GameOver(int int_WinOrLose, int int_BetMoney, int int_Num)
     switch(int_WinOrLose)
     {
         case -1:
-            std::cout<< "\n                     Draw!  \n\n"; break;
+            std::cout<< "\n                     Draw!  \n\n";
+
+            break;
 
         case  0:
             std::cout<< "\n                   You Lose!\n\n";
@@ -426,10 +447,10 @@ void  fn_SetCard(Card &crd_Poker, bool &bl_HaveAce, int* intarr_CheckUsedCard)
 
     switch(int_Num1)
     {
-        case 0: crd_Poker.str_Suit = "Spade  ";   break;
-        case 1: crd_Poker.str_Suit = "Heart  ";   break;
-        case 2: crd_Poker.str_Suit = "Clubs  ";   break;
-        case 3: crd_Poker.str_Suit = "Diamond";   break;
+        case 0: crd_Poker.str_Suit = "Spade  "; break;
+        case 1: crd_Poker.str_Suit = "Heart  "; break;
+        case 2: crd_Poker.str_Suit = "Clubs  "; break;
+        case 3: crd_Poker.str_Suit = "Diamond"; break;
     }
 
     if((int_Num2 + 1) > 10) crd_Poker.int_Count = 10;
