@@ -213,6 +213,7 @@ void Doubly_Linked_List<Type>::fn_InsNode(int int_Idx, Type typ_Field)
             }
         }
 
+        nodptr_Curr->nodptr_Prev->nodptr_Next = nodptr_Elem;
         nodptr_Elem->nodptr_Prev = nodptr_Curr->nodptr_Prev;
         nodptr_Elem->nodptr_Next = nodptr_Curr;
         nodptr_Curr->nodptr_Prev = nodptr_Elem;
