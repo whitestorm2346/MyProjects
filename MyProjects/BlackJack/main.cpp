@@ -95,6 +95,8 @@ int main()
         fn_SetCard(plr_Banker.crd_Invisible, plr_Banker.bl_HaveAce, intptr_UsedCard);
         fn_SetCard(plr_Main.crd_Visible, plr_Main.bl_HaveAce, intptr_UsedCard);
         fn_SetCard(plr_Main.crd_Invisible, plr_Main.bl_HaveAce, intptr_UsedCard);
+        fn_CountPoint(plr_Banker);
+        fn_CountPoint(plr_Main);
 
         int  int_Result;
         bool bl_PlrRoundEnd = false;
