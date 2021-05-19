@@ -139,14 +139,21 @@ Doubly_Circular_Linked_List<Type>::~Doubly_Circular_Linked_List()
 template <typename Type>
 void Doubly_Circular_Linked_List<Type>::fn_Trace()
 {
-    std::cout<< "(nullptr->)start->";
-
-    for(Node<Type>* nodptr_Curr = nodptr_Start; nodptr_Curr != nullptr; nodptr_Curr = nodptr_Curr->nodptr_Next)
+    if(int_NodCount == 0)
     {
-        std::cout<< nodptr_Curr->typ_Field << "->";
+        std::cerr<< "This list is empty.\n";
+
+        return;
     }
 
-    std::cout<< "nullptr\n";
+    std::cout<< "start -> ";
+
+    for(Node<Type>* nodptr_Curr = nodptr_Start; nodptr_Curr != nodptr_End; nodptr_Curr = nodptr_Curr->nodptr_Next)
+    {
+        std::cout<< nodptr_Curr->typ_Field << " -> ";
+    }
+
+    std::cout<< nodptr_End->typ_Field << " -> start\n";
 }
 
 template <typename Type>
@@ -161,9 +168,9 @@ void Doubly_Circular_Linked_List<Type>::fn_AddNode(Type typ_Field)
     }
     else
     {
-        nodptr_Elem->nodptr_Prev = nodptr_End;
+        nodptr_Start->nodptr_Prev = nodptr_End->nodptr_Next = nodptr_Elem;
         nodptr_Elem->nodptr_Next = nodptr_Start;
-        nodptr_Start->nodptr_Prev = nodptr_Elem;
+        nodptr_Elem->nodptr_Prev = nodptr_End;
         nodptr_End = nodptr_Elem;
     }
 
@@ -175,9 +182,21 @@ void Doubly_Circular_Linked_List<Type>::fn_UpdNode(int int_Idx, Type typ_Field)
 {
     Node<Type>* nodptr_Curr = nodptr_Start;
 
-    for(; int_Idx > 0; int_Idx--)
+    if(int_Idx < int_NodCount / 2)
     {
-        nodptr_Curr = nodptr_Curr->nodptr_Next;
+        for(int i = 0; i < int_Idx; i++)
+        {
+            nodptr_Curr = nodptr_Curr->nodptr_Next;
+        }
+    }
+    else
+    {
+        nodptr_Curr = nodptr_End;
+
+        for(int i = int_NodCount - 1; i > int_Idx; i--)
+        {
+            nodptr_Curr = nodptr_Curr->nodptr_Prev;
+        }
     }
 
     nodptr_Curr->typ_Field = typ_Field;
@@ -190,9 +209,16 @@ void Doubly_Circular_Linked_List<Type>::fn_InsNode(int int_Idx, Type typ_Field)
 
     if(int_Idx == 0)
     {
-        nodptr_Start->nodptr_Prev = nodptr_Elem;
         nodptr_Elem->nodptr_Next = nodptr_Start;
+        nodptr_Elem->nodptr_Prev = nodptr_End;
+        nodptr_Start->nodptr_Prev = nodptr_End->nodptr_Next = nodptr_Elem;
         nodptr_Start = nodptr_Elem;
+    }
+    else if(int_Idx >= int_NodCount)
+    {
+        std::cerr<< "This linked list just has " << int_NodCount << " elements!\n";
+
+        return;
     }
     else
     {
@@ -215,10 +241,9 @@ void Doubly_Circular_Linked_List<Type>::fn_InsNode(int int_Idx, Type typ_Field)
             }
         }
 
-        nodptr_Curr->nodptr_Prev->nodptr_Next = nodptr_Elem;
         nodptr_Elem->nodptr_Prev = nodptr_Curr->nodptr_Prev;
         nodptr_Elem->nodptr_Next = nodptr_Curr;
-        nodptr_Curr->nodptr_Prev = nodptr_Elem;
+        nodptr_Curr->nodptr_Prev = nodptr_Curr->nodptr_Prev->nodptr_Next = nodptr_Elem;
     }
 
     int_NodCount++;
