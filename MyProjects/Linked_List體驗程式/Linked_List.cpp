@@ -1,7 +1,11 @@
 #include <iostream>
 #include <string>
 
-#define int_CmdCount 14
+#define int_CmdCount 15
+#define SINGLY_LINKED_LIST 1
+#define DOUBLY_LINKED_LIST 2
+#define SINGLY_CIRCULAR_LINKED_LIST 3
+#define DOUBLY_CIRCULAR_LINKED_LIST 4
 
 template <typename Type>
 class Singly_Node
@@ -104,15 +108,34 @@ public:
     bool fn_DelNode(int int_Idx);
 };
 
+void fn_SetLinkedList(int &int_Case);
 void fn_SetCmd(std::string *strarr_Cmd);
 void fn_ShowAllCmd(std::string *strarr_Cmd);
-void fn_RunCmd(std::string str_Input);
+void fn_RunCmd(std::string str_Input, int int_Case);
+
+Singly_Linked_List<int>* sll_ptr = nullptr;
+Doubly_Linked_List<int>* dll_ptr = nullptr;
+Singly_Circular_Linked_List<int>* scll_ptr = nullptr;
+Doubly_Circular_Linked_List<int>* dcll_ptr = nullptr;
 
 int main()
 {
     std::string str_Input, str_Cmd[int_CmdCount];
+    int int_CurrCase = 0;
 
-    std::cout<< "[system] Use command \"/help\" to check all commands.\n\n";
+    std::cout<< "[system] You have to set the linked list first.\n";
+
+    fn_SetLinkedList(int_CurrCase);
+
+    switch(int_CurrCase)
+    {
+        case SINGLY_LINKED_LIST: sll_ptr = new Singly_Linked_List<int>(); break;
+        case DOUBLY_LINKED_LIST: dll_ptr = new Doubly_Linked_List<int>(); break;
+        case SINGLY_CIRCULAR_LINKED_LIST: scll_ptr = new Singly_Circular_Linked_List<int>(); break;
+        case DOUBLY_CIRCULAR_LINKED_LIST: dcll_ptr = new Doubly_Circular_Linked_List<int>(); break;
+    }
+
+    std::cout<< "[system] Now you can use command \"/help\" to check all commands.\n\n";
 
     fn_SetCmd(str_Cmd);
 
@@ -120,14 +143,43 @@ int main()
     {
         if(str_Input == "/end") break;
         else if(str_Input == "/help") fn_ShowAllCmd(str_Cmd);
-        else fn_RunCmd(str_Input);
+        else fn_RunCmd(str_Input, int_CurrCase);
 
         std::cout<< '\n';
+    }
+
+    switch(int_CurrCase)
+    {
+        case SINGLY_LINKED_LIST: delete sll_ptr; break;
+        case DOUBLY_LINKED_LIST: delete dll_ptr; break;
+        case SINGLY_CIRCULAR_LINKED_LIST: delete scll_ptr; break;
+        case DOUBLY_CIRCULAR_LINKED_LIST: delete dcll_ptr; break;
     }
 
     std::cout<< "\n[system] End up successfully.\n";
 
     return 0;
+}
+
+void fn_SetLinkedList(int &int_Case)
+{
+    std::cout<< "[system] Please choose a kind of linked list.\n\n";
+    std::cout<< "(1) Singly Linked List\n";
+    std::cout<< "(2) Doubly Linked List\n";
+    std::cout<< "(3) Singly Circular Linked List\n";
+    std::cout<< "(4) Doubly Circular Linked List\n\n";
+
+    while(true)
+    {
+        std::cout<< "[system] Input a number.\n";
+        std::cin>> int_Case;
+
+        if(int_Case == 1 || int_Case == 2 || int_Case == 3 || int_Case == 4) break;
+
+        std::cout<< "\n[system] Illegal input! Please input again.\n";
+    }
+
+    std::cout<< "\n[system] Finished setting.\n";
 }
 
 void fn_SetCmd(std::string *strarr_Cmd)
@@ -142,10 +194,11 @@ void fn_SetCmd(std::string *strarr_Cmd)
     strarr_Cmd[7]  = "/adrs_trace";
     strarr_Cmd[8]  = "/create_ptr";
     strarr_Cmd[9]  = "/get_curr_elem";
-    strarr_Cmd[10] = "/ptr_to_next";
-    strarr_Cmd[11] = "/ptr_to_prev";
-    strarr_Cmd[12] = "/del_ptr";
-    strarr_Cmd[13] = "/end";
+    strarr_Cmd[10] = "/get_curr_adrs";
+    strarr_Cmd[11] = "/ptr_to_next";
+    strarr_Cmd[12] = "/ptr_to_prev";
+    strarr_Cmd[13] = "/del_ptr";
+    strarr_Cmd[14] = "/end";
 }
 
 void fn_ShowAllCmd(std::string *strarr_Cmd)
@@ -158,8 +211,223 @@ void fn_ShowAllCmd(std::string *strarr_Cmd)
     }
 }
 
-void fn_RunCmd(std::string str_Input)
+void fn_RunCmd(std::string str_Input, int int_Case)
 {
+    if(str_Input == "/add")
+    {
+        int int_Num;
+
+        std::cout<< "[system] Input a number.\n";
+        std::cin>> int_Num;
+
+        switch(int_Case)
+        {
+            case SINGLY_LINKED_LIST: sll_ptr->fn_AddNode(int_Num); break;
+            case DOUBLY_LINKED_LIST: dll_ptr->fn_AddNode(int_Num); break;
+            case SINGLY_CIRCULAR_LINKED_LIST: scll_ptr->fn_AddNode(int_Num); break;
+            case DOUBLY_CIRCULAR_LINKED_LIST: dcll_ptr->fn_AddNode(int_Num); break;
+        }
+
+        return;
+    }
+    else if(str_Input == "/del")
+    {
+        int int_Idx;
+
+        std::cout<< "[system] Input an index number.\n";
+        std::cin>> int_Idx;
+
+        switch(int_Case)
+        {
+            case SINGLY_LINKED_LIST: sll_ptr->fn_DelNode(int_Idx); break;
+            case DOUBLY_LINKED_LIST: dll_ptr->fn_DelNode(int_Idx); break;
+            case SINGLY_CIRCULAR_LINKED_LIST: scll_ptr->fn_DelNode(int_Idx); break;
+            case DOUBLY_CIRCULAR_LINKED_LIST: dcll_ptr->fn_DelNode(int_Idx); break;
+        }
+
+        return;
+    }
+    else if(str_Input == "/modify")
+    {
+        int int_NewNum, int_Idx;
+
+        std::cout<< "[system] Input an index number.\n";
+        std::cin>> int_Idx;
+
+        std::cout<< "[system] Input a new number.\n";
+        std::cin>> int_NewNum;
+
+        switch(int_Case)
+        {
+            case SINGLY_LINKED_LIST: sll_ptr->fn_Renew(int_Idx, int_NewNum); break;
+            case DOUBLY_LINKED_LIST: dll_ptr->fn_UpdNode(int_Idx, int_NewNum); break;
+            case SINGLY_CIRCULAR_LINKED_LIST: scll_ptr->fn_Renew(int_Idx, int_NewNum); break;
+            case DOUBLY_CIRCULAR_LINKED_LIST: dcll_ptr->fn_UpdNode(int_Idx, int_NewNum); break;
+        }
+
+        return;
+    }
+    else if(str_Input == "/insert")
+    {
+        int int_Num, int_Idx;
+
+        std::cout<< "[system] Input an index number.\n";
+        std::cin>> int_Idx;
+
+        std::cout<< "[system] Input a number.\n";
+        std::cin>> int_Num;
+
+        switch(int_Case)
+        {
+            case SINGLY_LINKED_LIST: sll_ptr->fn_Insert(int_Idx, int_Num); break;
+            case DOUBLY_LINKED_LIST: dll_ptr->fn_InsNode(int_Idx, int_Num); break;
+            case SINGLY_CIRCULAR_LINKED_LIST: scll_ptr->fn_Insert(int_Idx, int_Num); break;
+            case DOUBLY_CIRCULAR_LINKED_LIST: dcll_ptr->fn_InsNode(int_Idx, int_Num); break;
+        }
+
+        return;
+    }
+    else if(str_Input == "/get_elem")
+    {
+        std::cout<< "[system] This command hasn\'t finished yet.\n";
+
+        /*switch(int_Case)
+        {
+            case 1:
+            case 2:
+            case 3:
+            case 4:
+        }*/
+
+        return;
+    }
+    else if(str_Input == "/get_adrs")
+    {
+        std::cout<< "[system] This command hasn\'t finished yet.\n";
+
+        /*switch(int_Case)
+        {
+            case 1:
+            case 2:
+            case 3:
+            case 4:
+        }*/
+
+        return;
+    }
+    else if(str_Input == "/elem_trace")
+    {
+        switch(int_Case)
+        {
+            case SINGLY_LINKED_LIST: sll_ptr->fn_Trace(); break;
+            case DOUBLY_LINKED_LIST: dll_ptr->fn_Trace(); break;
+            case SINGLY_CIRCULAR_LINKED_LIST: scll_ptr->fn_Trace(); break;
+            case DOUBLY_CIRCULAR_LINKED_LIST: dcll_ptr->fn_Trace(); break;
+        }
+
+        return;
+    }
+    else if(str_Input == "/adrs_trace")
+    {
+        std::cout<< "[system] This command hasn\'t finished yet.\n";
+
+        /*switch(int_Case)
+        {
+            case 1:
+            case 2:
+            case 3:
+            case 4:
+        }*/
+
+        return;
+    }
+    else if(str_Input == "/create_ptr")
+    {
+        std::cout<< "[system] This command hasn\'t finished yet.\n";
+
+        /*switch(int_Case)
+        {
+            case 1:
+            case 2:
+            case 3:
+            case 4:
+        }*/
+
+        return;
+    }
+    else if(str_Input == "/get_curr_elem")
+    {
+        std::cout<< "[system] This command hasn\'t finished yet.\n";
+
+        /*switch(int_Case)
+        {
+            case 1:
+            case 2:
+            case 3:
+            case 4:
+        }*/
+
+        return;
+    }
+    else if(str_Input == "/get_curr_adrs")
+    {
+        std::cout<< "[system] This command hasn\'t finished yet.\n";
+
+        /*switch(int_Case)
+        {
+            case 1:
+            case 2:
+            case 3:
+            case 4:
+        }*/
+
+        return;
+    }
+    else if(str_Input == "/ptr_to_next")
+    {
+        std::cout<< "[system] This command hasn\'t finished yet.\n";
+
+        /*switch(int_Case)
+        {
+            case 1:
+            case 2:
+            case 3:
+            case 4:
+        }*/
+
+        return;
+    }
+    else if(str_Input == "/ptr_to_prev")
+    {
+        std::cout<< "[system] This command hasn\'t finished yet.\n";
+
+        /*switch(int_Case)
+        {
+            case 1:
+            case 2:
+            case 3:
+            case 4:
+        }*/
+
+        return;
+    }
+    else if(str_Input == "/del_ptr")
+    {
+        std::cout<< "[system] This command hasn\'t finished yet.\n";
+
+        /*switch(int_Case)
+        {
+            case 1:
+            case 2:
+            case 3:
+            case 4:
+        }*/
+
+        return;
+    }
+
+    std::cout<< "[system] Illegal command!\n";
+
     return;
 }
 
