@@ -30,11 +30,14 @@ public:
     Singly_Linked_List();
     ~Singly_Linked_List();
 
-    void fn_AddNode(Type typ_Field);
-    void fn_Trace();
+    void fn_Add(Type typ_Field);
+    void fn_ElemTrace();
+    void fn_AdrsTrace();
     void fn_Insert(int int_Idx, Type typ_Field);
-    void fn_Renew(int int_Idx, Type typ_Field);
-    bool fn_DelNode(int int_Idx);
+    void fn_Modify(int int_Idx, Type typ_Field);
+    bool fn_Del(int int_Idx);
+    Type fn_GetElem(int int_Idx);
+    Singly_Node<Type>* fn_GetAdrs(int int_Idx);
 };
 
 template <typename Type>
@@ -50,11 +53,14 @@ public:
     Singly_Circular_Linked_List();
     ~Singly_Circular_Linked_List();
 
-    void fn_AddNode(Type typ_Field);
-    void fn_Trace();
+    void fn_Add(Type typ_Field);
+    void fn_ElemTrace();
+    void fn_AdrsTrace();
     void fn_Insert(int int_Idx, Type typ_Field);
-    void fn_Renew(int int_Idx, Type typ_Field);
-    bool fn_DelNode(int int_Idx);
+    void fn_Modify(int int_Idx, Type typ_Field);
+    bool fn_Del(int int_Idx);
+    Type fn_GetElem(int int_Idx);
+    Singly_Node<Type>* fn_GetAdrs(int int_Idx);
 };
 
 template <typename Type>
@@ -81,11 +87,14 @@ public:
     Doubly_Linked_List();
     ~Doubly_Linked_List();
 
-    void fn_Trace();
-    void fn_AddNode(Type typ_Field);
-    void fn_UpdNode(int int_Idx, Type typ_Field);
-    void fn_InsNode(int int_Idx, Type typ_Field);
-    bool fn_DelNode(int int_Idx);
+    void fn_ElemTrace();
+    void fn_AdrsTrace();
+    void fn_Add(Type typ_Field);
+    void fn_Modify(int int_Idx, Type typ_Field);
+    void fn_Insert(int int_Idx, Type typ_Field);
+    bool fn_Del(int int_Idx);
+    Type fn_GetElem(int int_Idx);
+    Doubly_Node<Type>* fn_GetAdrs(int int_Idx);
 };
 
 template<typename Type>
@@ -101,11 +110,14 @@ public:
     Doubly_Circular_Linked_List();
     ~Doubly_Circular_Linked_List();
 
-    void fn_Trace();
-    void fn_AddNode(Type typ_Field);
-    void fn_UpdNode(int int_Idx, Type typ_Field);
-    void fn_InsNode(int int_Idx, Type typ_Field);
-    bool fn_DelNode(int int_Idx);
+    void fn_ElemTrace();
+    void fn_AdrsTrace();
+    void fn_Add(Type typ_Field);
+    void fn_Modify(int int_Idx, Type typ_Field);
+    void fn_Insert(int int_Idx, Type typ_Field);
+    bool fn_Del(int int_Idx);
+    Type fn_GetElem(int int_Idx);
+    Doubly_Node<Type>* fn_GetAdrs(int int_Idx);
 };
 
 void fn_SetLinkedList(int &int_Case);
@@ -117,6 +129,8 @@ Singly_Linked_List<int>* sll_ptr = nullptr;
 Doubly_Linked_List<int>* dll_ptr = nullptr;
 Singly_Circular_Linked_List<int>* scll_ptr = nullptr;
 Doubly_Circular_Linked_List<int>* dcll_ptr = nullptr;
+Singly_Node<int>* snodptr_Curr = nullptr;
+Doubly_Node<int>* dnodptr_Curr = nullptr;
 
 int main()
 {
@@ -222,13 +236,11 @@ void fn_RunCmd(std::string str_Input, int int_Case)
 
         switch(int_Case)
         {
-            case SINGLY_LINKED_LIST: sll_ptr->fn_AddNode(int_Num); break;
-            case DOUBLY_LINKED_LIST: dll_ptr->fn_AddNode(int_Num); break;
-            case SINGLY_CIRCULAR_LINKED_LIST: scll_ptr->fn_AddNode(int_Num); break;
-            case DOUBLY_CIRCULAR_LINKED_LIST: dcll_ptr->fn_AddNode(int_Num); break;
+            case SINGLY_LINKED_LIST: sll_ptr->fn_Add(int_Num); return;
+            case DOUBLY_LINKED_LIST: dll_ptr->fn_Add(int_Num); return;
+            case SINGLY_CIRCULAR_LINKED_LIST: scll_ptr->fn_Add(int_Num); return;
+            case DOUBLY_CIRCULAR_LINKED_LIST: dcll_ptr->fn_Add(int_Num); return;
         }
-
-        return;
     }
     else if(str_Input == "/del")
     {
@@ -239,13 +251,11 @@ void fn_RunCmd(std::string str_Input, int int_Case)
 
         switch(int_Case)
         {
-            case SINGLY_LINKED_LIST: sll_ptr->fn_DelNode(int_Idx); break;
-            case DOUBLY_LINKED_LIST: dll_ptr->fn_DelNode(int_Idx); break;
-            case SINGLY_CIRCULAR_LINKED_LIST: scll_ptr->fn_DelNode(int_Idx); break;
-            case DOUBLY_CIRCULAR_LINKED_LIST: dcll_ptr->fn_DelNode(int_Idx); break;
+            case SINGLY_LINKED_LIST: sll_ptr->fn_Del(int_Idx); return;
+            case DOUBLY_LINKED_LIST: dll_ptr->fn_Del(int_Idx); return;
+            case SINGLY_CIRCULAR_LINKED_LIST: scll_ptr->fn_Del(int_Idx); return;
+            case DOUBLY_CIRCULAR_LINKED_LIST: dcll_ptr->fn_Del(int_Idx); return;
         }
-
-        return;
     }
     else if(str_Input == "/modify")
     {
@@ -259,13 +269,11 @@ void fn_RunCmd(std::string str_Input, int int_Case)
 
         switch(int_Case)
         {
-            case SINGLY_LINKED_LIST: sll_ptr->fn_Renew(int_Idx, int_NewNum); break;
-            case DOUBLY_LINKED_LIST: dll_ptr->fn_UpdNode(int_Idx, int_NewNum); break;
-            case SINGLY_CIRCULAR_LINKED_LIST: scll_ptr->fn_Renew(int_Idx, int_NewNum); break;
-            case DOUBLY_CIRCULAR_LINKED_LIST: dcll_ptr->fn_UpdNode(int_Idx, int_NewNum); break;
+            case SINGLY_LINKED_LIST: sll_ptr->fn_Modify(int_Idx, int_NewNum); return;
+            case DOUBLY_LINKED_LIST: dll_ptr->fn_Modify(int_Idx, int_NewNum); return;
+            case SINGLY_CIRCULAR_LINKED_LIST: scll_ptr->fn_Modify(int_Idx, int_NewNum); return;
+            case DOUBLY_CIRCULAR_LINKED_LIST: dcll_ptr->fn_Modify(int_Idx, int_NewNum); return;
         }
-
-        return;
     }
     else if(str_Input == "/insert")
     {
@@ -279,149 +287,206 @@ void fn_RunCmd(std::string str_Input, int int_Case)
 
         switch(int_Case)
         {
-            case SINGLY_LINKED_LIST: sll_ptr->fn_Insert(int_Idx, int_Num); break;
-            case DOUBLY_LINKED_LIST: dll_ptr->fn_InsNode(int_Idx, int_Num); break;
-            case SINGLY_CIRCULAR_LINKED_LIST: scll_ptr->fn_Insert(int_Idx, int_Num); break;
-            case DOUBLY_CIRCULAR_LINKED_LIST: dcll_ptr->fn_InsNode(int_Idx, int_Num); break;
+            case SINGLY_LINKED_LIST: sll_ptr->fn_Insert(int_Idx, int_Num); return;
+            case DOUBLY_LINKED_LIST: dll_ptr->fn_Insert(int_Idx, int_Num); return;
+            case SINGLY_CIRCULAR_LINKED_LIST: scll_ptr->fn_Insert(int_Idx, int_Num); return;
+            case DOUBLY_CIRCULAR_LINKED_LIST: dcll_ptr->fn_Insert(int_Idx, int_Num); return;
         }
-
-        return;
     }
     else if(str_Input == "/get_elem")
     {
-        std::cout<< "[system] This command hasn\'t finished yet.\n";
+        int int_Idx;
 
-        /*switch(int_Case)
+        std::cout<< "[system] Input an index number.\n";
+        std::cin>> int_Idx;
+
+        switch(int_Case)
         {
-            case 1:
-            case 2:
-            case 3:
-            case 4:
-        }*/
-
-        return;
+            case SINGLY_LINKED_LIST: std::cout<< "[system] " << sll_ptr->fn_GetElem(int_Idx) << '\n'; return;
+            case DOUBLY_LINKED_LIST: std::cout<< "[system] " << dll_ptr->fn_GetElem(int_Idx) << '\n'; return;
+            case SINGLY_CIRCULAR_LINKED_LIST: std::cout<< "[system] " << scll_ptr->fn_GetElem(int_Idx) << '\n'; return;
+            case DOUBLY_CIRCULAR_LINKED_LIST: std::cout<< "[system] " << dcll_ptr->fn_GetElem(int_Idx) << '\n'; return;
+        }
     }
     else if(str_Input == "/get_adrs")
     {
-        std::cout<< "[system] This command hasn\'t finished yet.\n";
+        int int_Idx;
 
-        /*switch(int_Case)
+        std::cout<< "[system] Input an index number.\n";
+        std::cin>> int_Idx;
+
+        switch(int_Case)
         {
-            case 1:
-            case 2:
-            case 3:
-            case 4:
-        }*/
-
-        return;
+            case SINGLY_LINKED_LIST: std::cout<< "[system] " << sll_ptr->fn_GetAdrs(int_Idx) << '\n'; return;
+            case DOUBLY_LINKED_LIST: std::cout<< "[system] " << dll_ptr->fn_GetAdrs(int_Idx) << '\n'; return;
+            case SINGLY_CIRCULAR_LINKED_LIST: std::cout<< "[system] " << scll_ptr->fn_GetAdrs(int_Idx) << '\n'; return;
+            case DOUBLY_CIRCULAR_LINKED_LIST: std::cout<< "[system] " << dcll_ptr->fn_GetAdrs(int_Idx) << '\n'; return;
+        }
     }
     else if(str_Input == "/elem_trace")
     {
         switch(int_Case)
         {
-            case SINGLY_LINKED_LIST: sll_ptr->fn_Trace(); break;
-            case DOUBLY_LINKED_LIST: dll_ptr->fn_Trace(); break;
-            case SINGLY_CIRCULAR_LINKED_LIST: scll_ptr->fn_Trace(); break;
-            case DOUBLY_CIRCULAR_LINKED_LIST: dcll_ptr->fn_Trace(); break;
+            case SINGLY_LINKED_LIST: sll_ptr->fn_ElemTrace(); return;
+            case DOUBLY_LINKED_LIST: dll_ptr->fn_ElemTrace(); return;
+            case SINGLY_CIRCULAR_LINKED_LIST: scll_ptr->fn_ElemTrace(); return;
+            case DOUBLY_CIRCULAR_LINKED_LIST: dcll_ptr->fn_ElemTrace(); return;
         }
-
-        return;
     }
     else if(str_Input == "/adrs_trace")
     {
-        std::cout<< "[system] This command hasn\'t finished yet.\n";
-
-        /*switch(int_Case)
+        switch(int_Case)
         {
-            case 1:
-            case 2:
-            case 3:
-            case 4:
-        }*/
-
-        return;
+            case SINGLY_LINKED_LIST: sll_ptr->fn_AdrsTrace(); return;
+            case DOUBLY_LINKED_LIST: dll_ptr->fn_AdrsTrace(); return;
+            case SINGLY_CIRCULAR_LINKED_LIST: scll_ptr->fn_AdrsTrace(); return;
+            case DOUBLY_CIRCULAR_LINKED_LIST: dcll_ptr->fn_AdrsTrace(); return;
+        }
     }
     else if(str_Input == "/create_ptr")
     {
-        std::cout<< "[system] This command hasn\'t finished yet.\n";
-
-        /*switch(int_Case)
+        if((int_Case == 1 || int_Case == 3) && snodptr_Curr != nullptr)
         {
-            case 1:
-            case 2:
-            case 3:
-            case 4:
-        }*/
+            std::cerr<< "[system] You have already created a pointer.\n";
+
+            return;
+        }
+        else if((int_Case == 2 || int_Case == 4) && dnodptr_Curr != nullptr)
+        {
+            std::cerr<< "[system] You have already created a pointer.\n";
+
+            return;
+        }
+
+        switch(int_Case)
+        {
+            case SINGLY_LINKED_LIST: snodptr_Curr = sll_ptr->nodptr_Start; break;
+            case DOUBLY_LINKED_LIST: dnodptr_Curr = dll_ptr->nodptr_Start; break;
+            case SINGLY_CIRCULAR_LINKED_LIST: snodptr_Curr = scll_ptr->nodptr_Start; break;
+            case DOUBLY_CIRCULAR_LINKED_LIST: dnodptr_Curr = dcll_ptr->nodptr_Start; break;
+        }
+
+        std::cout<< "[system] Pointer created successfully.\n";
 
         return;
     }
     else if(str_Input == "/get_curr_elem")
     {
-        std::cout<< "[system] This command hasn\'t finished yet.\n";
-
-        /*switch(int_Case)
+        if((int_Case == 1 || int_Case == 3) && snodptr_Curr == nullptr)
         {
-            case 1:
-            case 2:
-            case 3:
-            case 4:
-        }*/
+            std::cerr<< "[system] You haven\'t create a pointer.\n";
 
-        return;
+            return;
+        }
+        else if((int_Case == 2 || int_Case == 4) && dnodptr_Curr == nullptr)
+        {
+            std::cerr<< "[system] You haven\'t create a pointer.\n";
+
+            return;
+        }
+
+        switch(int_Case)
+        {
+            case SINGLY_LINKED_LIST: case SINGLY_CIRCULAR_LINKED_LIST: std::cout<< "[system] " << snodptr_Curr->typ_Field << '\n'; return;
+            case DOUBLY_LINKED_LIST: case DOUBLY_CIRCULAR_LINKED_LIST: std::cout<< "[system] " << dnodptr_Curr->typ_Field << '\n'; return;
+        }
     }
     else if(str_Input == "/get_curr_adrs")
     {
-        std::cout<< "[system] This command hasn\'t finished yet.\n";
-
-        /*switch(int_Case)
+        if((int_Case == 1 || int_Case == 3) && snodptr_Curr == nullptr)
         {
-            case 1:
-            case 2:
-            case 3:
-            case 4:
-        }*/
+            std::cerr<< "[system] You haven\'t create a pointer.\n";
 
-        return;
+            return;
+        }
+        else if((int_Case == 2 || int_Case == 4) && dnodptr_Curr == nullptr)
+        {
+            std::cerr<< "[system] You haven\'t create a pointer.\n";
+
+            return;
+        }
+
+        switch(int_Case)
+        {
+            case SINGLY_LINKED_LIST: case SINGLY_CIRCULAR_LINKED_LIST: std::cout<< "[system] " << snodptr_Curr << '\n'; return;
+            case DOUBLY_LINKED_LIST: case DOUBLY_CIRCULAR_LINKED_LIST: std::cout<< "[system] " << dnodptr_Curr << '\n'; return;
+        }
     }
     else if(str_Input == "/ptr_to_next")
     {
-        std::cout<< "[system] This command hasn\'t finished yet.\n";
-
-        /*switch(int_Case)
+        if((int_Case == 1 || int_Case == 3) && snodptr_Curr == nullptr)
         {
-            case 1:
-            case 2:
-            case 3:
-            case 4:
-        }*/
+            std::cerr<< "[system] You haven\'t create a pointer.\n";
 
-        return;
+            return;
+        }
+        else if((int_Case == 2 || int_Case == 4) && dnodptr_Curr == nullptr)
+        {
+            std::cerr<< "[system] You haven\'t create a pointer.\n";
+
+            return;
+        }
+
+        switch(int_Case)
+        {
+            case SINGLY_LINKED_LIST:
+                if(snodptr_Curr->nodptr_Next == nullptr) std::cout<< "[system] This is the last position of the linked list.\n";
+                else snodptr_Curr = snodptr_Curr->nodptr_Next; return;
+
+            case DOUBLY_LINKED_LIST:
+                if(dnodptr_Curr->nodptr_Next == nullptr) std::cout<< "[system] This is the last position of the linked list.\n";
+                else dnodptr_Curr = dnodptr_Curr->nodptr_Next; return;
+
+            case SINGLY_CIRCULAR_LINKED_LIST: snodptr_Curr = snodptr_Curr->nodptr_Next; return;
+            case DOUBLY_CIRCULAR_LINKED_LIST: dnodptr_Curr = dnodptr_Curr->nodptr_Next; return;
+        }
     }
     else if(str_Input == "/ptr_to_prev")
     {
-        std::cout<< "[system] This command hasn\'t finished yet.\n";
-
-        /*switch(int_Case)
+        if(int_Case == 1 || int_Case == 3)
         {
-            case 1:
-            case 2:
-            case 3:
-            case 4:
-        }*/
+            std::cout<< "[system] Pointer of singly node cannot move to previous node.\n";
 
-        return;
+            return;
+        }
+        else if((int_Case == 2 || int_Case == 4) && dnodptr_Curr == nullptr)
+        {
+            std::cout<< "[system] You haven\'t create a pointer.\n";
+
+            return;
+        }
+
+        switch(int_Case)
+        {
+            case DOUBLY_LINKED_LIST:
+                if(dnodptr_Curr->nodptr_Prev == nullptr) std::cout<< "[system] This is the First position of the linked list.\n";
+                else dnodptr_Curr = dnodptr_Curr->nodptr_Prev; return;
+
+            case DOUBLY_CIRCULAR_LINKED_LIST: dnodptr_Curr = dnodptr_Curr->nodptr_Prev; return;
+        }
     }
     else if(str_Input == "/del_ptr")
     {
-        std::cout<< "[system] This command hasn\'t finished yet.\n";
-
-        /*switch(int_Case)
+        if((int_Case == 1 || int_Case == 3) && snodptr_Curr == nullptr)
         {
-            case 1:
-            case 2:
-            case 3:
-            case 4:
-        }*/
+            std::cerr<< "[system] You haven\'t create a pointer.\n";
+
+            return;
+        }
+        else if((int_Case == 2 || int_Case == 4) && dnodptr_Curr == nullptr)
+        {
+            std::cerr<< "[system] You haven\'t create a pointer.\n";
+
+            return;
+        }
+
+        switch(int_Case)
+        {
+            case SINGLY_LINKED_LIST: case SINGLY_CIRCULAR_LINKED_LIST: snodptr_Curr = nullptr; break;
+            case DOUBLY_LINKED_LIST: case DOUBLY_CIRCULAR_LINKED_LIST: dnodptr_Curr = nullptr; break;
+        }
+
+        std::cout<< "[system] Deleted successfully.\n";
 
         return;
     }
@@ -457,7 +522,7 @@ Singly_Linked_List<Type>::~Singly_Linked_List()
 }
 
 template <typename Type>
-void Singly_Linked_List<Type>::fn_AddNode(Type typ_Field)
+void Singly_Linked_List<Type>::fn_Add(Type typ_Field)
 {
     Singly_Node<Type>* nod_ptr = new Singly_Node<Type>(typ_Field);
 
@@ -472,13 +537,40 @@ void Singly_Linked_List<Type>::fn_AddNode(Type typ_Field)
 }
 
 template <typename Type>
-void Singly_Linked_List<Type>::fn_Trace()
+void Singly_Linked_List<Type>::fn_ElemTrace()
 {
+    if(int_NodCount == 0)
+    {
+        std::cerr<< "[system] This linked list is empty.\n";
+
+        return;
+    }
+
     std::cout<< "start -> ";
 
     for(Singly_Node<Type>* nodptr_Temp = nodptr_Start; nodptr_Temp != nullptr; nodptr_Temp = nodptr_Temp->nodptr_Next)
     {
         std::cout<< nodptr_Temp->typ_Field << " -> ";
+    }
+
+    std::cout<< " nullptr\n";
+}
+
+template <typename Type>
+void Singly_Linked_List<Type>::fn_AdrsTrace()
+{
+    if(int_NodCount == 0)
+    {
+        std::cerr<< "[system] This linked list is empty.\n";
+
+        return;
+    }
+
+    std::cout<< "start -> ";
+
+    for(Singly_Node<Type>* nodptr_Temp = nodptr_Start; nodptr_Temp != nullptr; nodptr_Temp = nodptr_Temp->nodptr_Next)
+    {
+        std::cout<< nodptr_Temp << " -> ";
     }
 
     std::cout<< " nullptr\n";
@@ -513,7 +605,7 @@ void Singly_Linked_List<Type>::fn_Insert(int int_Idx, Type typ_Field)
 }
 
 template <typename Type>
-void Singly_Linked_List<Type>::fn_Renew(int int_Idx, Type typ_Field)
+void Singly_Linked_List<Type>::fn_Modify(int int_Idx, Type typ_Field)
 {
     Singly_Node<Type>* nodptr_Temp = nodptr_Start;
 
@@ -526,7 +618,7 @@ void Singly_Linked_List<Type>::fn_Renew(int int_Idx, Type typ_Field)
 }
 
 template <typename Type>
-bool Singly_Linked_List<Type>::fn_DelNode(int int_Idx)
+bool Singly_Linked_List<Type>::fn_Del(int int_Idx)
 {
     bool bl_IsSuccess = true;
 
@@ -563,6 +655,32 @@ bool Singly_Linked_List<Type>::fn_DelNode(int int_Idx)
 }
 
 template <typename Type>
+Type Singly_Linked_List<Type>::fn_GetElem(int int_Idx)
+{
+    Singly_Node<Type>* nodptr_Temp = nodptr_Start;
+
+    while(int_Idx--)
+    {
+        nodptr_Temp = nodptr_Temp->nodptr_Next;
+    }
+
+    return nodptr_Temp->typ_Field;
+}
+
+template <typename Type>
+Singly_Node<Type>* Singly_Linked_List<Type>::fn_GetAdrs(int int_Idx)
+{
+    Singly_Node<Type>* nodptr_Temp = nodptr_Start;
+
+    while(int_Idx--)
+    {
+        nodptr_Temp = nodptr_Temp->nodptr_Next;
+    }
+
+    return nodptr_Temp;
+}
+
+template <typename Type>
 Singly_Circular_Linked_List<Type>::Singly_Circular_Linked_List()
 {
     nodptr_Start = nodptr_Curr = nullptr;
@@ -581,7 +699,7 @@ Singly_Circular_Linked_List<Type>::~Singly_Circular_Linked_List()
 }
 
 template <typename Type>
-void Singly_Circular_Linked_List<Type>::fn_AddNode(Type typ_Field)
+void Singly_Circular_Linked_List<Type>::fn_Add(Type typ_Field)
 {
     Singly_Node<Type>* nodptr_Ele = new Singly_Node<Type>(typ_Field);
 
@@ -597,8 +715,15 @@ void Singly_Circular_Linked_List<Type>::fn_AddNode(Type typ_Field)
 }
 
 template <typename Type>
-void Singly_Circular_Linked_List<Type>::fn_Trace()
+void Singly_Circular_Linked_List<Type>::fn_ElemTrace()
 {
+    if(int_NodCount == 0)
+    {
+        std::cerr<< "[system] This linked list is empty.\n";
+
+        return;
+    }
+
     std::cout<< "start -> ";
 
     int i = 0;
@@ -606,6 +731,28 @@ void Singly_Circular_Linked_List<Type>::fn_Trace()
     for(Singly_Node<Type>* nodptr_Temp = nodptr_Start; i < int_NodCount; nodptr_Temp = nodptr_Temp->nodptr_Next, i++)
     {
         std::cout<< nodptr_Temp->typ_Field << " -> ";
+    }
+
+    std::cout<< " start\n";
+}
+
+template <typename Type>
+void Singly_Circular_Linked_List<Type>::fn_AdrsTrace()
+{
+    if(int_NodCount == 0)
+    {
+        std::cerr<< "[system] This linked list is empty.\n";
+
+        return;
+    }
+
+    std::cout<< "start -> ";
+
+    int i = 0;
+
+    for(Singly_Node<Type>* nodptr_Temp = nodptr_Start; i < int_NodCount; nodptr_Temp = nodptr_Temp->nodptr_Next, i++)
+    {
+        std::cout<< nodptr_Temp << " -> ";
     }
 
     std::cout<< " start\n";
@@ -640,7 +787,7 @@ void Singly_Circular_Linked_List<Type>::fn_Insert(int int_Idx, Type typ_Field)
 }
 
 template <typename Type>
-void Singly_Circular_Linked_List<Type>::fn_Renew(int int_Idx, Type typ_Field)
+void Singly_Circular_Linked_List<Type>::fn_Modify(int int_Idx, Type typ_Field)
 {
     Singly_Node<Type>* nodptr_Temp = nodptr_Start;
 
@@ -653,7 +800,7 @@ void Singly_Circular_Linked_List<Type>::fn_Renew(int int_Idx, Type typ_Field)
 }
 
 template <typename Type>
-bool Singly_Circular_Linked_List<Type>::fn_DelNode(int int_Idx)
+bool Singly_Circular_Linked_List<Type>::fn_Del(int int_Idx)
 {
     bool bl_IsSuccess = true;
 
@@ -690,6 +837,32 @@ bool Singly_Circular_Linked_List<Type>::fn_DelNode(int int_Idx)
 }
 
 template <typename Type>
+Type Singly_Circular_Linked_List<Type>::fn_GetElem(int int_Idx)
+{
+    Singly_Node<Type>* nodptr_Temp = nodptr_Start;
+
+    while(int_Idx--)
+    {
+        nodptr_Temp = nodptr_Temp->nodptr_Next;
+    }
+
+    return nodptr_Temp->typ_Field;
+}
+
+template <typename Type>
+Singly_Node<Type>* Singly_Circular_Linked_List<Type>::fn_GetAdrs(int int_Idx)
+{
+    Singly_Node<Type>* nodptr_Temp = nodptr_Start;
+
+    while(int_Idx--)
+    {
+        nodptr_Temp = nodptr_Temp->nodptr_Next;
+    }
+
+    return nodptr_Temp;
+}
+
+template <typename Type>
 Doubly_Node<Type>::Doubly_Node(Type typ_Field)
 {
     this->typ_Field = typ_Field;
@@ -717,8 +890,15 @@ Doubly_Linked_List<Type>::~Doubly_Linked_List()
 }
 
 template <typename Type>
-void Doubly_Linked_List<Type>::fn_Trace()
+void Doubly_Linked_List<Type>::fn_ElemTrace()
 {
+    if(int_NodCount == 0)
+    {
+        std::cerr<< "[system] This linked list is empty.\n";
+
+        return;
+    }
+
     std::cout<< "(nullptr->)start->";
 
     for(Doubly_Node<Type>* nodptr_Curr = nodptr_Start; nodptr_Curr != nullptr; nodptr_Curr = nodptr_Curr->nodptr_Next)
@@ -730,7 +910,27 @@ void Doubly_Linked_List<Type>::fn_Trace()
 }
 
 template <typename Type>
-void Doubly_Linked_List<Type>::fn_AddNode(Type typ_Field)
+void Doubly_Linked_List<Type>::fn_AdrsTrace()
+{
+    if(int_NodCount == 0)
+    {
+        std::cerr<< "[system] This linked list is empty.\n";
+
+        return;
+    }
+
+    std::cout<< "(nullptr->)start->";
+
+    for(Doubly_Node<Type>* nodptr_Curr = nodptr_Start; nodptr_Curr != nullptr; nodptr_Curr = nodptr_Curr->nodptr_Next)
+    {
+        std::cout<< nodptr_Curr << "->";
+    }
+
+    std::cout<< "nullptr\n";
+}
+
+template <typename Type>
+void Doubly_Linked_List<Type>::fn_Add(Type typ_Field)
 {
     Doubly_Node<Type>* nodptr_Elem = new Doubly_Node<Type>(typ_Field);
 
@@ -751,11 +951,11 @@ void Doubly_Linked_List<Type>::fn_AddNode(Type typ_Field)
 }
 
 template <typename Type>
-void Doubly_Linked_List<Type>::fn_UpdNode(int int_Idx, Type typ_Field)
+void Doubly_Linked_List<Type>::fn_Modify(int int_Idx, Type typ_Field)
 {
     Doubly_Node<Type>* nodptr_Curr = nodptr_Start;
 
-    for(; int_Idx > 0; int_Idx--)
+    while(int_Idx--)
     {
         nodptr_Curr = nodptr_Curr->nodptr_Next;
     }
@@ -764,7 +964,7 @@ void Doubly_Linked_List<Type>::fn_UpdNode(int int_Idx, Type typ_Field)
 }
 
 template <typename Type>
-void Doubly_Linked_List<Type>::fn_InsNode(int int_Idx, Type typ_Field)
+void Doubly_Linked_List<Type>::fn_Insert(int int_Idx, Type typ_Field)
 {
     Doubly_Node<Type>* nodptr_Elem = new Doubly_Node<Type>(typ_Field);
 
@@ -805,7 +1005,7 @@ void Doubly_Linked_List<Type>::fn_InsNode(int int_Idx, Type typ_Field)
 }
 
 template <typename Type>
-bool Doubly_Linked_List<Type>::fn_DelNode(int int_Idx)
+bool Doubly_Linked_List<Type>::fn_Del(int int_Idx)
 {
     bool bl_IsSuccess = true;
 
@@ -854,6 +1054,56 @@ bool Doubly_Linked_List<Type>::fn_DelNode(int int_Idx)
 }
 
 template <typename Type>
+Type Doubly_Linked_List<Type>::fn_GetElem(int int_Idx)
+{
+    Doubly_Node<Type>* nodptr_Curr = nodptr_Start;
+
+    if(int_Idx < int_NodCount / 2)
+    {
+        for(int i = 0; i < int_Idx; i++)
+        {
+            nodptr_Curr = nodptr_Curr->nodptr_Next;
+        }
+    }
+    else
+    {
+        nodptr_Curr = nodptr_End;
+
+        for(int i = int_NodCount - 1; i > int_Idx; i--)
+        {
+            nodptr_Curr = nodptr_Curr->nodptr_Prev;
+        }
+    }
+
+    return nodptr_Curr->typ_Field;
+}
+
+template <typename Type>
+Doubly_Node<Type>* Doubly_Linked_List<Type>::fn_GetAdrs(int int_Idx)
+{
+    Doubly_Node<Type>* nodptr_Curr = nodptr_Start;
+
+    if(int_Idx < int_NodCount / 2)
+    {
+        for(int i = 0; i < int_Idx; i++)
+        {
+            nodptr_Curr = nodptr_Curr->nodptr_Next;
+        }
+    }
+    else
+    {
+        nodptr_Curr = nodptr_End;
+
+        for(int i = int_NodCount - 1; i > int_Idx; i--)
+        {
+            nodptr_Curr = nodptr_Curr->nodptr_Prev;
+        }
+    }
+
+    return nodptr_Curr;
+}
+
+template <typename Type>
 Doubly_Circular_Linked_List<Type>::Doubly_Circular_Linked_List()
 {
     nodptr_Start = nodptr_End = nullptr;
@@ -876,11 +1126,11 @@ Doubly_Circular_Linked_List<Type>::~Doubly_Circular_Linked_List()
 }
 
 template <typename Type>
-void Doubly_Circular_Linked_List<Type>::fn_Trace()
+void Doubly_Circular_Linked_List<Type>::fn_ElemTrace()
 {
     if(int_NodCount == 0)
     {
-        std::cerr<< "This list is empty.\n";
+        std::cerr<< "[system] This linked list is empty.\n";
 
         return;
     }
@@ -896,7 +1146,27 @@ void Doubly_Circular_Linked_List<Type>::fn_Trace()
 }
 
 template <typename Type>
-void Doubly_Circular_Linked_List<Type>::fn_AddNode(Type typ_Field)
+void Doubly_Circular_Linked_List<Type>::fn_AdrsTrace()
+{
+    if(int_NodCount == 0)
+    {
+        std::cerr<< "[system] This linked list is empty.\n";
+
+        return;
+    }
+
+    std::cout<< "start -> ";
+
+    for(Doubly_Node<Type>* nodptr_Curr = nodptr_Start; nodptr_Curr != nodptr_End; nodptr_Curr = nodptr_Curr->nodptr_Next)
+    {
+        std::cout<< nodptr_Curr << " -> ";
+    }
+
+    std::cout<< nodptr_End->typ_Field << " -> start\n";
+}
+
+template <typename Type>
+void Doubly_Circular_Linked_List<Type>::fn_Add(Type typ_Field)
 {
     Doubly_Node<Type>* nodptr_Elem = new Doubly_Node<Type>(typ_Field);
 
@@ -917,7 +1187,7 @@ void Doubly_Circular_Linked_List<Type>::fn_AddNode(Type typ_Field)
 }
 
 template <typename Type>
-void Doubly_Circular_Linked_List<Type>::fn_UpdNode(int int_Idx, Type typ_Field)
+void Doubly_Circular_Linked_List<Type>::fn_Modify(int int_Idx, Type typ_Field)
 {
     Doubly_Node<Type>* nodptr_Curr = nodptr_Start;
 
@@ -942,7 +1212,7 @@ void Doubly_Circular_Linked_List<Type>::fn_UpdNode(int int_Idx, Type typ_Field)
 }
 
 template <typename Type>
-void Doubly_Circular_Linked_List<Type>::fn_InsNode(int int_Idx, Type typ_Field)
+void Doubly_Circular_Linked_List<Type>::fn_Insert(int int_Idx, Type typ_Field)
 {
     Doubly_Node<Type>* nodptr_Elem = new Doubly_Node<Type>(typ_Field);
 
@@ -989,7 +1259,7 @@ void Doubly_Circular_Linked_List<Type>::fn_InsNode(int int_Idx, Type typ_Field)
 }
 
 template <typename Type>
-bool Doubly_Circular_Linked_List<Type>::fn_DelNode(int int_Idx)
+bool Doubly_Circular_Linked_List<Type>::fn_Del(int int_Idx)
 {
     bool bl_IsSuccess = true;
 
@@ -1035,4 +1305,54 @@ bool Doubly_Circular_Linked_List<Type>::fn_DelNode(int int_Idx)
     }
 
     return bl_IsSuccess;
+}
+
+template <typename Type>
+Type Doubly_Circular_Linked_List<Type>::fn_GetElem(int int_Idx)
+{
+    Doubly_Node<Type>* nodptr_Curr = nodptr_Start;
+
+    if(int_Idx < int_NodCount / 2)
+    {
+        for(int i = 0; i < int_Idx; i++)
+        {
+            nodptr_Curr = nodptr_Curr->nodptr_Next;
+        }
+    }
+    else
+    {
+        nodptr_Curr = nodptr_End;
+
+        for(int i = int_NodCount - 1; i > int_Idx; i--)
+        {
+            nodptr_Curr = nodptr_Curr->nodptr_Prev;
+        }
+    }
+
+    return nodptr_Curr->typ_Field;
+}
+
+template <typename Type>
+Doubly_Node<Type>* Doubly_Circular_Linked_List<Type>::fn_GetAdrs(int int_Idx)
+{
+    Doubly_Node<Type>* nodptr_Curr = nodptr_Start;
+
+    if(int_Idx < int_NodCount / 2)
+    {
+        for(int i = 0; i < int_Idx; i++)
+        {
+            nodptr_Curr = nodptr_Curr->nodptr_Next;
+        }
+    }
+    else
+    {
+        nodptr_Curr = nodptr_End;
+
+        for(int i = int_NodCount - 1; i > int_Idx; i--)
+        {
+            nodptr_Curr = nodptr_Curr->nodptr_Prev;
+        }
+    }
+
+    return nodptr_Curr;
 }
