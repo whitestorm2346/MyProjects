@@ -120,9 +120,15 @@ public:
     Doubly_Node<Type>* fn_GetAdrs(int int_Idx);
 };
 
+struct Command
+{
+    std::string str_CmdName;
+    std::string str_CmdIntro;
+};
+
 void fn_SetLinkedList(int &int_Case);
-void fn_SetCmd(std::string *strarr_Cmd);
-void fn_ShowAllCmd(std::string *strarr_Cmd);
+void fn_SetCmd(Command *cmd_Arr);
+void fn_ShowAllCmd(Command *cmd_Arr);
 void fn_RunCmd(std::string str_Input, int int_Case);
 
 Singly_Linked_List<int>* sll_ptr = nullptr;
@@ -134,7 +140,8 @@ Doubly_Node<int>* dnodptr_Curr = nullptr;
 
 int main()
 {
-    std::string str_Input, str_Cmd[int_CmdCount];
+    Command cmd_Arr[int_CmdCount];
+    std::string str_Input;
     int int_CurrCase = 0;
 
     std::cout<< "[system] You have to set the linked list first.\n";
@@ -149,14 +156,14 @@ int main()
         case DOUBLY_CIRCULAR_LINKED_LIST: dcll_ptr = new Doubly_Circular_Linked_List<int>(); break;
     }
 
-    std::cout<< "[system] Now you can use command \"/help\" to check all commands.\n\n";
+    std::cout<< "[system] Now you can use command \"/help\" to check all the commands.\n\n";
 
-    fn_SetCmd(str_Cmd);
+    fn_SetCmd(cmd_Arr);
 
     while(std::cin>> str_Input)
     {
         if(str_Input == "/end") break;
-        else if(str_Input == "/help") fn_ShowAllCmd(str_Cmd);
+        else if(str_Input == "/help") fn_ShowAllCmd(cmd_Arr);
         else fn_RunCmd(str_Input, int_CurrCase);
 
         std::cout<< '\n';
@@ -196,32 +203,62 @@ void fn_SetLinkedList(int &int_Case)
     std::cout<< "\n[system] Finished setting.\n";
 }
 
-void fn_SetCmd(std::string *strarr_Cmd)
+void fn_SetCmd(Command *cmd_Arr)
 {
-    strarr_Cmd[0]  = "/add";
-    strarr_Cmd[1]  = "/del";
-    strarr_Cmd[2]  = "/modify";
-    strarr_Cmd[3]  = "/insert";
-    strarr_Cmd[4]  = "/get_elem";
-    strarr_Cmd[5]  = "/get_adrs";
-    strarr_Cmd[6]  = "/elem_trace";
-    strarr_Cmd[7]  = "/adrs_trace";
-    strarr_Cmd[8]  = "/create_ptr";
-    strarr_Cmd[9]  = "/get_curr_elem";
-    strarr_Cmd[10] = "/get_curr_adrs";
-    strarr_Cmd[11] = "/ptr_to_next";
-    strarr_Cmd[12] = "/ptr_to_prev";
-    strarr_Cmd[13] = "/del_ptr";
-    strarr_Cmd[14] = "/end";
+    cmd_Arr[0].str_CmdName  = "/add";
+    cmd_Arr[0].str_CmdIntro = "Add a new node into the linked list.";
+
+    cmd_Arr[1].str_CmdName  = "/del";
+    cmd_Arr[1].str_CmdIntro = "Delete a node from the linked list.";
+
+    cmd_Arr[2].str_CmdName  = "/modify";
+    cmd_Arr[2].str_CmdIntro = "Modify the element of the chosen node.";
+
+    cmd_Arr[3].str_CmdName  = "/insert";
+    cmd_Arr[3].str_CmdIntro = "Insert a new node into the linked list at a chosen position.";
+
+    cmd_Arr[4].str_CmdName  = "/get_elem";
+    cmd_Arr[4].str_CmdIntro = "Return the element of the chosen node.";
+
+    cmd_Arr[5].str_CmdName  = "/get_adrs";
+    cmd_Arr[5].str_CmdIntro = "Return the address of the chosen node.";
+
+    cmd_Arr[6].str_CmdName  = "/elem_trace";
+    cmd_Arr[6].str_CmdIntro = "Output all the elements of the nodes in linked list.";
+
+    cmd_Arr[7].str_CmdName  = "/adrs_trace";
+    cmd_Arr[7].str_CmdIntro = "Output all the addresses of the nodes in linked list.";
+
+    cmd_Arr[8].str_CmdName  = "/create_ptr";
+    cmd_Arr[8].str_CmdIntro = "Create a pointer to point out one node in the linked list.";
+
+    cmd_Arr[9].str_CmdName  = "/get_curr_elem";
+    cmd_Arr[9].str_CmdIntro = "Return the element of the pointed node.";
+
+    cmd_Arr[10].str_CmdName  = "/get_curr_adrs";
+    cmd_Arr[10].str_CmdIntro = "Return the address of the pointed node.";
+
+    cmd_Arr[11].str_CmdName  = "/ptr_to_next";
+    cmd_Arr[11].str_CmdIntro = "Move the pointer to the next node.";
+
+    cmd_Arr[12].str_CmdName  = "/ptr_to_prev";
+    cmd_Arr[12].str_CmdIntro = "Move the pointer to the previous node.";
+
+    cmd_Arr[13].str_CmdName  = "/del_ptr";
+    cmd_Arr[13].str_CmdIntro = "Delete the pointer.";
+
+    cmd_Arr[14].str_CmdName  = "/end";
+    cmd_Arr[14].str_CmdIntro = "End up the program.";
 }
 
-void fn_ShowAllCmd(std::string *strarr_Cmd)
+void fn_ShowAllCmd(Command *cmd_Arr)
 {
     std::cout<< '\n';
 
     for(int i = 0; i < int_CmdCount; i++)
     {
-        std::cout<< strarr_Cmd[i] << '\n';
+        std::cout<< "[system] " << cmd_Arr[i].str_CmdName << '\n';
+        std::cout<< "[system] " << cmd_Arr[i].str_CmdIntro << "\n\n";
     }
 }
 
@@ -437,9 +474,13 @@ void fn_RunCmd(std::string str_Input, int int_Case)
                 if(dnodptr_Curr->nodptr_Next == nullptr) std::cout<< "[system] This is the last position of the linked list.\n";
                 else dnodptr_Curr = dnodptr_Curr->nodptr_Next; return;
 
-            case SINGLY_CIRCULAR_LINKED_LIST: snodptr_Curr = snodptr_Curr->nodptr_Next; return;
-            case DOUBLY_CIRCULAR_LINKED_LIST: dnodptr_Curr = dnodptr_Curr->nodptr_Next; return;
+            case SINGLY_CIRCULAR_LINKED_LIST: snodptr_Curr = snodptr_Curr->nodptr_Next; break;
+            case DOUBLY_CIRCULAR_LINKED_LIST: dnodptr_Curr = dnodptr_Curr->nodptr_Next; break;
         }
+
+        std::cout<< "[system] Pointer is moving to the next node.\n";
+
+        return;
     }
     else if(str_Input == "/ptr_to_prev")
     {
@@ -462,8 +503,12 @@ void fn_RunCmd(std::string str_Input, int int_Case)
                 if(dnodptr_Curr->nodptr_Prev == nullptr) std::cout<< "[system] This is the First position of the linked list.\n";
                 else dnodptr_Curr = dnodptr_Curr->nodptr_Prev; return;
 
-            case DOUBLY_CIRCULAR_LINKED_LIST: dnodptr_Curr = dnodptr_Curr->nodptr_Prev; return;
+            case DOUBLY_CIRCULAR_LINKED_LIST: dnodptr_Curr = dnodptr_Curr->nodptr_Prev; break;
         }
+
+        std::cout<< "[system] Pointer is moving to the previous node.\n";
+
+        return;
     }
     else if(str_Input == "/del_ptr")
     {
