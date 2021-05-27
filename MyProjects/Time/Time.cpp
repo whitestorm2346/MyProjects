@@ -24,11 +24,18 @@ int main()
 
     if(read_File.is_open())
     {
+        std::cout<< "[system] File open successfully.\n\n";
+
         std::string str_Command;
 
         while(std::cin>> str_Command)
         {
-            if(str_Command == "/end") break;
+            if(str_Command == "/end")
+            {
+                std::cout<< '\n';
+
+                break;
+            }
             else if(str_Command == "/update") fn_Update(str_Time, time_Curr, time_Info);
             else if(str_Command == "/saved_time") fn_OutputSavedTime();
             else if(str_Command == "/curr_time") fn_OutputCurrTime(str_Time, time_Curr, time_Info);
@@ -37,11 +44,25 @@ int main()
             std::cout<< '\n';
         }
     }
-    else std::cerr<< "Failed to open the file.\n";
+    else
+    {
+        std::cout<< "[system] File doesn\'t exist.\n";
+        std::cout<< "[system] Create \"Time.txt\" automatically.\n";
+
+        std::fstream new_File;
+
+        new_File.open(FileName, std::fstream::in | std::fstream::out | std::fstream::trunc);
+        str_Time = fn_GetCurrTime(time_Curr, time_Info);
+        new_File<< str_Time;
+        new_File.close();
+
+        std::cout<< "[system] Create file successfully.\n";
+        std::cout<< "[system] Please rerun the program.\n\n";
+    }
 
     read_File.close();
 
-    std::cout<< "[system] End up successfully.\n";
+    std::cout<< "[system] End up the program successfully.\n";
 
     return 0;
 }
