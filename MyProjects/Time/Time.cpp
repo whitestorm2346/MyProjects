@@ -7,11 +7,28 @@
 
 typedef struct tm Time;
 
+struct TimeInfo
+{
+    std::string str_Day = "";
+    std::string str_Month = "";
+    int int_Day = 0;
+    int int_Month = 0;
+    int int_Date = 0;
+    int int_Hr = 0;
+    int int_Min = 0;
+    int int_Sec = 0;
+    int int_Year = 0;
+
+    TimeInfo(std::string str_Time);
+    int operator - (TimeInfo ti_Prev);
+};
+
 char* fn_GetCurrTime(time_t &time_Curr, Time* time_Info);
 void  fn_OutputSavedTime();
 void  fn_OutputCurrTime(char* str_Time, time_t &time_Curr, Time* time_Info);
 void  fn_Update(char* str_Time, time_t &time_Curr, Time* time_Info);
 void  fn_ToWords(char* str_Time, std::string &str_Words);
+int   fn_CalculateSec();
 
 int main()
 {
@@ -106,4 +123,56 @@ void  fn_Update(char* str_Time, time_t &time_Curr, Time* time_Info)
     std::cout<< "[system] Update successfully.\n";
 
     write_File.close();
+}
+
+int   fn_CalculateSec()
+{
+    int int_Sec = 0;
+    time_t time_Curr;
+    Time*  time_Info;
+    char*  str_CurrTime;
+    std::ifstream read_File;
+    std::string str_PrevTime;
+
+    read_File.open(FileName);
+    getline(read_File, str_PrevTime, '\n');
+    read_File.close();
+
+    str_CurrTime = fn_GetCurrTime(time_Curr, time_Info);
+
+    TimeInfo ti_Prev(str_PrevTime), ti_Curr(str_CurrTime);
+
+    int_Sec = ti_Curr - ti_Prev;
+
+    return int_Sec;
+}
+
+TimeInfo::TimeInfo(std::string str_Time)
+{
+    std::string str_Date = "", str_Hr = "", str_Min = "", str_Sec = "", str_Year = "";
+
+    for(int i = 0; i < 3; i++) str_Day += str_Time[i];
+
+    for(int i = 4; i < 7; i++) str_Month += str_Time[i];
+
+    for(int i = 8; i < 10; i++) str_Date += str_Time[i];
+
+    for(int i = 11; i < 13; i++) str_Hr += str_Time[i];
+
+    for(int i = 14; i < 16; i++) str_Min += str_Time[i];
+
+    for(int i = 17; i < 19; i++) str_Sec += str_Time[i];
+
+    for(int i = 20; i < 24; i++) str_Year += str_Time[i];
+
+    int_Date = std::stoi(str_Date);
+    int_Hr   = std::stoi(str_Hr);
+    int_Min  = std::stoi(str_Min);
+    int_Sec  = std::stoi(str_Sec);
+    int_Year = std::stoi(str_Year);
+}
+
+int TimeInfo::operator - (TimeInfo ti_Prev)
+{
+    return 0;
 }
