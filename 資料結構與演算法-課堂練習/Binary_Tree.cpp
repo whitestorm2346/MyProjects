@@ -22,23 +22,38 @@ public:
     ~BinaryTree();
 
     Node<Type>* fn_CreateNode(Type typ_Field);
+    Node<Type>* fn_Search(Node<Type>* nodptr_Curr, Type typ_Field, bool bl_Last = false)
+    {
+        if(!bl_Last && nodptr_Curr->typ_Field == typ_Field) return nodptr_Curr;
+
+        if(nodptr_Curr->nodptr_L != nullptr) return fn_Search(nodptr_Curr->nodptr_L, typ_Field, bl_Last);
+
+        if(nodptr_Curr->nodptr_R != nullptr) return fn_Search(nodptr_Curr->nodptr_R, typ_Field, bl_Last);
+
+        return nodptr_Curr;
+    }
     void fn_Insert(Type typ_Field);
+    void fn_Delete(Type typ_Field);
     void fn_Trace(Node<Type>* nodptr_Temp, bool bl_Del = false)
     {
         if(nodptr_Temp == nullptr) return;
 
-        fn_TraInOrder(nodptr_Temp->nodptr_L, bl_Mode);
+        fn_Trace(nodptr_Temp->nodptr_L, bl_Del);
         Node<Type>* nodptr_TempR = nodptr_Temp->nodptr_R;
 
-        if(b_Mode == false) std::cout<< nodptr_Temp->typ_Field << ' ';
+        if(bl_Del == false) std::cout<< nodptr_Temp->typ_Field << ' ';
         else delete nodptr_Temp;
 
-        fn_Destroy(nodptr_TempR, bl_Mode);
+        fn_Trace(nodptr_TempR, bl_Del);
     }
 };
 
 int main()
 {
+    BinaryTree<int> bt_Main(100);
+
+    bt_Main.fn_Trace(bt_Main.nodptr_Root);
+
     return 0;
 }
 
@@ -51,13 +66,13 @@ Node<Type>::Node()
 template <typename Type>
 BinaryTree<Type>::BinaryTree(Type typ_Field)
 {
-    nodptr_Root = nullptr;
+    nodptr_Root = fn_CreateNode(typ_Field);
 }
 
 template <typename Type>
-BinaryTree<Type>::~BinaryTree(Type typ_Field)
+BinaryTree<Type>::~BinaryTree()
 {
-    nodptr_Root = nullptr;
+    fn_Trace(nodptr_Root, true);
 }
 
 template <typename Type>
@@ -82,11 +97,17 @@ Node<Type>* BinaryTree<Type>::fn_CreateNode(Type typ_Field)
 }
 
 template <typename Type>
+void BinaryTree<Type>::fn_Delete(Type typ_Field)
+{
+
+}
+
+template <typename Type>
 void BinaryTree<Type>::fn_Insert(Type typ_Field)
 {
     std::queue<Node<Type>*> que_Nodptr;
 
-    que_Nodptr.push(op_Root);
+    que_Nodptr.push(nodptr_Root);
 
     while(!que_Nodptr.empty())
     {
