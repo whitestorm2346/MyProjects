@@ -1320,7 +1320,7 @@ bool Doubly_Circular_Linked_List<Type>::fn_Del(int int_Idx)
         {
             nodptr_Curr = nodptr_End;
 
-            for(int i = int_NodCount; i > int_Idx; i--)
+            for(int i = int_NodCount - 1; i > int_Idx; i--)
             {
                 nodptr_Curr = nodptr_Curr->nodptr_Prev;
             }
