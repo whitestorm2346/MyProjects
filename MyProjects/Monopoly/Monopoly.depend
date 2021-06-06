@@ -1,0 +1,11 @@
+# depslib dependency file v1.0
+1622960079 source:c:\users\andre\onedrive\орн▒\git_repositories\publiclibrary\myprojects\monopoly\main.cpp
+	<iostream>
+	<windows.h>
+	<conio.h>
+	"Functions.h"
+
+1622960379 c:\users\andre\onedrive\орн▒\git_repositories\publiclibrary\myprojects\monopoly\functions.h
+	<windows.h>
+	<conio.h>
+
