@@ -1,11 +1,12 @@
 # depslib dependency file v1.0
-1622960079 source:c:\users\andre\onedrive\桌面\git_repositories\publiclibrary\myprojects\monopoly\main.cpp
+1623068304 source:c:\users\andre\onedrive\桌面\git_repositories\publiclibrary\myprojects\monopoly\main.cpp
 	<iostream>
-	<windows.h>
-	<conio.h>
 	"Functions.h"
+	"LinkedList.h"
 
-1622960379 c:\users\andre\onedrive\桌面\git_repositories\publiclibrary\myprojects\monopoly\functions.h
+1623058011 c:\users\andre\onedrive\桌面\git_repositories\publiclibrary\myprojects\monopoly\functions.h
 	<windows.h>
 	<conio.h>
+
+1623084449 c:\users\andre\onedrive\桌面\git_repositories\publiclibrary\myprojects\monopoly\linkedlist.h
 

@@ -24,6 +24,29 @@
 #define FOREGROUND true
 #define BACKGROUND false
 
+#define COURT_SIZE 10
+
+class Map
+{
+private:
+    unsigned short int int_PlayerCount;
+
+public:
+    char chrarr_Court[COURT_SIZE][COURT_SIZE];
+
+    void fn_SetPlayerCount(unsigned short int int_PlayerCount)
+    {
+        this->int_PlayerCount = int_PlayerCount;
+    }
+};
+
+struct Player
+{
+    int int_Color;
+    unsigned long int int_Money;
+    bool bl_IsWinner;
+};
+
 HANDLE hdl_Console = GetStdHandle(STD_OUTPUT_HANDLE);
 COORD  cor_Pos = {0, 0};
 
@@ -48,7 +71,7 @@ void fn_SetColor(int int_Color, bool bl_Fore)
     {
         switch(int_Color)
         {
-            case  0: SetConsoleTextAttribute(hdl_Console, NULL); break;
+            case  0: SetConsoleTextAttribute(hdl_Console, 0x0); break;
             case  1: SetConsoleTextAttribute(hdl_Console, FOREGROUND_BLUE); break;
             case  2: SetConsoleTextAttribute(hdl_Console, FOREGROUND_GREEN); break;
             case  3: SetConsoleTextAttribute(hdl_Console, FOREGROUND_BLUE | FOREGROUND_GREEN); break;

@@ -1,7 +1,6 @@
 #include <iostream>
-#include <windows.h>
-#include <conio.h>
 #include "Functions.h"
+#include "LinkedList.h"
 
 void fn_Intro();
 
@@ -9,6 +8,8 @@ int main()
 {
     fn_SetOutputPos(0, 0);
     fn_Intro();
+
+    std::dll<int> dll_Num;
 
     return 0;
 }
