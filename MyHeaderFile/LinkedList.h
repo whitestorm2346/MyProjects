@@ -45,7 +45,7 @@ namespace std
     class Singly_Linked_List
     {
     private:
-        unsigned int int_NodCount;
+        int int_NodCount;
         nod::Singly_Node<Type>* nodptr_End;
         nod::Singly_Node<Type>* nodptr_Start;
 
@@ -69,7 +69,7 @@ namespace std
             }
         }
 
-        void assign(unsigned int int_Idx, Type typ_NewElem)
+        void assign(int int_Idx, Type typ_NewElem)
         {
             if(int_Idx >= int_NodCount || int_Idx < 0)
             {
@@ -121,7 +121,7 @@ namespace std
                 int_NodCount++;
             }
         }
-        void insert(unsigned int int_Idx, Type typ_Field)
+        void insert(int int_Idx, Type typ_Field)
         {
             if(int_Idx >= int_NodCount || int_Idx < 0)
             {
@@ -210,7 +210,7 @@ namespace std
                 nodptr_End = nodptr_Temp;
             }
         }
-        void erase(unsigned int int_Idx)
+        void erase(int int_Idx)
         {
             if(int_Idx >= int_NodCount || int_Idx < 0)
             {
@@ -246,8 +246,19 @@ namespace std
         }
         void clear()
         {
-            ~Singly_Linked_List();
-            Singly_Linked_List();
+            for(nod::Singly_Node<Type>* nodptr_Curr = nodptr_Start; int_NodCount > 0;)
+            {
+                nod::Singly_Node<Type>* nodptr_Temp = nodptr_Curr;
+
+                nodptr_Curr = nodptr_Curr->nodptr_Next;
+                int_NodCount--;
+
+                delete nodptr_Temp;
+            }
+
+            nodptr_Start = nullptr;
+            nodptr_End = nullptr;
+            int_NodCount = 0;
         }
         void reverse()
         {
@@ -258,7 +269,7 @@ namespace std
                 return;
             }
 
-            unsigned int int_Count = int_NodCount - 1;
+            int int_Count = int_NodCount - 1;
 
             while(int_Count--)
             {
@@ -275,7 +286,7 @@ namespace std
                 nodptr_End = nodptr_Temp;
             }
         }
-        unsigned int size()
+        int size()
         {
             return int_NodCount;
         }
@@ -283,7 +294,7 @@ namespace std
         {
             return int_NodCount == 0;
         }
-        Type at(unsigned int int_Idx)
+        Type at(int int_Idx)
         {
             if(int_Idx >= int_NodCount || int_Idx < 0)
             {
@@ -372,7 +383,7 @@ namespace std
     class Singly_Circular_Linked_List
     {
     private:
-        unsigned int int_NodCount;
+        int int_NodCount;
         nod::Singly_Node<Type>* nodptr_End;
         nod::Singly_Node<Type>* nodptr_Start;
 
@@ -396,7 +407,7 @@ namespace std
             }
         }
 
-        void assign(unsigned int int_Idx, Type typ_NewElem)
+        void assign(int int_Idx, Type typ_NewElem)
         {
             if(int_Idx >= int_NodCount || int_Idx < 0)
             {
@@ -453,7 +464,7 @@ namespace std
                 int_NodCount++;
             }
         }
-        void insert(unsigned int int_Idx, Type typ_Field)
+        void insert(int int_Idx, Type typ_Field)
         {
             if(int_Idx >= int_NodCount || int_Idx < 0)
             {
@@ -545,7 +556,7 @@ namespace std
                 nodptr_End->nodptr_Next = nodptr_Start;
             }
         }
-        void erase(unsigned int int_Idx)
+        void erase(int int_Idx)
         {
             if(int_Idx >= int_NodCount || int_Idx < 0)
             {
@@ -582,8 +593,19 @@ namespace std
         }
         void clear()
         {
-            ~Singly_Circular_Linked_List();
-            Singly_Circular_Linked_List();
+            for(nod::Singly_Node<Type>* nodptr_Curr = nodptr_Start; int_NodCount > 0;)
+            {
+                nod::Singly_Node<Type>* nodptr_Temp = nodptr_Curr;
+
+                nodptr_Curr = nodptr_Curr->nodptr_Next;
+                int_NodCount--;
+
+                delete nodptr_Temp;
+            }
+
+            nodptr_Start = nullptr;
+            nodptr_End = nullptr;
+            int_NodCount = 0;
         }
         void reverse()
         {
@@ -594,7 +616,7 @@ namespace std
                 return;
             }
 
-            unsigned int int_Count = int_NodCount - 1;
+            int int_Count = int_NodCount - 1;
 
             while(int_Count--)
             {
@@ -614,7 +636,7 @@ namespace std
                 nodptr_End = nodptr_Temp;
             }
         }
-        unsigned int size()
+        int size()
         {
             return int_NodCount;
         }
@@ -622,7 +644,7 @@ namespace std
         {
             return int_NodCount == 0;
         }
-        Type at(unsigned int int_Idx)
+        Type at(int int_Idx)
         {
             if(int_Idx >= int_NodCount || int_Idx < 0)
             {
@@ -711,7 +733,7 @@ namespace std
     class Doubly_Linked_List
     {
     private:
-        unsigned int int_NodCount;
+        int int_NodCount;
         nod::Doubly_Node<Type>* nodptr_Start;
         nod::Doubly_Node<Type>* nodptr_End;
 
@@ -735,7 +757,7 @@ namespace std
             }
         }
 
-        void assign(unsigned int int_Idx, Type typ_NewElem)
+        void assign(int int_Idx, Type typ_NewElem)
         {
             if(int_Idx >= int_NodCount || int_Idx < 0)
             {
@@ -802,7 +824,7 @@ namespace std
                 int_NodCount++;
             }
         }
-        void insert(unsigned int int_Idx, Type typ_Field)
+        void insert(int int_Idx, Type typ_Field)
         {
             if(int_Idx >= int_NodCount || int_Idx < 0)
             {
@@ -902,7 +924,7 @@ namespace std
 
             delete nodptr_Temp;
         }
-        void erase(unsigned int int_Idx)
+        void erase(int int_Idx)
         {
             if(int_Idx >= int_NodCount || int_Idx < 0)
             {
@@ -947,8 +969,19 @@ namespace std
         }
         void clear()
         {
-            ~Doubly_Linked_List();
-            Doubly_Linked_List();
+            for(nod::Doubly_Node<Type>* nodptr_Curr = nodptr_Start; int_NodCount > 0;)
+            {
+                nod::Doubly_Node<Type>* nodptr_Temp = nodptr_Curr;
+
+                nodptr_Curr = nodptr_Curr->nodptr_Next;
+                int_NodCount--;
+
+                delete nodptr_Temp;
+            }
+
+            nodptr_Start = nullptr;
+            nodptr_End = nullptr;
+            int_NodCount = 0;
         }
         void reverse()
         {
@@ -959,7 +992,7 @@ namespace std
                 return;
             }
 
-            unsigned int int_Count = int_NodCount - 1;
+            int int_Count = int_NodCount - 1;
 
             while(int_Count--)
             {
@@ -978,7 +1011,7 @@ namespace std
                 nodptr_End = nodptr_Temp;
             }
         }
-        unsigned int size()
+        int size()
         {
             return int_NodCount;
         }
@@ -986,7 +1019,7 @@ namespace std
         {
             return int_NodCount == 0;
         }
-        Type at(unsigned int int_Idx)
+        Type at(int int_Idx)
         {
             if(int_Idx >= int_NodCount || int_Idx < 0)
             {
@@ -1101,7 +1134,7 @@ namespace std
     class Doubly_Circular_Linked_List
     {
     private:
-        unsigned int int_NodCount;
+        int int_NodCount;
         nod::Doubly_Node<Type>* nodptr_Start;
         nod::Doubly_Node<Type>* nodptr_End;
 
@@ -1125,7 +1158,7 @@ namespace std
             }
         }
 
-        void assign(unsigned int int_Idx, Type typ_NewElem)
+        void assign(int int_Idx, Type typ_NewElem)
         {
             if(int_Idx >= int_NodCount || int_Idx < 0)
             {
@@ -1302,7 +1335,7 @@ namespace std
 
             delete nodptr_Temp;
         }
-        void erase(unsigned int int_Idx)
+        void erase(int int_Idx)
         {
             if(int_Idx >= int_NodCount || int_Idx < 0)
             {
@@ -1361,7 +1394,7 @@ namespace std
                 return;
             }
 
-            unsigned int int_Count = int_NodCount - 1;
+            int int_Count = int_NodCount - 1;
 
             while(int_Count--)
             {
@@ -1383,17 +1416,15 @@ namespace std
                 nodptr_End = nodptr_Temp;
             }
         }
-        unsigned int size()
+        int size()
         {
             return int_NodCount;
         }
         bool empty()
         {
-            bool bl_Empty = (int_NodCount == 0) ? true : false;
-
-            return bl_Empty;
+            return int_NodCount == 0;
         }
-        Type at(unsigned int int_Idx)
+        Type at(int int_Idx)
         {
             if(int_Idx >= int_NodCount || int_Idx < 0)
             {
