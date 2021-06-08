@@ -69,6 +69,24 @@ namespace std
             }
         }
 
+        void assign(unsigned int int_Idx, Type typ_NewElem)
+        {
+            if(int_Idx >= int_NodCount || int_Idx < 0)
+            {
+                std::cerr<< "Invalid index (assign)\n";
+
+                return;
+            }
+
+            nod::Singly_Node<Type>* nodptr_Curr = nodptr_Start;
+
+            while(int_Idx--)
+            {
+                nodptr_Curr = nodptr_Curr->nodptr_Next;
+            }
+
+            nodptr_Curr->typ_Field = typ_NewElem;
+        }
         void push_front(Type typ_Field)
         {
             nod::Singly_Node<Type>* nodptr_NewNode = new nod::Singly_Node<Type>(typ_Field);
@@ -190,6 +208,40 @@ namespace std
                 delete nodptr_End;
 
                 nodptr_End = nodptr_Temp;
+            }
+        }
+        void erase(unsigned int int_Idx)
+        {
+            if(int_Idx >= int_NodCount || int_Idx < 0)
+            {
+                std::cerr<< "Invalid index (erase)\n";
+
+                return;
+            }
+
+            nod::Singly_Node<Type>* nodptr_Curr = nodptr_Start;
+
+            if(int_Idx == 0)
+            {
+                nodptr_Start = nodptr_Start->nodptr_Next;
+                int_NodCount--;
+
+                delete nodptr_Curr;
+            }
+            else
+            {
+                nod::Singly_Node<Type>* nodptr_Temp;
+
+                while(int_Idx--)
+                {
+                    nodptr_Temp = nodptr_Curr;
+                    nodptr_Curr = nodptr_Curr->nodptr_Next;
+                }
+
+                nodptr_Temp->nodptr_Next = nodptr_Curr->nodptr_Next;
+                int_NodCount--;
+
+                delete nodptr_Curr;
             }
         }
         void clear()
@@ -294,13 +346,13 @@ namespace std
             return nodptr_End->typ_Field;
         }
 
-        Type operator [] (int int_Idx)
+        Type& operator [] (int int_Idx)
         {
             if(int_Idx >= int_NodCount || int_Idx < 0)
             {
                 std::cerr<< "Invalid index (operator[])\n";
 
-                return 0;
+                return nodptr_Start->typ_Field;
             }
 
             nod::Singly_Node<Type>* nodptr_Curr = nodptr_Start;
@@ -344,6 +396,24 @@ namespace std
             }
         }
 
+        void assign(unsigned int int_Idx, Type typ_NewElem)
+        {
+            if(int_Idx >= int_NodCount || int_Idx < 0)
+            {
+                std::cerr<< "Invalid index (assign)\n";
+
+                return;
+            }
+
+            nod::Singly_Node<Type>* nodptr_Curr = nodptr_Start;
+
+            while(int_Idx--)
+            {
+                nodptr_Curr = nodptr_Curr->nodptr_Next;
+            }
+
+            nodptr_Curr->typ_Field = typ_NewElem;
+        }
         void push_front(Type typ_Field)
         {
             nod::Singly_Node<Type>* nodptr_NewNode = new nod::Singly_Node<Type>(typ_Field);
@@ -473,6 +543,41 @@ namespace std
 
                 nodptr_End = nodptr_Temp;
                 nodptr_End->nodptr_Next = nodptr_Start;
+            }
+        }
+        void erase(unsigned int int_Idx)
+        {
+            if(int_Idx >= int_NodCount || int_Idx < 0)
+            {
+                std::cerr<< "Invalid index (erase)\n";
+
+                return;
+            }
+
+            nod::Singly_Node<Type>* nodptr_Curr = nodptr_Start;
+
+            if(int_Idx == 0)
+            {
+                nodptr_End->nodptr_Next = nodptr_Start->nodptr_Next;
+                nodptr_Start = nodptr_Start->nodptr_Next;
+                int_NodCount--;
+
+                delete nodptr_Curr;
+            }
+            else
+            {
+                nod::Singly_Node<Type>* nodptr_Temp;
+
+                while(int_Idx--)
+                {
+                    nodptr_Temp = nodptr_Curr;
+                    nodptr_Curr = nodptr_Curr->nodptr_Next;
+                }
+
+                nodptr_Temp->nodptr_Next = nodptr_Curr->nodptr_Next;
+                int_NodCount--;
+
+                delete nodptr_Curr;
             }
         }
         void clear()
@@ -580,13 +685,13 @@ namespace std
             return nodptr_End->typ_Field;
         }
 
-        Type operator [] (int int_Idx)
+        Type& operator [] (int int_Idx)
         {
             if(int_Idx >= int_NodCount || int_Idx < 0)
             {
                 std::cerr<< "Invalid index (operator[])\n";
 
-                return 0;
+                return nodptr_Start->typ_Field;
             }
 
             nod::Singly_Node<Type>* nodptr_Curr = nodptr_Start;
@@ -630,6 +735,37 @@ namespace std
             }
         }
 
+        void assign(unsigned int int_Idx, Type typ_NewElem)
+        {
+            if(int_Idx >= int_NodCount || int_Idx < 0)
+            {
+                std::cerr<< "Invalid index (assign)\n";
+
+                return;
+            }
+
+            nod::Doubly_Node<Type>* nodptr_Curr = nodptr_Start;
+
+            if(int_Idx < int_NodCount / 2)
+            {
+                while(int_Idx--)
+                {
+                    nodptr_Curr = nodptr_Curr->nodptr_Next;
+                }
+            }
+            else
+            {
+                nodptr_Curr = nodptr_End;
+                int_Idx = int_NodCount - 1 - int_Idx;
+
+                while(int_Idx--)
+                {
+                    nodptr_Curr = nodptr_Curr->nodptr_Prev;
+                }
+            }
+
+            nodptr_Curr->typ_Field = typ_NewElem;
+        }
         void push_front(Type typ_Field)
         {
             nod::Doubly_Node<Type>* nodptr_NewNode = new nod::Doubly_Node<Type>(typ_Field);
@@ -766,6 +902,49 @@ namespace std
 
             delete nodptr_Temp;
         }
+        void erase(unsigned int int_Idx)
+        {
+            if(int_Idx >= int_NodCount || int_Idx < 0)
+            {
+                std::cerr<< "Invalid index (erase)\n";
+
+                return;
+            }
+
+            nod::Doubly_Node<Type>* nodptr_Curr = nodptr_Start;
+
+            if(int_Idx == 0)
+            {
+                nodptr_Start = nodptr_Start->nodptr_Next;
+                int_NodCount--;
+            }
+            else
+            {
+                if(int_Idx < int_NodCount / 2)
+                {
+                    while(int_Idx--)
+                    {
+                        nodptr_Curr = nodptr_Curr->nodptr_Next;
+                    }
+                }
+                else
+                {
+                    nodptr_Curr = nodptr_End;
+                    int_Idx = int_NodCount - 1 - int_Idx;
+
+                    while(int_Idx--)
+                    {
+                        nodptr_Curr = nodptr_Curr->nodptr_Prev;
+                    }
+                }
+
+                nodptr_Curr->nodptr_Prev->nodptr_Next = nodptr_Curr->nodptr_Next;
+                nodptr_Curr->nodptr_Next->nodptr_Prev = nodptr_Curr->nodptr_Prev;
+                int_NodCount--;
+            }
+
+            delete nodptr_Curr;
+        }
         void clear()
         {
             ~Doubly_Linked_List();
@@ -883,13 +1062,13 @@ namespace std
             return nodptr_End->typ_Field;
         }
 
-        Type operator [] (int int_Idx)
+        Type& operator [] (int int_Idx)
         {
             if(int_Idx >= int_NodCount || int_Idx < 0)
             {
                 std::cerr<< "Invalid index (operator[])\n";
 
-                return 0;
+                return nodptr_Start->typ_Field;
             }
 
             nod::Doubly_Node<Type>* nodptr_Curr = nodptr_Start;
@@ -946,6 +1125,37 @@ namespace std
             }
         }
 
+        void assign(unsigned int int_Idx, Type typ_NewElem)
+        {
+            if(int_Idx >= int_NodCount || int_Idx < 0)
+            {
+                std::cerr<< "Invalid index (assign)\n";
+
+                return;
+            }
+
+            nod::Doubly_Node<Type>* nodptr_Curr = nodptr_Start;
+
+            if(int_Idx < int_NodCount / 2)
+            {
+                while(int_Idx--)
+                {
+                    nodptr_Curr = nodptr_Curr->nodptr_Next;
+                }
+            }
+            else
+            {
+                nodptr_Curr = nodptr_End;
+                int_Idx = int_NodCount - 1 - int_Idx;
+
+                while(int_Idx--)
+                {
+                    nodptr_Curr = nodptr_Curr->nodptr_Prev;
+                }
+            }
+
+            nodptr_Curr->typ_Field = typ_NewElem;
+        }
         void push_front(Type typ_Field)
         {
             nod::Doubly_Node<Type>* nodptr_NewNode = new nod::Doubly_Node<Type>(typ_Field);
@@ -1092,6 +1302,51 @@ namespace std
 
             delete nodptr_Temp;
         }
+        void erase(unsigned int int_Idx)
+        {
+            if(int_Idx >= int_NodCount || int_Idx < 0)
+            {
+                std::cerr<< "Invalid index (erase)\n";
+
+                return;
+            }
+
+            nod::Doubly_Node<Type>* nodptr_Curr = nodptr_Start;
+
+            if(int_Idx == 0)
+            {
+                nodptr_Start = nodptr_Start->nodptr_Next;
+                nodptr_End->nodptr_Next = nodptr_Start;
+                nodptr_Start->nodptr_Prev = nodptr_End;
+                int_NodCount--;
+            }
+            else
+            {
+                if(int_Idx < int_NodCount / 2)
+                {
+                    while(int_Idx--)
+                    {
+                        nodptr_Curr = nodptr_Curr->nodptr_Next;
+                    }
+                }
+                else
+                {
+                    nodptr_Curr = nodptr_End;
+                    int_Idx = int_NodCount - 1 - int_Idx;
+
+                    while(int_Idx--)
+                    {
+                        nodptr_Curr = nodptr_Curr->nodptr_Prev;
+                    }
+                }
+
+                nodptr_Curr->nodptr_Prev->nodptr_Next = nodptr_Curr->nodptr_Next;
+                nodptr_Curr->nodptr_Next->nodptr_Prev = nodptr_Curr->nodptr_Prev;
+                int_NodCount--;
+            }
+
+            delete nodptr_Curr;
+        }
         void clear()
         {
             ~Doubly_Circular_Linked_List();
@@ -1214,13 +1469,13 @@ namespace std
             return nodptr_End->typ_Field;
         }
 
-        Type operator [] (int int_Idx)
+        Type& operator [] (int int_Idx)
         {
             if(int_Idx >= int_NodCount || int_Idx < 0)
             {
                 std::cerr<< "Invalid index (operator[])\n";
 
-                return 0;
+                return nodptr_Start->typ_Field;
             }
 
             nod::Doubly_Node<Type>* nodptr_Curr = nodptr_Start;
