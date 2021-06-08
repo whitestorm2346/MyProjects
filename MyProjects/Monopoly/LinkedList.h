@@ -47,10 +47,9 @@ namespace std
     private:
         unsigned int int_NodCount;
         nod::Singly_Node<Type>* nodptr_End;
-
-    public:
         nod::Singly_Node<Type>* nodptr_Start;
 
+    public:
         Singly_Linked_List()
         {
             nodptr_Start = nullptr;
@@ -74,17 +73,35 @@ namespace std
         {
             nod::Singly_Node<Type>* nodptr_NewNode = new nod::Singly_Node<Type>(typ_Field);
 
-            nodptr_NewNode->nodptr_Next = nodptr_Start;
-            nodptr_Start = nodptr_NewNode;
-            int_NodCount++;
+            if(int_NodCount == 0)
+            {
+                nodptr_Start = nodptr_NewNode;
+                nodptr_End = nodptr_NewNode;
+                int_NodCount++;
+            }
+            else
+            {
+                nodptr_NewNode->nodptr_Next = nodptr_Start;
+                nodptr_Start = nodptr_NewNode;
+                int_NodCount++;
+            }
         }
         void push_back(Type typ_Field)
         {
             nod::Singly_Node<Type>* nodptr_NewNode = new nod::Singly_Node<Type>(typ_Field);
 
-            nodptr_End->nodptr_Next = nodptr_NewNode;
-            nodptr_End = nodptr_NewNode;
-            int_NodCount++;
+            if(int_NodCount == 0)
+            {
+                nodptr_Start = nodptr_NewNode;
+                nodptr_End = nodptr_NewNode;
+                int_NodCount++;
+            }
+            else
+            {
+                nodptr_End->nodptr_Next = nodptr_NewNode;
+                nodptr_End = nodptr_NewNode;
+                int_NodCount++;
+            }
         }
         void insert(unsigned int int_Idx, Type typ_Field)
         {
@@ -277,7 +294,7 @@ namespace std
             return nodptr_End->typ_Field;
         }
 
-        Type operator [] (unsigned int int_Idx)
+        Type operator [] (int int_Idx)
         {
             if(int_Idx >= int_NodCount || int_Idx < 0)
             {
@@ -305,10 +322,9 @@ namespace std
     private:
         unsigned int int_NodCount;
         nod::Singly_Node<Type>* nodptr_End;
-
-    public:
         nod::Singly_Node<Type>* nodptr_Start;
 
+    public:
         Singly_Circular_Linked_List()
         {
             nodptr_Start = nullptr;
@@ -332,19 +348,40 @@ namespace std
         {
             nod::Singly_Node<Type>* nodptr_NewNode = new nod::Singly_Node<Type>(typ_Field);
 
-            nodptr_NewNode->nodptr_Next = nodptr_Start;
-            nodptr_Start = nodptr_NewNode;
-            nodptr_End->nodptr_Next = nodptr_NewNode;
-            int_NodCount++;
+            if(int_NodCount == 0)
+            {
+                nodptr_Start = nodptr_NewNode;
+                nodptr_End = nodptr_NewNode;
+                nodptr_End->nodptr_Next = nodptr_Start;
+                int_NodCount++;
+            }
+            else
+            {
+                nodptr_NewNode->nodptr_Next = nodptr_Start;
+                nodptr_Start = nodptr_NewNode;
+                nodptr_End->nodptr_Next = nodptr_NewNode;
+                int_NodCount++;
+            }
         }
         void push_back(Type typ_Field)
         {
             nod::Singly_Node<Type>* nodptr_NewNode = new nod::Singly_Node<Type>(typ_Field);
 
-            nodptr_End->nodptr_Next = nodptr_NewNode;
-            nodptr_End = nodptr_NewNode;
-            nodptr_NewNode->nodptr_Next = nodptr_Start;
-            int_NodCount++;
+
+            if(int_NodCount == 0)
+            {
+                nodptr_Start = nodptr_NewNode;
+                nodptr_End = nodptr_NewNode;
+                nodptr_End->nodptr_Next = nodptr_Start;
+                int_NodCount++;
+            }
+            else
+            {
+                nodptr_End->nodptr_Next = nodptr_NewNode;
+                nodptr_End = nodptr_NewNode;
+                nodptr_NewNode->nodptr_Next = nodptr_Start;
+                int_NodCount++;
+            }
         }
         void insert(unsigned int int_Idx, Type typ_Field)
         {
@@ -543,7 +580,7 @@ namespace std
             return nodptr_End->typ_Field;
         }
 
-        Type operator [] (unsigned int int_Idx)
+        Type operator [] (int int_Idx)
         {
             if(int_Idx >= int_NodCount || int_Idx < 0)
             {
@@ -570,11 +607,10 @@ namespace std
     {
     private:
         unsigned int int_NodCount;
-
-    public:
         nod::Doubly_Node<Type>* nodptr_Start;
         nod::Doubly_Node<Type>* nodptr_End;
 
+    public:
         Doubly_Linked_List()
         {
             nodptr_Start = nullptr;
@@ -598,19 +634,37 @@ namespace std
         {
             nod::Doubly_Node<Type>* nodptr_NewNode = new nod::Doubly_Node<Type>(typ_Field);
 
-            nodptr_Start->nodptr_Prev = nodptr_NewNode;
-            nodptr_NewNode->nodptr_Next = nodptr_Start;
-            nodptr_Start = nodptr_NewNode;
-            int_NodCount++;
+            if(int_NodCount == 0)
+            {
+                nodptr_Start = nodptr_NewNode;
+                nodptr_End = nodptr_NewNode;
+                int_NodCount++;
+            }
+            else
+            {
+                nodptr_Start->nodptr_Prev = nodptr_NewNode;
+                nodptr_NewNode->nodptr_Next = nodptr_Start;
+                nodptr_Start = nodptr_NewNode;
+                int_NodCount++;
+            }
         }
         void push_back(Type typ_Field)
         {
             nod::Doubly_Node<Type>* nodptr_NewNode = new nod::Doubly_Node<Type>(typ_Field);
 
-            nodptr_End->nodptr_Next = nodptr_NewNode;
-            nodptr_NewNode->nodptr_Prev = nodptr_End;
-            nodptr_End = nodptr_NewNode;
-            int_NodCount++;
+            if(int_NodCount == 0)
+            {
+                nodptr_Start = nodptr_NewNode;
+                nodptr_End = nodptr_NewNode;
+                int_NodCount++;
+            }
+            else
+            {
+                nodptr_End->nodptr_Next = nodptr_NewNode;
+                nodptr_NewNode->nodptr_Prev = nodptr_End;
+                nodptr_End = nodptr_NewNode;
+                int_NodCount++;
+            }
         }
         void insert(unsigned int int_Idx, Type typ_Field)
         {
@@ -829,7 +883,7 @@ namespace std
             return nodptr_End->typ_Field;
         }
 
-        Type operator [] (unsigned int int_Idx)
+        Type operator [] (int int_Idx)
         {
             if(int_Idx >= int_NodCount || int_Idx < 0)
             {
@@ -869,11 +923,10 @@ namespace std
     {
     private:
         unsigned int int_NodCount;
-
-    public:
         nod::Doubly_Node<Type>* nodptr_Start;
         nod::Doubly_Node<Type>* nodptr_End;
 
+    public:
         Doubly_Circular_Linked_List()
         {
             nodptr_Start = nullptr;
@@ -897,25 +950,47 @@ namespace std
         {
             nod::Doubly_Node<Type>* nodptr_NewNode = new nod::Doubly_Node<Type>(typ_Field);
 
-            nodptr_Start->nodptr_Prev = nodptr_NewNode;
-            nodptr_End->nodptr_Next = nodptr_NewNode;
-            nodptr_NewNode->nodptr_Next = nodptr_Start;
-            nodptr_NewNode->nodptr_Prev = nodptr_End;
-            nodptr_Start = nodptr_NewNode;
-            int_NodCount++;
+            if(int_NodCount == 0)
+            {
+                nodptr_Start = nodptr_NewNode;
+                nodptr_End = nodptr_NewNode;
+                nodptr_Start->nodptr_Prev = nodptr_End;
+                nodptr_End->nodptr_Next = nodptr_Start;
+                int_NodCount++;
+            }
+            else
+            {
+                nodptr_Start->nodptr_Prev = nodptr_NewNode;
+                nodptr_End->nodptr_Next = nodptr_NewNode;
+                nodptr_NewNode->nodptr_Next = nodptr_Start;
+                nodptr_NewNode->nodptr_Prev = nodptr_End;
+                nodptr_Start = nodptr_NewNode;
+                int_NodCount++;
+            }
         }
         void push_back(Type typ_Field)
         {
             nod::Doubly_Node<Type>* nodptr_NewNode = new nod::Doubly_Node<Type>(typ_Field);
 
-            nodptr_End->nodptr_Next = nodptr_NewNode;
-            nodptr_Start->nodptr_Prev = nodptr_NewNode;
-            nodptr_NewNode->nodptr_Prev = nodptr_End;
-            nodptr_NewNode->nodptr_Next = nodptr_Start;
-            nodptr_End = nodptr_NewNode;
-            int_NodCount++;
+            if(int_NodCount == 0)
+            {
+                nodptr_Start = nodptr_NewNode;
+                nodptr_End = nodptr_NewNode;
+                nodptr_Start->nodptr_Prev = nodptr_End;
+                nodptr_End->nodptr_Next = nodptr_Start;
+                int_NodCount++;
+            }
+            else
+            {
+                nodptr_End->nodptr_Next = nodptr_NewNode;
+                nodptr_Start->nodptr_Prev = nodptr_NewNode;
+                nodptr_NewNode->nodptr_Prev = nodptr_End;
+                nodptr_NewNode->nodptr_Next = nodptr_Start;
+                nodptr_End = nodptr_NewNode;
+                int_NodCount++;
+            }
         }
-        void insert(unsigned int int_Idx, Type typ_Field)
+        void insert(int int_Idx, Type typ_Field)
         {
             if(int_Idx >= int_NodCount || int_Idx < 0)
             {
@@ -1139,13 +1214,13 @@ namespace std
             return nodptr_End->typ_Field;
         }
 
-        Type operator [] (unsigned int int_Idx)
+        Type operator [] (int int_Idx)
         {
             if(int_Idx >= int_NodCount || int_Idx < 0)
             {
                 std::cerr<< "Invalid index (operator[])\n";
 
-                return;
+                return 0;
             }
 
             nod::Doubly_Node<Type>* nodptr_Curr = nodptr_Start;
