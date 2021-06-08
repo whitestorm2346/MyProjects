@@ -294,13 +294,13 @@ namespace std
         {
             return int_NodCount == 0;
         }
-        Type at(int int_Idx)
+        Type& at(int int_Idx)
         {
             if(int_Idx >= int_NodCount || int_Idx < 0)
             {
                 std::cerr<< "Invalid index (at)\n";
 
-                return;
+                return nodptr_Start->typ_Field;
             }
 
             nod::Singly_Node<Type>* nodptr_Curr = nodptr_Start;
@@ -644,13 +644,13 @@ namespace std
         {
             return int_NodCount == 0;
         }
-        Type at(int int_Idx)
+        Type& at(int int_Idx)
         {
             if(int_Idx >= int_NodCount || int_Idx < 0)
             {
                 std::cerr<< "Invalid index (at)\n";
 
-                return;
+                return nodptr_Start->typ_Field;
             }
 
             nod::Singly_Node<Type>* nodptr_Curr = nodptr_Start;
@@ -1019,13 +1019,13 @@ namespace std
         {
             return int_NodCount == 0;
         }
-        Type at(int int_Idx)
+        Type& at(int int_Idx)
         {
             if(int_Idx >= int_NodCount || int_Idx < 0)
             {
                 std::cerr<< "Invalid index (at)\n";
 
-                return;
+                return nodptr_Start->typ_Field;
             }
 
             nod::Doubly_Node<Type>* nodptr_Curr = nodptr_Start;
@@ -1424,13 +1424,13 @@ namespace std
         {
             return int_NodCount == 0;
         }
-        Type at(int int_Idx)
+        Type& at(int int_Idx)
         {
             if(int_Idx >= int_NodCount || int_Idx < 0)
             {
                 std::cerr<< "Invalid index (at)\n";
 
-                return;
+                return nodptr_Start->typ_Field;
             }
 
             nod::Doubly_Node<Type>* nodptr_Curr = nodptr_Start;
