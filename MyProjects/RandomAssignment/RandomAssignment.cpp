@@ -67,22 +67,15 @@ int main()
 
     for(unsigned int i = 0; i < int_GroupCount; i++)
     {
-        std::cout<< "Group " << i + 1 << " :";
-        write_File<< "Group " << i + 1 << " :";
+        write_File<< "Group " << i + 1 << ": ";
 
         for(unsigned int j = 0; j < vec_Group[i].size(); j++)
         {
-            std::cout<< vec_Group[i][j];
             write_File<< vec_Group[i][j];
 
-            if(j != vec_Group[i].size() - 1)
-            {
-                std::cout<< ", ";
-                write_File<< ", ";
-            }
+            if(j != vec_Group[i].size() - 1) write_File<< ", ";
         }
 
-        std::cout<< '\n';
         write_File<< std::endl;
     }
 

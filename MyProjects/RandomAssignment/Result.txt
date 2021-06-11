@@ -1,5 +1,4 @@
-Group 1 :name29, name27, name17, name14, name8, name6
-Group 2 :name30, name26, name25, name24, name22, name1
-Group 3 :name23, name21, name16, name15, name13, name12
-Group 4 :name19, name11, name9, name4, name3, name2
-Group 5 :name28, name20, name18, name10, name7, name5
+Group 1: 名字十二, 名字六, 名字二, 名字一
+Group 2: 名字十四, 名字十三, 名字七, 名字三
+Group 3: 名字十, 名字八, 名字五, 名字四
+Group 4: 名字十六, 名字十五, 名字十一, 名字九
