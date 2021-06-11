@@ -4,6 +4,7 @@
 #include <string>
 #include <fstream>
 #include <vector>
+#include <windows.h>
 
 void fn_Line();
 void fn_TryOpenFile(std::string& str_FilePath);
