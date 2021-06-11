@@ -4,6 +4,9 @@
 #include <string>
 #include <fstream>
 #include <vector>
+#include <windows.h>
+#include <conio.h>
+#include <cstdio>
 
 struct Element
 {
@@ -27,6 +30,8 @@ int main()
 {
     std::string str_FilePath;
 
+    SetConsoleOutputCP(CP_UTF8);
+    setvbuf(stdout, nullptr, _IOFBF, 1000);
     fn_Line();
 
     std::cout<< "\n                    Random Draw\n\n";
@@ -141,7 +146,7 @@ void fn_Pick(Element* ele_Arr, unsigned int int_Size)
 
     ele_Arr[int_RandNum].bl_IsPicked = true;
 
-    std::cout<< "\n[Result] " << ele_Arr[int_RandNum].str_Elem << '\n';
+    std::cout<< "[Result] " << ele_Arr[int_RandNum].str_Elem << '\n';
 }
 
 bool fn_CheckAllPicked(Element* ele_Arr, unsigned int int_Size)
