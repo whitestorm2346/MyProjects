@@ -81,7 +81,7 @@ int main()
         {
             case 'e': bl_true = false; break;
             case 'r': fn_Reset(ele_Arr, int_Size); break;
-            case 'p': fn_Pick(ele_Arr, int_Size); if(fn_CheckAllPicked(ele_Arr, int_Size)) fn_Reset(ele_Arr, int_Size);
+            case 'p': fn_Pick(ele_Arr, int_Size); break;
         }
 
         std::cout<< '\n';
@@ -137,6 +137,13 @@ void fn_Reset(Element* ele_Arr, unsigned int int_Size)
 
 void fn_Pick(Element* ele_Arr, unsigned int int_Size)
 {
+    if(fn_CheckAllPicked(ele_Arr, int_Size))
+    {
+        std::cout<< "[system] All elements have been picked.\n";
+
+        return;
+    }
+
     unsigned int int_RandNum = rand() % int_Size;
 
     while(ele_Arr[int_RandNum].bl_IsPicked)
