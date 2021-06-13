@@ -1,0 +1,19 @@
+# depslib dependency file v1.0
+1613132551 source:c:\users\andre\desktop\21point\main.cpp
+	<iostream>
+	<string>
+	<ctime>
+	<cstdlib>
+
+1619066764 source:c:\users\andre\desktop\git_repositories\publiclibrary\myprojects\blackjack\main.cpp
+	<iostream>
+	<string>
+	<ctime>
+	<cstdlib>
+
+1621223875 source:c:\users\andre\onedrive\орн▒\git_repositories\publiclibrary\myprojects\blackjack\main.cpp
+	<iostream>
+	<string>
+	<ctime>
+	<cstdlib>
+
