@@ -53,6 +53,13 @@ namespace obj
             rct_Field.setPosition(sf::Vector2f(flt_XPos, flt_YPos));
         }
     };
+
+    struct MergeSortIdx
+    {
+        int int_Start;
+        int int_Mid;
+        int int_End;
+    };
 }
 
 namespace fn

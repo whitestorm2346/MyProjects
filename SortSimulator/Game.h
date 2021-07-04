@@ -11,15 +11,20 @@
 
 enum AssertID
 {
-    CONSOLAS = 0,
-    BLOCK
+    CONSOLAS = 0
 };
 
 enum SortAlgorithm
 {
     BUBBLE_SORT = 0,
     INSERTION_SORT,
-    SELECTION_SORT
+    SELECTION_SORT,
+    DOUBLE_SELECTION_SORT,
+    MERGE_SORT,
+    LOMUTO_QUICK_SORT,
+    HOARE_QUICK_SORT,
+    COUNTING_SORT,
+    LSD_RADIX_SORT
 };
 
 int  intarr_BtnCount[] = {10, 50, 100, 500, 1000, 5000};

@@ -58,9 +58,15 @@ public:
     {
         switch(int_SortAlgoIdx)
         {
-            case 0: txt_SortAlgo.setString("Bubble Sort"); break;
-            case 1: txt_SortAlgo.setString("Insertion Sort"); break;
-            case 2: txt_SortAlgo.setString("Selection Sort"); break;
+            case BUBBLE_SORT: txt_SortAlgo.setString("Bubble Sort"); break;
+            case INSERTION_SORT: txt_SortAlgo.setString("Insertion Sort"); break;
+            case SELECTION_SORT: txt_SortAlgo.setString("Selection Sort"); break;
+            case DOUBLE_SELECTION_SORT: txt_SortAlgo.setString("Double Selection Sort"); break;
+            case MERGE_SORT: txt_SortAlgo.setString("Merge Sort"); break;
+            case LOMUTO_QUICK_SORT: txt_SortAlgo.setString("Quick Sort (Lomuto Partition)"); break;
+            case HOARE_QUICK_SORT: txt_SortAlgo.setString("Quick Sort (Hoare Partition)"); break;
+            case COUNTING_SORT: txt_SortAlgo.setString("Counting Sort"); break;
+            case LSD_RADIX_SORT: txt_SortAlgo.setString("Radix Sort (LSD)"); break;
         }
 
         txt_SortAlgo.setOrigin(txt_SortAlgo.getLocalBounds().width / 2, txt_SortAlgo.getLocalBounds().height / 2);
@@ -168,7 +174,7 @@ public:
                         {
                             int_SortAlgoIdx++;
 
-                            if(int_SortAlgoIdx > 2) int_SortAlgoIdx = 0;
+                            if(int_SortAlgoIdx > 8) int_SortAlgoIdx = 0;
 
                             fn_SortAlgoSetText();
                         }
@@ -180,7 +186,7 @@ public:
                         {
                             int_BlkCountIdx--;
 
-                            if(int_BlkCount < 0) int_BlkCountIdx = 5;
+                            if(int_BlkCountIdx < 0) int_BlkCountIdx = 5;
 
                             fn_BlkCountSetText();
                         }
@@ -188,7 +194,7 @@ public:
                         {
                             int_SortAlgoIdx--;
 
-                            if(int_SortAlgoIdx < 0) int_SortAlgoIdx = 2;
+                            if(int_SortAlgoIdx < 0) int_SortAlgoIdx = 8;
 
                             fn_SortAlgoSetText();
                         }
@@ -217,6 +223,11 @@ public:
 
                                 break;
                         }
+
+                        break;
+
+                    case sf::Keyboard::Escape:
+                        bl_ReturnPressed = true;
 
                         break;
 
