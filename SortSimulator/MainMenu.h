@@ -67,7 +67,7 @@ public:
 
         // Title
         txt_GameTitle.setFont(sptr_Context->uptr_Assert->GetFont(CONSOLAS));
-        txt_GameTitle.setString("Sort Emulator");
+        txt_GameTitle.setString("Sort Simulator");
         txt_GameTitle.setCharacterSize(36);
         txt_GameTitle.setOrigin(txt_GameTitle.getLocalBounds().width / 2, txt_GameTitle.getLocalBounds().height / 2);
         txt_GameTitle.setPosition(sptr_Context->uptr_Window->getSize().x / 2, sptr_Context->uptr_Window->getSize().y / 2 - 75);
@@ -193,7 +193,7 @@ public:
 
 Game::Game(): sptr_Context(std::make_shared<Context>())
 {
-    sptr_Context->uptr_Window->create(sf::VideoMode(int_WinWidth, int_WinHeight + 100), "Sort Emulator", sf::Style::Close);
+    sptr_Context->uptr_Window->create(sf::VideoMode(int_WinWidth, int_WinHeight + 100), "Sort Simulator", sf::Style::Close);
     sptr_Context->uptr_State->Add(std::make_unique<MainMenu>(sptr_Context));
 }
 

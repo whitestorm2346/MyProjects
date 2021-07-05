@@ -380,6 +380,10 @@ public:
                         break;
 
                     case LSD_RADIX_SORT:
+                        int_SortIdx = 0;
+                        int_StepCount = 0;
+                        int_MaxElemIdx = 0;
+
                         break;
 
                     default: break;
@@ -690,7 +694,109 @@ void StartSort::fn_CountingSort()
 {
     switch(int_StepCount)
     {
-        case 0:
+        case 0: // Get Max Value
+            if(deq_BlkArr[int_SortIdx].int_Idx > deq_BlkArr[int_MaxElemIdx].int_Idx)
+            {
+                deq_BlkArr[int_MaxElemIdx].fn_SetColor();
+
+                int_MaxElemIdx = int_SortIdx;
+            }
+
+            deq_BlkArr[int_SortIdx].fn_SetColor(sf::Color::Red);
+
+            sptr_Context->uptr_Window->clear();
+            sptr_Context->uptr_Window->draw(txt_SortName);
+            sptr_Context->uptr_Window->draw(txt_ResetBtn);
+            sptr_Context->uptr_Window->draw(txt_StartBtn);
+            sptr_Context->uptr_Window->draw(txt_ReturnBtn);
+
+            for(int i = 0; i < int_BlkCount; i++)
+            {
+                sptr_Context->uptr_Window->draw(deq_BlkArr[i].rct_Field);
+            }
+
+            sptr_Context->uptr_Window->display();
+
+            if(int_SortIdx != int_MaxElemIdx)
+            {
+                deq_BlkArr[int_SortIdx].fn_SetColor();
+                deq_BlkArr[int_MaxElemIdx].fn_SetColor(sf::Color::Red);
+            }
+            else deq_BlkArr[int_SortIdx].fn_SetColor();
+
+            if(++int_SortIdx == int_BlkCount)
+            {
+                deq_BlkArr[int_MaxElemIdx].fn_SetColor();
+
+                int_SortIdx = 0;
+                int_StepCount++;
+            }
+
+            break;
+
+        case 1: // Count Elements' numbers
+            deq_BlkArr[int_SortIdx].fn_SetColor(sf::Color::Red);
+
+            sptr_Context->uptr_Window->clear();
+            sptr_Context->uptr_Window->draw(txt_SortName);
+            sptr_Context->uptr_Window->draw(txt_ResetBtn);
+            sptr_Context->uptr_Window->draw(txt_StartBtn);
+            sptr_Context->uptr_Window->draw(txt_ReturnBtn);
+
+            for(int i = 0; i < int_BlkCount; i++)
+            {
+                sptr_Context->uptr_Window->draw(deq_BlkArr[i].rct_Field);
+            }
+
+            sptr_Context->uptr_Window->display();
+
+            deq_BlkArr[int_SortIdx].fn_SetColor();
+
+            if(++int_SortIdx == int_BlkCount)
+            {
+                int_SortIdx = 0;
+                int_StepCount++;
+            }
+
+            break;
+
+        case 2: // print
+            deq_BlkArr[int_SortIdx].fn_SetColor(sf::Color::Red);
+            deq_BlkArr[int_SortIdx].fn_SetIdx(int_SortIdx);
+            deq_BlkArr[int_SortIdx].fn_SetSize(int_SortIdx, int_BlkCount);
+            deq_BlkArr[int_SortIdx].fn_SetXPos(int_SortIdx, int_BlkCount);
+            deq_BlkArr[int_SortIdx].fn_SetYPos(int_SortIdx, int_BlkCount);
+            deq_BlkArr[int_SortIdx].fn_SetRctPos();
+
+            sptr_Context->uptr_Window->clear();
+            sptr_Context->uptr_Window->draw(txt_SortName);
+            sptr_Context->uptr_Window->draw(txt_ResetBtn);
+            sptr_Context->uptr_Window->draw(txt_StartBtn);
+            sptr_Context->uptr_Window->draw(txt_ReturnBtn);
+
+            for(int i = 0; i < int_BlkCount; i++)
+            {
+                sptr_Context->uptr_Window->draw(deq_BlkArr[i].rct_Field);
+            }
+
+            sptr_Context->uptr_Window->display();
+
+            deq_BlkArr[int_SortIdx].fn_SetColor();
+
+            if(++int_SortIdx == int_BlkCount)
+            {
+                bl_Sorted = true;
+            }
+
+            break;
+    }
+}
+
+void StartSort::fn_RadixSortLSD()
+{
+    switch(int_StepCount)
+    {
+        case 0: // Get Max Value
             if(deq_BlkArr[int_SortIdx].int_Idx > deq_BlkArr[int_MaxElemIdx].int_Idx)
             {
                 deq_BlkArr[int_MaxElemIdx].fn_SetColor();
@@ -731,59 +837,12 @@ void StartSort::fn_CountingSort()
             break;
 
         case 1:
-            deq_BlkArr[int_SortIdx].fn_SetColor(sf::Color::Red);
-
-            sptr_Context->uptr_Window->clear();
-            sptr_Context->uptr_Window->draw(txt_SortName);
-            sptr_Context->uptr_Window->draw(txt_ResetBtn);
-            sptr_Context->uptr_Window->draw(txt_StartBtn);
-            sptr_Context->uptr_Window->draw(txt_ReturnBtn);
-
-            for(int i = 0; i < int_BlkCount; i++)
-            {
-                sptr_Context->uptr_Window->draw(deq_BlkArr[i].rct_Field);
-            }
-
-            sptr_Context->uptr_Window->display();
-
-            deq_BlkArr[int_SortIdx].fn_SetColor();
-
-            if(++int_SortIdx == int_BlkCount)
-            {
-                int_SortIdx = 0;
-                int_StepCount++;
-            }
-
             break;
 
         case 2:
-            deq_BlkArr[int_SortIdx].fn_SetColor(sf::Color::Red);
-            deq_BlkArr[int_SortIdx].fn_SetIdx(int_SortIdx);
-            deq_BlkArr[int_SortIdx].fn_SetSize(int_SortIdx, int_BlkCount);
-            deq_BlkArr[int_SortIdx].fn_SetXPos(int_SortIdx, int_BlkCount);
-            deq_BlkArr[int_SortIdx].fn_SetYPos(int_SortIdx, int_BlkCount);
-            deq_BlkArr[int_SortIdx].fn_SetRctPos();
+            break;
 
-            sptr_Context->uptr_Window->clear();
-            sptr_Context->uptr_Window->draw(txt_SortName);
-            sptr_Context->uptr_Window->draw(txt_ResetBtn);
-            sptr_Context->uptr_Window->draw(txt_StartBtn);
-            sptr_Context->uptr_Window->draw(txt_ReturnBtn);
-
-            for(int i = 0; i < int_BlkCount; i++)
-            {
-                sptr_Context->uptr_Window->draw(deq_BlkArr[i].rct_Field);
-            }
-
-            sptr_Context->uptr_Window->display();
-
-            deq_BlkArr[int_SortIdx].fn_SetColor();
-
-            if(++int_SortIdx == int_BlkCount)
-            {
-                bl_Sorted = true;
-            }
-
+        case 3:
             break;
     }
 }
@@ -961,11 +1020,6 @@ void StartSort::fn_QuickSortLomuto()
 }
 
 void StartSort::fn_QuickSortHoare()
-{
-
-}
-
-void StartSort::fn_RadixSortLSD()
 {
 
 }

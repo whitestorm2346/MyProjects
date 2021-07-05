@@ -24,10 +24,10 @@ enum SortAlgorithm
     COUNTING_SORT,
 
     // Not finished
+    LSD_RADIX_SORT,
     MERGE_SORT,
     LOMUTO_QUICK_SORT,
-    HOARE_QUICK_SORT,
-    LSD_RADIX_SORT
+    HOARE_QUICK_SORT
 };
 
 int  intarr_BtnCount[] = {10, 50, 100, 500, 1000, 5000};
