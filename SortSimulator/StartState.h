@@ -373,6 +373,10 @@ public:
                         break;
 
                     case COUNTING_SORT:
+                        int_SortIdx = 0;
+                        int_StepCount = 0;
+                        int_MaxElemIdx = 0;
+
                         break;
 
                     case LSD_RADIX_SORT:
@@ -682,6 +686,108 @@ void StartSort::fn_DoubleSelectionSort()
     }
 }
 
+void StartSort::fn_CountingSort()
+{
+    switch(int_StepCount)
+    {
+        case 0:
+            if(deq_BlkArr[int_SortIdx].int_Idx > deq_BlkArr[int_MaxElemIdx].int_Idx)
+            {
+                deq_BlkArr[int_MaxElemIdx].fn_SetColor();
+
+                int_MaxElemIdx = int_SortIdx;
+            }
+
+            deq_BlkArr[int_SortIdx].fn_SetColor(sf::Color::Red);
+
+            sptr_Context->uptr_Window->clear();
+            sptr_Context->uptr_Window->draw(txt_SortName);
+            sptr_Context->uptr_Window->draw(txt_ResetBtn);
+            sptr_Context->uptr_Window->draw(txt_StartBtn);
+            sptr_Context->uptr_Window->draw(txt_ReturnBtn);
+
+            for(int i = 0; i < int_BlkCount; i++)
+            {
+                sptr_Context->uptr_Window->draw(deq_BlkArr[i].rct_Field);
+            }
+
+            sptr_Context->uptr_Window->display();
+
+            if(int_SortIdx != int_MaxElemIdx)
+            {
+                deq_BlkArr[int_SortIdx].fn_SetColor();
+                deq_BlkArr[int_MaxElemIdx].fn_SetColor(sf::Color::Red);
+            }
+            else deq_BlkArr[int_SortIdx].fn_SetColor();
+
+            if(++int_SortIdx == int_BlkCount)
+            {
+                deq_BlkArr[int_MaxElemIdx].fn_SetColor();
+
+                int_SortIdx = 0;
+                int_StepCount++;
+            }
+
+            break;
+
+        case 1:
+            deq_BlkArr[int_SortIdx].fn_SetColor(sf::Color::Red);
+
+            sptr_Context->uptr_Window->clear();
+            sptr_Context->uptr_Window->draw(txt_SortName);
+            sptr_Context->uptr_Window->draw(txt_ResetBtn);
+            sptr_Context->uptr_Window->draw(txt_StartBtn);
+            sptr_Context->uptr_Window->draw(txt_ReturnBtn);
+
+            for(int i = 0; i < int_BlkCount; i++)
+            {
+                sptr_Context->uptr_Window->draw(deq_BlkArr[i].rct_Field);
+            }
+
+            sptr_Context->uptr_Window->display();
+
+            deq_BlkArr[int_SortIdx].fn_SetColor();
+
+            if(++int_SortIdx == int_BlkCount)
+            {
+                int_SortIdx = 0;
+                int_StepCount++;
+            }
+
+            break;
+
+        case 2:
+            deq_BlkArr[int_SortIdx].fn_SetColor(sf::Color::Red);
+            deq_BlkArr[int_SortIdx].fn_SetIdx(int_SortIdx);
+            deq_BlkArr[int_SortIdx].fn_SetSize(int_SortIdx, int_BlkCount);
+            deq_BlkArr[int_SortIdx].fn_SetXPos(int_SortIdx, int_BlkCount);
+            deq_BlkArr[int_SortIdx].fn_SetYPos(int_SortIdx, int_BlkCount);
+            deq_BlkArr[int_SortIdx].fn_SetRctPos();
+
+            sptr_Context->uptr_Window->clear();
+            sptr_Context->uptr_Window->draw(txt_SortName);
+            sptr_Context->uptr_Window->draw(txt_ResetBtn);
+            sptr_Context->uptr_Window->draw(txt_StartBtn);
+            sptr_Context->uptr_Window->draw(txt_ReturnBtn);
+
+            for(int i = 0; i < int_BlkCount; i++)
+            {
+                sptr_Context->uptr_Window->draw(deq_BlkArr[i].rct_Field);
+            }
+
+            sptr_Context->uptr_Window->display();
+
+            deq_BlkArr[int_SortIdx].fn_SetColor();
+
+            if(++int_SortIdx == int_BlkCount)
+            {
+                bl_Sorted = true;
+            }
+
+            break;
+    }
+}
+
 void StartSort::fn_SetMergeSort(std::deque<obj::Block>& deq_BlkArr, int int_StartIdx, int int_EndIdx)
 {
     if(int_StartIdx < int_EndIdx)
@@ -698,13 +804,15 @@ void StartSort::fn_SetMergeSort(std::deque<obj::Block>& deq_BlkArr, int int_Star
 
         stk_MIdx.push(msi_Rval);
     }
+
+    return;
 }
 
 void StartSort::fn_MergeSort()
 {
     switch(int_StepCount)
     {
-        case 0:
+        case 0: // Init
             int_SortIdx  = stk_MIdx.top().int_Start;
             int_MSortIdx = stk_MIdx.top().int_Mid;
             int_RSortIdx = stk_MIdx.top().int_End;
@@ -713,37 +821,8 @@ void StartSort::fn_MergeSort()
             int_RCheckBlkIdx = 0;
             int_MSCheckBlkIdx = int_SortIdx;
 
-            int_StepCount++;
-
-            sptr_Context->uptr_Window->clear();
-            sptr_Context->uptr_Window->draw(txt_SortName);
-            sptr_Context->uptr_Window->draw(txt_ResetBtn);
-            sptr_Context->uptr_Window->draw(txt_StartBtn);
-            sptr_Context->uptr_Window->draw(txt_ReturnBtn);
-
-            for(int i = 0; i < int_BlkCount; i++)
-            {
-                sptr_Context->uptr_Window->draw(deq_BlkArr[i].rct_Field);
-            }
-
-            sptr_Context->uptr_Window->display();
-
-            break;
-
-        case 1:
-            for(int i = 0; i < int_MSortIdx - int_SortIdx + 1; i++)
-            {
-                obj::Block blk_Elem = deq_BlkArr[int_SortIdx + i];
-
-                deq_LBlk.push_back(blk_Elem);
-            }
-
-            for(int i = 0; i < int_RSortIdx - int_MSortIdx; i++)
-            {
-                obj::Block blk_Elem = deq_BlkArr[int_MSortIdx + 1 + i];
-
-                deq_LBlk.push_back(blk_Elem);
-            }
+            deq_LBlk.clear();
+            deq_RBlk.clear();
 
             int_StepCount++;
 
@@ -762,28 +841,83 @@ void StartSort::fn_MergeSort()
 
             break;
 
-        case 2:
+        case 1: // Divide
+            if(int_CheckBlkIdx < int_MSortIdx - int_SortIdx + 1)
+            {
+                obj::Block blk_Elem = deq_BlkArr[int_SortIdx + int_CheckBlkIdx];
+
+                deq_LBlk.push_back(blk_Elem);
+
+                deq_BlkArr[int_SortIdx + int_CheckBlkIdx].fn_SetColor(sf::Color::Red);
+            }
+
+            if(int_RCheckBlkIdx < int_RSortIdx - int_MSortIdx)
+            {
+                obj::Block blk_Elem = deq_BlkArr[int_MSortIdx + 1 + int_RCheckBlkIdx];
+
+                deq_LBlk.push_back(blk_Elem);
+
+                deq_BlkArr[int_MSortIdx + int_RCheckBlkIdx + 1].fn_SetColor(sf::Color::Red);
+            }
+
+            sptr_Context->uptr_Window->clear();
+            sptr_Context->uptr_Window->draw(txt_SortName);
+            sptr_Context->uptr_Window->draw(txt_ResetBtn);
+            sptr_Context->uptr_Window->draw(txt_StartBtn);
+            sptr_Context->uptr_Window->draw(txt_ReturnBtn);
+
+            for(int i = 0; i < int_BlkCount; i++)
+            {
+                sptr_Context->uptr_Window->draw(deq_BlkArr[i].rct_Field);
+            }
+
+            sptr_Context->uptr_Window->display();
+
+            if(int_CheckBlkIdx < int_MSortIdx - int_SortIdx + 1)
+            {
+                deq_BlkArr[int_SortIdx + int_CheckBlkIdx].fn_SetColor();
+
+                int_CheckBlkIdx++;
+            }
+            if(int_RCheckBlkIdx < int_RSortIdx - int_MSortIdx)
+            {
+                deq_BlkArr[int_MSortIdx + int_RCheckBlkIdx + 1].fn_SetColor();
+
+                int_RCheckBlkIdx++;
+            }
+
+            if(int_CheckBlkIdx >= int_MSortIdx - int_SortIdx + 1 && int_RCheckBlkIdx >= int_RSortIdx - int_MSortIdx)
+            {
+                int_CheckBlkIdx = 0;
+                int_RCheckBlkIdx = 0;
+                int_StepCount++;
+            }
+
+            break;
+
+        case 2: // Merge
             if(int_CheckBlkIdx < int_MSortIdx - int_SortIdx + 1 && int_RCheckBlkIdx < int_RSortIdx - int_MSortIdx)
             {
                 if(deq_LBlk[int_CheckBlkIdx].int_Idx <= deq_RBlk[int_RCheckBlkIdx].int_Idx)
                 {
-                    deq_BlkArr[int_MSCheckBlkIdx++] = deq_LBlk[int_CheckBlkIdx++];
+                    deq_BlkArr[int_MSCheckBlkIdx] = deq_LBlk[int_CheckBlkIdx++];
                 }
                 else
                 {
-                    deq_BlkArr[int_MSCheckBlkIdx++] = deq_RBlk[int_RCheckBlkIdx++];
+                    deq_BlkArr[int_MSCheckBlkIdx] = deq_RBlk[int_RCheckBlkIdx++];
                 }
 
-                //deq_BlkArr[int_MSCheckBlkIdx].fn_SetXPos(int_MSCheckBlkIdx, int_BlkCount);
-                //deq_BlkArr[int_MSCheckBlkIdx].fn_SetRctPos();
+                deq_BlkArr[int_MSCheckBlkIdx].fn_SetColor(sf::Color::Red);
+                deq_BlkArr[int_MSCheckBlkIdx].fn_SetXPos(int_MSCheckBlkIdx, int_BlkCount);
+                deq_BlkArr[int_MSCheckBlkIdx].fn_SetRctPos();
             }
             else if(int_CheckBlkIdx < int_MSortIdx - int_SortIdx + 1)
             {
-                deq_BlkArr[int_MSCheckBlkIdx++] = deq_LBlk[int_CheckBlkIdx++];
+                deq_BlkArr[int_MSCheckBlkIdx] = deq_LBlk[int_CheckBlkIdx++];
             }
             else if(int_RCheckBlkIdx < int_RSortIdx - int_MSortIdx)
             {
-                deq_BlkArr[int_MSCheckBlkIdx++] = deq_RBlk[int_RCheckBlkIdx++];
+                deq_BlkArr[int_MSCheckBlkIdx] = deq_RBlk[int_RCheckBlkIdx++];
             }
             else
             {
@@ -792,6 +926,13 @@ void StartSort::fn_MergeSort()
                 int_StepCount = 0;
             }
 
+            if(!(int_CheckBlkIdx >= int_MSortIdx - int_SortIdx + 1 && int_RCheckBlkIdx >= int_RSortIdx - int_MSortIdx))
+            {
+                deq_BlkArr[int_MSCheckBlkIdx].fn_SetColor(sf::Color::Red);
+                deq_BlkArr[int_MSCheckBlkIdx].fn_SetXPos(int_MSCheckBlkIdx, int_BlkCount);
+                deq_BlkArr[int_MSCheckBlkIdx].fn_SetRctPos();
+            }
+
             sptr_Context->uptr_Window->clear();
             sptr_Context->uptr_Window->draw(txt_SortName);
             sptr_Context->uptr_Window->draw(txt_ResetBtn);
@@ -804,6 +945,11 @@ void StartSort::fn_MergeSort()
             }
 
             sptr_Context->uptr_Window->display();
+
+            if(!(int_CheckBlkIdx >= int_MSortIdx - int_SortIdx + 1 && int_RCheckBlkIdx >= int_RSortIdx - int_MSortIdx))
+            {
+                deq_BlkArr[int_MSCheckBlkIdx++].fn_SetColor();
+            }
 
             break;
     }
@@ -815,11 +961,6 @@ void StartSort::fn_QuickSortLomuto()
 }
 
 void StartSort::fn_QuickSortHoare()
-{
-
-}
-
-void StartSort::fn_CountingSort()
 {
 
 }

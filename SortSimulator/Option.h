@@ -174,7 +174,7 @@ public:
                         {
                             int_SortAlgoIdx++;
 
-                            if(int_SortAlgoIdx > 8) int_SortAlgoIdx = 0;
+                            if(int_SortAlgoIdx > COUNTING_SORT) int_SortAlgoIdx = 0;
 
                             fn_SortAlgoSetText();
                         }
@@ -194,7 +194,7 @@ public:
                         {
                             int_SortAlgoIdx--;
 
-                            if(int_SortAlgoIdx < 0) int_SortAlgoIdx = 8;
+                            if(int_SortAlgoIdx < 0) int_SortAlgoIdx = COUNTING_SORT;
 
                             fn_SortAlgoSetText();
                         }

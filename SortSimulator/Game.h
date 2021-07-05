@@ -16,14 +16,17 @@ enum AssertID
 
 enum SortAlgorithm
 {
+    // Finished
     BUBBLE_SORT = 0,
     INSERTION_SORT,
     SELECTION_SORT,
     DOUBLE_SELECTION_SORT,
+    COUNTING_SORT,
+
+    // Not finished
     MERGE_SORT,
     LOMUTO_QUICK_SORT,
     HOARE_QUICK_SORT,
-    COUNTING_SORT,
     LSD_RADIX_SORT
 };
 
