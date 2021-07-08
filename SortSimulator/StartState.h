@@ -383,6 +383,17 @@ public:
                         int_SortIdx = 0;
                         int_StepCount = 0;
                         int_MaxElemIdx = 0;
+                        deq_LBlk.clear();
+                        deq_RBlk.clear();
+
+                        for(int i = 0, j = 0; j < int_BlkCount; j++)
+                        {
+                            obj::Block blk_RVal;
+
+                            if(i++ < 10) deq_LBlk.push_back(blk_RVal);
+
+                            deq_RBlk.push_back(blk_RVal);
+                        }
 
                         break;
 
@@ -832,13 +843,16 @@ void StartSort::fn_RadixSortLSD()
 
                 int_SortIdx = 0;
                 int_CheckBlkIdx = 1; // int_Exp
-                int_StepCount++;
+                int_MaxElemIdx = deq_BlkArr[int_MaxElemIdx].int_Idx; // int_MaxElem
+
+                int_StepCount = 1;
             }
 
             break;
 
         case 1: // Sorting
             deq_BlkArr[int_SortIdx].fn_SetColor(sf::Color::Red);
+            deq_LBlk[(deq_BlkArr[int_SortIdx].int_Idx / int_CheckBlkIdx) % 10].int_Idx++;
 
             sptr_Context->uptr_Window->clear();
             sptr_Context->uptr_Window->draw(txt_SortName);
@@ -858,22 +872,29 @@ void StartSort::fn_RadixSortLSD()
             if(++int_SortIdx == int_BlkCount)
             {
                 int_SortIdx = 0;
-                int_CheckBlkIdx *= 10;
-            }
+                int_RSortIdx = int_BlkCount - 1;
+                int_StepCount = 2;
 
-            if(int_MaxElemIdx % int_CheckBlkIdx == 0)
-            {
-                int_StepCount = 3;
+                for(int i = 1; i < 10; i++)
+                {
+                    deq_LBlk[i].int_Idx += deq_LBlk[i - 1].int_Idx;
+                }
+
+                for(int i = int_BlkCount - 1; i >= 0; i--)
+                {
+                    deq_RBlk[--(deq_LBlk[(deq_BlkArr[i].int_Idx / int_CheckBlkIdx) % 10].int_Idx)] = deq_BlkArr[i];
+                }
+
+                deq_BlkArr = deq_RBlk;
             }
 
             break;
 
         case 2: // Displaying
             deq_BlkArr[int_SortIdx].fn_SetColor(sf::Color::Red);
-            deq_BlkArr[int_SortIdx].fn_SetIdx(int_SortIdx);
-            deq_BlkArr[int_SortIdx].fn_SetSize(int_SortIdx, int_BlkCount);
             deq_BlkArr[int_SortIdx].fn_SetXPos(int_SortIdx, int_BlkCount);
-            deq_BlkArr[int_SortIdx].fn_SetYPos(int_SortIdx, int_BlkCount);
+            deq_BlkArr[int_SortIdx].fn_SetYPos(deq_BlkArr[int_SortIdx].int_Idx, int_BlkCount);
+            deq_BlkArr[int_SortIdx].fn_SetSize(deq_BlkArr[int_SortIdx].int_Idx, int_BlkCount);
             deq_BlkArr[int_SortIdx].fn_SetRctPos();
 
             sptr_Context->uptr_Window->clear();
@@ -893,8 +914,17 @@ void StartSort::fn_RadixSortLSD()
 
             if(++int_SortIdx == int_BlkCount)
             {
-                bl_Sorted = true;
+                int_CheckBlkIdx *= 10;
+                int_SortIdx = 0;
+                int_StepCount = 1;
+
+                for(int i = 0; i < 10; i++)
+                {
+                    deq_LBlk[i].int_Idx = 0;
+                }
             }
+
+            if(int_MaxElemIdx / int_CheckBlkIdx == 0) bl_Sorted = true;
 
             break;
     }

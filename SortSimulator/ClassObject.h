@@ -23,6 +23,15 @@ namespace obj
         float flt_YPos;
         int int_Idx;
 
+        Block()
+        {
+            flt_Height = 0;
+            flt_Width = 0;
+            flt_XPos = 0;
+            flt_YPos = 0;
+            int_Idx = 0;
+        }
+
         void fn_SetColor(sf::Color clr_Field = sf::Color::White)
         {
             this->clr_Field = clr_Field;

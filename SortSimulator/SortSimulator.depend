@@ -443,7 +443,7 @@
 	"StartState.h"
 	"Option.h"
 
-1625740724 c:\users\andre\onedrive\桌面\git_repositories\myprojects\sortsimulator\startstate.h
+1625747098 c:\users\andre\onedrive\桌面\git_repositories\myprojects\sortsimulator\startstate.h
 	<memory>
 	<deque>
 	<stack>
@@ -455,7 +455,7 @@
 	"State.h"
 	"ClassObject.h"
 
-1625723304 c:\users\andre\onedrive\桌面\git_repositories\myprojects\sortsimulator\classobject.h
+1625745875 c:\users\andre\onedrive\桌面\git_repositories\myprojects\sortsimulator\classobject.h
 	<cstdlib>
 	<ctime>
 	<set>
