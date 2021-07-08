@@ -7,7 +7,7 @@
 #include <deque>
 
 #define int_WinHeight static_cast<float>(600)
-#define int_WinWidth static_cast<float>(1000)
+#define int_WinWidth static_cast<float>(1200)
 
 namespace obj
 {

@@ -7,7 +7,7 @@
 #include "AssertManager.h"
 
 #define int_WinHeight static_cast<float>(600)
-#define int_WinWidth static_cast<float>(1000)
+#define int_WinWidth static_cast<float>(1200)
 
 enum AssertID
 {
@@ -22,9 +22,9 @@ enum SortAlgorithm
     SELECTION_SORT,
     DOUBLE_SELECTION_SORT,
     COUNTING_SORT,
+    LSD_RADIX_SORT,
 
     // Not finished
-    LSD_RADIX_SORT,
     MERGE_SORT,
     LOMUTO_QUICK_SORT,
     HOARE_QUICK_SORT

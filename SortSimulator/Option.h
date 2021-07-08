@@ -101,9 +101,9 @@ public:
         // OPtion Title
         txt_OptionTitle.setFont(sptr_Context->uptr_Assert->GetFont(CONSOLAS));
         txt_OptionTitle.setString("Options");
-        txt_OptionTitle.setCharacterSize(36);
+        txt_OptionTitle.setCharacterSize(44);
         txt_OptionTitle.setOrigin(txt_OptionTitle.getLocalBounds().width / 2, txt_OptionTitle.getLocalBounds().height / 2);
-        txt_OptionTitle.setPosition(sptr_Context->uptr_Window->getSize().x / 2, 50);
+        txt_OptionTitle.setPosition(sptr_Context->uptr_Window->getSize().x / 2, 75);
 
         // Set Block Count
         txt_SetBlkCount.setFont(sptr_Context->uptr_Assert->GetFont(CONSOLAS));
@@ -115,7 +115,7 @@ public:
 
         // Block Count
         txt_BlkCount.setFont(sptr_Context->uptr_Assert->GetFont(CONSOLAS));
-        txt_BlkCount.setCharacterSize(24);
+        txt_BlkCount.setCharacterSize(28);
         fn_BlkCountSetText();
 
         // Set Sort Algorithm
@@ -127,7 +127,7 @@ public:
 
         // Sort Algorithm
         txt_SortAlgo.setFont(sptr_Context->uptr_Assert->GetFont(CONSOLAS));
-        txt_SortAlgo.setCharacterSize(24);
+        txt_SortAlgo.setCharacterSize(28);
         fn_SortAlgoSetText();
 
 
@@ -136,7 +136,7 @@ public:
         txt_ReturnBtn.setString("Return");
         txt_ReturnBtn.setCharacterSize(36);
         txt_ReturnBtn.setOrigin(txt_ReturnBtn.getLocalBounds().width / 2, txt_ReturnBtn.getLocalBounds().height / 2);
-        txt_ReturnBtn.setPosition(sptr_Context->uptr_Window->getSize().x / 2, sptr_Context->uptr_Window->getSize().y / 2 + 250);
+        txt_ReturnBtn.setPosition(sptr_Context->uptr_Window->getSize().x / 2, sptr_Context->uptr_Window->getSize().y / 2 + 225);
     }
     void ProcessInput() override
     {
@@ -174,7 +174,7 @@ public:
                         {
                             int_SortAlgoIdx++;
 
-                            if(int_SortAlgoIdx > COUNTING_SORT) int_SortAlgoIdx = 0;
+                            if(int_SortAlgoIdx > LSD_RADIX_SORT) int_SortAlgoIdx = 0;
 
                             fn_SortAlgoSetText();
                         }
@@ -194,7 +194,7 @@ public:
                         {
                             int_SortAlgoIdx--;
 
-                            if(int_SortAlgoIdx < 0) int_SortAlgoIdx = COUNTING_SORT;
+                            if(int_SortAlgoIdx < 0) int_SortAlgoIdx = LSD_RADIX_SORT;
 
                             fn_SortAlgoSetText();
                         }

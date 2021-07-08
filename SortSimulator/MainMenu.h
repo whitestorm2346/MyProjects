@@ -68,30 +68,30 @@ public:
         // Title
         txt_GameTitle.setFont(sptr_Context->uptr_Assert->GetFont(CONSOLAS));
         txt_GameTitle.setString("Sort Simulator");
-        txt_GameTitle.setCharacterSize(36);
+        txt_GameTitle.setCharacterSize(44);
         txt_GameTitle.setOrigin(txt_GameTitle.getLocalBounds().width / 2, txt_GameTitle.getLocalBounds().height / 2);
-        txt_GameTitle.setPosition(sptr_Context->uptr_Window->getSize().x / 2, sptr_Context->uptr_Window->getSize().y / 2 - 75);
+        txt_GameTitle.setPosition(sptr_Context->uptr_Window->getSize().x / 2, sptr_Context->uptr_Window->getSize().y / 2 - 125);
 
         // Start Button
         txt_StartBtn.setFont(sptr_Context->uptr_Assert->GetFont(CONSOLAS));
         txt_StartBtn.setString("start");
-        txt_StartBtn.setCharacterSize(24);
+        txt_StartBtn.setCharacterSize(32);
         txt_StartBtn.setOrigin(txt_StartBtn.getLocalBounds().width / 2, txt_StartBtn.getLocalBounds().height / 2);
-        txt_StartBtn.setPosition(sptr_Context->uptr_Window->getSize().x / 2, sptr_Context->uptr_Window->getSize().y / 2 + 25);
+        txt_StartBtn.setPosition(sptr_Context->uptr_Window->getSize().x / 2, sptr_Context->uptr_Window->getSize().y / 2);
 
         // Option Button
         txt_OptionBtn.setFont(sptr_Context->uptr_Assert->GetFont(CONSOLAS));
         txt_OptionBtn.setString("option");
-        txt_OptionBtn.setCharacterSize(24);
+        txt_OptionBtn.setCharacterSize(32);
         txt_OptionBtn.setOrigin(txt_OptionBtn.getLocalBounds().width / 2, txt_OptionBtn.getLocalBounds().height / 2);
         txt_OptionBtn.setPosition(sptr_Context->uptr_Window->getSize().x / 2, sptr_Context->uptr_Window->getSize().y / 2 + 75);
 
         // Exit Button
         txt_ExitBtn.setFont(sptr_Context->uptr_Assert->GetFont(CONSOLAS));
         txt_ExitBtn.setString("exit");
-        txt_ExitBtn.setCharacterSize(24);
+        txt_ExitBtn.setCharacterSize(32);
         txt_ExitBtn.setOrigin(txt_ExitBtn.getLocalBounds().width / 2, txt_ExitBtn.getLocalBounds().height / 2);
-        txt_ExitBtn.setPosition(sptr_Context->uptr_Window->getSize().x / 2, sptr_Context->uptr_Window->getSize().y / 2 + 125);
+        txt_ExitBtn.setPosition(sptr_Context->uptr_Window->getSize().x / 2, sptr_Context->uptr_Window->getSize().y / 2 + 150);
     }
     void ProcessInput() override
     {
