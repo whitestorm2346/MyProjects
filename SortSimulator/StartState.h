@@ -831,18 +831,71 @@ void StartSort::fn_RadixSortLSD()
                 deq_BlkArr[int_MaxElemIdx].fn_SetColor();
 
                 int_SortIdx = 0;
+                int_CheckBlkIdx = 1; // int_Exp
                 int_StepCount++;
             }
 
             break;
 
-        case 1:
+        case 1: // Sorting
+            deq_BlkArr[int_SortIdx].fn_SetColor(sf::Color::Red);
+
+            sptr_Context->uptr_Window->clear();
+            sptr_Context->uptr_Window->draw(txt_SortName);
+            sptr_Context->uptr_Window->draw(txt_ResetBtn);
+            sptr_Context->uptr_Window->draw(txt_StartBtn);
+            sptr_Context->uptr_Window->draw(txt_ReturnBtn);
+
+            for(int i = 0; i < int_BlkCount; i++)
+            {
+                sptr_Context->uptr_Window->draw(deq_BlkArr[i].rct_Field);
+            }
+
+            sptr_Context->uptr_Window->display();
+
+            deq_BlkArr[int_SortIdx].fn_SetColor();
+
+            if(++int_SortIdx == int_BlkCount)
+            {
+                int_SortIdx = 0;
+                int_CheckBlkIdx *= 10;
+            }
+
+            if(int_MaxElemIdx % int_CheckBlkIdx == 0)
+            {
+                int_StepCount = 3;
+            }
+
             break;
 
-        case 2:
-            break;
+        case 2: // Displaying
+            deq_BlkArr[int_SortIdx].fn_SetColor(sf::Color::Red);
+            deq_BlkArr[int_SortIdx].fn_SetIdx(int_SortIdx);
+            deq_BlkArr[int_SortIdx].fn_SetSize(int_SortIdx, int_BlkCount);
+            deq_BlkArr[int_SortIdx].fn_SetXPos(int_SortIdx, int_BlkCount);
+            deq_BlkArr[int_SortIdx].fn_SetYPos(int_SortIdx, int_BlkCount);
+            deq_BlkArr[int_SortIdx].fn_SetRctPos();
 
-        case 3:
+            sptr_Context->uptr_Window->clear();
+            sptr_Context->uptr_Window->draw(txt_SortName);
+            sptr_Context->uptr_Window->draw(txt_ResetBtn);
+            sptr_Context->uptr_Window->draw(txt_StartBtn);
+            sptr_Context->uptr_Window->draw(txt_ReturnBtn);
+
+            for(int i = 0; i < int_BlkCount; i++)
+            {
+                sptr_Context->uptr_Window->draw(deq_BlkArr[i].rct_Field);
+            }
+
+            sptr_Context->uptr_Window->display();
+
+            deq_BlkArr[int_SortIdx].fn_SetColor();
+
+            if(++int_SortIdx == int_BlkCount)
+            {
+                bl_Sorted = true;
+            }
+
             break;
     }
 }
