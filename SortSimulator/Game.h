@@ -52,6 +52,7 @@ struct Context
 class Game
 {
     std::shared_ptr<Context> sptr_Context;
+    sf::Image img_Icon;
     const sf::Time FPS = sf::seconds(1.0f / 60.0f);
 
 public:

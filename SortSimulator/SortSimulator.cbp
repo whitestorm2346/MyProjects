@@ -49,6 +49,7 @@
 			<Add directory="C:/Program Files/SFML-2.5.1-windows-gcc-7.3.0-mingw-64-bit/SFML-2.5.1/lib" />
 		</Linker>
 		<Unit filename="AssertManager.h" />
+		<Unit filename="Block.ico" />
 		<Unit filename="ClassObject.h" />
 		<Unit filename="Game.h" />
 		<Unit filename="MainMenu.h" />

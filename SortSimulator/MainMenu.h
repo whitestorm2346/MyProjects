@@ -193,7 +193,10 @@ public:
 
 Game::Game(): sptr_Context(std::make_shared<Context>())
 {
+    img_Icon.loadFromFile("Block.png");
+
     sptr_Context->uptr_Window->create(sf::VideoMode(int_WinWidth, int_WinHeight + 100), "Sort Simulator", sf::Style::Close);
+    sptr_Context->uptr_Window->setIcon(img_Icon.getSize().x, img_Icon.getSize().y, img_Icon.getPixelsPtr());
     sptr_Context->uptr_State->Add(std::make_unique<MainMenu>(sptr_Context));
 }
 
