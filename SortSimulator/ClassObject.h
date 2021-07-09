@@ -9,6 +9,23 @@
 #define int_WinHeight static_cast<float>(600)
 #define int_WinWidth static_cast<float>(1200)
 
+namespace sf
+{
+    struct Button
+    {
+        sf::Text txt_Name;
+        bool bl_IsSelected;
+        bool bl_IsPressed;
+
+        Button()
+        {
+            bl_IsSelected = false;
+            bl_IsPressed = false;
+        }
+        ~Button(){}
+    };
+}
+
 namespace obj
 {
     class Block
