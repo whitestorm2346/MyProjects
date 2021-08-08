@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1625317330 source:c:\users\andre\onedrive\桌面\git_repositories\myprojects\sortsimulator\main.cpp
+1625817034 source:c:\users\andre\onedrive\桌面\git_repositories\myprojects\sortsimulator\main.cpp
 	<SFML/Graphics.hpp>
 	"Game.h"
 	"MainMenu.h"
@@ -443,7 +443,7 @@
 	"StartState.h"
 	"Option.h"
 
-1625747098 c:\users\andre\onedrive\桌面\git_repositories\myprojects\sortsimulator\startstate.h
+1626366491 c:\users\andre\onedrive\桌面\git_repositories\myprojects\sortsimulator\startstate.h
 	<memory>
 	<deque>
 	<stack>
@@ -455,7 +455,7 @@
 	"State.h"
 	"ClassObject.h"
 
-1625745875 c:\users\andre\onedrive\桌面\git_repositories\myprojects\sortsimulator\classobject.h
+1625829795 c:\users\andre\onedrive\桌面\git_repositories\myprojects\sortsimulator\classobject.h
 	<cstdlib>
 	<ctime>
 	<set>
