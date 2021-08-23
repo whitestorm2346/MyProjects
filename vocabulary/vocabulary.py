@@ -6,28 +6,19 @@ filebox = 'allfile.txt'
 
 #Check if the word is exist
 def CheckWordExist(lstname, inputword):
-  
-    WordExist = False
-    
     for num in range(0, len(lstname)):
         if lstname[num] == inputword:
-            WordExist = True
-    
-    if WordExist == True:
-        return True
-    
-    else:
-        return False
+            return True
+          
+    return False
 
 #Delete all contents in file
 def CleanFile(fname):   
-  
     with open(fname, 'w') as f:   
         f.truncate()
 
 #Pack all contents in lines into a list
 def ScanFile(fname, lstname):
-    
     with open(fname) as f:
         for line in f:
             lstname.append(line.strip())
@@ -36,14 +27,12 @@ def ScanFile(fname, lstname):
 
 #Renew the file
 def RenewFile(fname, lstname):
-    
     with open(fname, 'w') as f:       
         for lst in lstname:
             f.write(lst + '\n')
 
 #Pack all contents in words into a list
-def ScanWord(fname, lstname):
-    
+def ScanWord(fname, lstname):    
     with open(fname, 'r') as f:
         for line in f:                          
             item = [i for i in line.split()]
@@ -51,19 +40,18 @@ def ScanWord(fname, lstname):
             
     return lstname
     
-def ChangeFile(fbox, fname, optnumlst, allfilelst):
-  
+def ChangeFile(fbox, fname, optnumlst, allfilelst):  
     print('\n*Choose the number of files to open it\n')
 
     with open(fbox, 'r') as f:
         print('\n' + f.read() + '\n')
 
     while True:
-
         choose = int(input())
     
         if choose in optnumlst:                  
             print('\n*File import successfully!\n')
+          
             break
         
         else:
@@ -89,22 +77,20 @@ with open(filebox, 'r') as f:
     print('\n' + f.read() + '\n')
 
 while True:
-
     choose = int(input())
     
     if choose in optnum:                  
         print('\n*File import successfully!\n')
+        
         break
         
     else:
         print('\n*Illegal inputs\n*Please input again!')
     
 filename = allfile[choose - 1][1]
-
 save = []
 
-while True:
-  
+while True:  
     words = []
     
     ScanFile(filename, words)
@@ -123,19 +109,15 @@ while True:
     option = [1, 2, 3, 4, 5, 6, 7, 8, 9]
     options = int(input())
 
-    if options in option:
-      
-        if options == 1: 
-          
+    if options in option:      
+        if options == 1:           
             print('\n*Input a new word\n*Input \"END\" to stop adding the word '
                   + '\n  and back to the options\n')
         
-            while True:  
-                 
+            while True:                   
                 word_a = str(input())
       
-                if word_a == 'END': 
-                     
+                if word_a == 'END':                   
                     CleanFile(filename)
                     RenewFile(filename, words)
                             
@@ -143,8 +125,7 @@ while True:
 
                     break
         
-                else:
-                    
+                else:                    
                     Check = CheckWordExist(words, word_a)
                     
                     if Check == False:
@@ -153,8 +134,7 @@ while True:
                     else:
                         print('\n*The word has already exist!\n Please add other words\n')
       
-        if options == 2:  
-                   
+        if options == 2:                     
             words2 = []
             
             ScanWord(filename, words2)
@@ -164,31 +144,25 @@ while True:
             word_r = str(input())           
             WordExist = False
             
-            for i in range(len(words)): 
-                        
-                if word_r in words2[i][0]:
-                  
+            for i in range(len(words)):                         
+                if word_r in words2[i][0]:                
                     WordExist = True
                     del words[i]
     
-            if WordExist == False:
-              
+            if WordExist == False:              
                 print('\n*This word is not exist!\n')
                 
-            else:  
-                           
+            else:                           
                 CleanFile(filename)               
                 RenewFile(filename, words)
                         
                 print('\n*Remove the word successfully!\n')
   
-        if options == 3: 
-            
+        if options == 3:            
             with open(filename, 'r') as f:
                 print('\n' + 30 * '=' + '\n\n' + f.read() + '\n\n' + 30 * '=' + '\n')
     
-        if options == 4:     
-             
+        if options == 4:         
             save = []
             
             ScanFile(filename, save)                            
@@ -197,7 +171,6 @@ while True:
             print('\n*Clean file successfully!\n\n*The lated archive saved successfully!\n')
                 
         if options == 5:
-            
             save = []
             
             ScanFile(filename, save)
@@ -205,14 +178,12 @@ while True:
             print('\n*Save file successfully!')
                 
         if options == 6:         
-            
             CleanFile(filename)
             RenewFile(filename, save)        
                             
             print('\n*Return file successfully!\n')
     
-        if options == 7:  
-             
+        if options == 7:          
             words2 = []
             numlst = []
                     
@@ -229,25 +200,20 @@ while True:
             count = 0
             count2 = 0
             
-            while True:  
-                      
+            while True:               
                 if life == 0:
-                  
                     print('\n*Test Over!\n Please practice more!\n\n' + 30 * '=' + '\n')
                         
                     break
                 
-                elif count == len(numlst):
-                  
+                elif count == len(numlst):                  
                     print('\n*Congratulations!\n You have answered all the questions!'
                           + '\n Test Over!\n\n' + 30 * '=' + '\n')
                         
                     break
                 
-                else:
-                  
-                    rnum = numlst[count]-1
-                         
+                else:                  
+                    rnum = numlst[count]-1                         
                     rword = words2[rnum][0]
                     lst = list(rword)
             
@@ -263,15 +229,13 @@ while True:
                 
                     ans = str(input())
                 
-                    if ans == rword:   
-                        
+                    if ans == rword:                           
                         count += 1
                         count2 += 1
 
                         print('\n*Correct!    Score:' + str(count2) + '\n\n' + 30 * '–' + '\n')
                     
-                    else:
-                        
+                    else:                       
                         life -= 1
                         count += 1
 
