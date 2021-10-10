@@ -2,10 +2,13 @@
 #include <string>
 
 #define int_CmdCount 15
-#define SINGLY_LINKED_LIST 1
-#define DOUBLY_LINKED_LIST 2
-#define SINGLY_CIRCULAR_LINKED_LIST 3
-#define DOUBLY_CIRCULAR_LINKED_LIST 4
+
+enum LinkedList{
+    SINGLY_LINKED_LIST = 1,
+    DOUBLY_LINKED_LIST,
+    SINGLY_CIRCULAR_LINKED_LIST,
+    DOUBLY_CIRCULAR_LINKED_LIST
+};
 
 template <typename Type>
 class Singly_Node
