@@ -282,17 +282,23 @@ void fn_RunCmd(std::string str_Input, int int_Case)
     else if(str_Input == "/del")
     {
         int int_Idx;
+        bool bl_IsSuccess;
 
         std::cout<< "[system] Input an index number.\n";
         std::cin>> int_Idx;
 
         switch(int_Case)
         {
-            case SINGLY_LINKED_LIST: sll_ptr->fn_Del(int_Idx); return;
-            case DOUBLY_LINKED_LIST: dll_ptr->fn_Del(int_Idx); return;
-            case SINGLY_CIRCULAR_LINKED_LIST: scll_ptr->fn_Del(int_Idx); return;
-            case DOUBLY_CIRCULAR_LINKED_LIST: dcll_ptr->fn_Del(int_Idx); return;
+            case SINGLY_LINKED_LIST: bl_IsSuccess = sll_ptr->fn_Del(int_Idx); break;
+            case DOUBLY_LINKED_LIST: bl_IsSuccess = dll_ptr->fn_Del(int_Idx); break;
+            case SINGLY_CIRCULAR_LINKED_LIST: bl_IsSuccess = scll_ptr->fn_Del(int_Idx); break;
+            case DOUBLY_CIRCULAR_LINKED_LIST: bl_IsSuccess = dcll_ptr->fn_Del(int_Idx); break;
         }
+
+        if(bl_IsSuccess) std::cout<< "[system] Delete the node successfully.\n";
+        else std::cout<< "[system] Delete the node unsuccessfully.\n";
+
+        return;
     }
     else if(str_Input == "/modify")
     {
@@ -579,6 +585,8 @@ void Singly_Linked_List<Type>::fn_Add(Type typ_Field)
     }
 
     int_NodCount++;
+
+    std::cout<< "[system] Add the node successfully.\n";
 }
 
 template <typename Type>
@@ -646,7 +654,7 @@ void Singly_Linked_List<Type>::fn_Insert(int int_Idx, Type typ_Field)
         nodptr_Temp->nodptr_Next = nodptr_Input;
     }
 
-    delete nodptr_Input;
+    std::cout<< "[system] Insert the node successfully.\n";
 }
 
 template <typename Type>
@@ -660,6 +668,8 @@ void Singly_Linked_List<Type>::fn_Modify(int int_Idx, Type typ_Field)
     }
 
     nodptr_Temp->typ_Field = typ_Field;
+
+    std::cout<< "[system] Modify the node successfully.\n";
 }
 
 template <typename Type>
@@ -757,6 +767,8 @@ void Singly_Circular_Linked_List<Type>::fn_Add(Type typ_Field)
     }
 
     int_NodCount++;
+
+    std::cout<< "[system] Add the node successfully.\n";
 }
 
 template <typename Type>
@@ -825,6 +837,8 @@ void Singly_Circular_Linked_List<Type>::fn_Insert(int int_Idx, Type typ_Field)
     }
 
     int_NodCount++;
+
+    std::cout<< "[system] Insert the node successfully.\n";
 }
 
 template <typename Type>
@@ -838,6 +852,8 @@ void Singly_Circular_Linked_List<Type>::fn_Modify(int int_Idx, Type typ_Field)
     }
 
     nodptr_Temp->typ_Field = typ_Field;
+
+    std::cout<< "[system] Modify the node successfully.\n";
 }
 
 template <typename Type>
@@ -989,6 +1005,8 @@ void Doubly_Linked_List<Type>::fn_Add(Type typ_Field)
     }
 
     int_NodCount++;
+
+    std::cout<< "[system] Add the node successfully.\n";
 }
 
 template <typename Type>
@@ -1002,6 +1020,8 @@ void Doubly_Linked_List<Type>::fn_Modify(int int_Idx, Type typ_Field)
     }
 
     nodptr_Curr->typ_Field = typ_Field;
+
+    std::cout<< "[system] Modify the node successfully.\n";
 }
 
 template <typename Type>
@@ -1043,6 +1063,8 @@ void Doubly_Linked_List<Type>::fn_Insert(int int_Idx, Type typ_Field)
     }
 
     int_NodCount++;
+
+    std::cout<< "[system] Insert the node successfully.\n";
 }
 
 template <typename Type>
@@ -1225,6 +1247,8 @@ void Doubly_Circular_Linked_List<Type>::fn_Add(Type typ_Field)
     }
 
     int_NodCount++;
+
+    std::cout<< "[system] Add the node successfully.\n";
 }
 
 template <typename Type>
@@ -1250,6 +1274,8 @@ void Doubly_Circular_Linked_List<Type>::fn_Modify(int int_Idx, Type typ_Field)
     }
 
     nodptr_Curr->typ_Field = typ_Field;
+
+    std::cout<< "[system] Modify the node successfully.\n";
 }
 
 template <typename Type>
@@ -1297,6 +1323,8 @@ void Doubly_Circular_Linked_List<Type>::fn_Insert(int int_Idx, Type typ_Field)
     }
 
     int_NodCount++;
+
+    std::cout<< "[system] Insert the node successfully.\n";
 }
 
 template <typename Type>
