@@ -686,7 +686,7 @@ bool Singly_Linked_List<Type>::fn_Del(int int_Idx)
         Singly_Node<Type>* nodptr_TmpCurr = nodptr_Start;
         Singly_Node<Type>* nodptr_TmpPrev = nodptr_Start;
 
-        for(int i = 1; i < int_Idx + 1; i++)
+        for(int i = 0; i < int_Idx; i++)
         {
             nodptr_TmpPrev = nodptr_TmpCurr;
             nodptr_TmpCurr = nodptr_TmpCurr->nodptr_Next;
@@ -697,7 +697,7 @@ bool Singly_Linked_List<Type>::fn_Del(int int_Idx)
             nodptr_Start = nodptr_Start->nodptr_Next;
             nodptr_Curr = nullptr;
         }
-        else if(int_Idx == int_NodCount - 1 && int_Idx != 0)
+        else if(int_Idx == int_NodCount - 1)
         {
             nodptr_Curr = nodptr_TmpPrev;
             nodptr_TmpPrev->nodptr_Next = nullptr;
@@ -870,7 +870,7 @@ bool Singly_Circular_Linked_List<Type>::fn_Del(int int_Idx)
         Singly_Node<Type>* nodptr_TmpCurr = nodptr_Start;
         Singly_Node<Type>* nodptr_TmpPrev = nodptr_Start;
 
-        for(int i = 1; i < int_Idx + 1; i++)
+        for(int i = 0; i < int_Idx; i++)
         {
             nodptr_TmpPrev = nodptr_TmpCurr;
             nodptr_TmpCurr = nodptr_TmpCurr->nodptr_Next;
@@ -881,7 +881,7 @@ bool Singly_Circular_Linked_List<Type>::fn_Del(int int_Idx)
             nodptr_Start = nodptr_Start->nodptr_Next;
             nodptr_Curr = nullptr;
         }
-        else if(int_Idx == int_NodCount - 1 && int_Idx != 0)
+        else if(int_Idx == int_NodCount - 1)
         {
             nodptr_Curr = nodptr_TmpPrev;
             nodptr_TmpPrev->nodptr_Next = nullptr;
@@ -1104,7 +1104,11 @@ bool Doubly_Linked_List<Type>::fn_Del(int int_Idx)
 
             if(int_NodCount == 1) nodptr_End = nullptr;
         }
-        else if(int_Idx == int_NodCount -1) nodptr_End = nodptr_Curr->nodptr_Prev;
+        else if(int_Idx == int_NodCount - 1)
+        {
+            nodptr_End = nodptr_Curr->nodptr_Prev;
+            nodptr_End->nodptr_Next = nullptr;
+        }
         else
         {
             nodptr_Curr->nodptr_Prev->nodptr_Next = nodptr_Curr->nodptr_Next;
@@ -1360,11 +1364,16 @@ bool Doubly_Circular_Linked_List<Type>::fn_Del(int int_Idx)
         if(int_Idx == 0)
         {
             nodptr_Start = nodptr_Start->nodptr_Next;
-            nodptr_Start->nodptr_Prev = nullptr;
+            nodptr_Start->nodptr_Prev = nodptr_End;
 
             if(int_NodCount == 1) nodptr_End = nullptr;
         }
-        else if(int_Idx == int_NodCount -1) nodptr_End = nodptr_Curr->nodptr_Prev;
+        else if(int_Idx == int_NodCount - 1)
+        {
+            nodptr_End = nodptr_Curr->nodptr_Prev;
+            nodptr_Start->nodptr_Prev = nodptr_Curr->nodptr_Prev;
+            nodptr_Curr->nodptr_Prev->nodptr_Next = nodptr_Start;
+        }
         else
         {
             nodptr_Curr->nodptr_Prev->nodptr_Next = nodptr_Curr->nodptr_Next;
