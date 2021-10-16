@@ -4,6 +4,7 @@
 #include <string>
 #include <fstream>
 #include <vector>
+#include <set>
 #include <windows.h>
 
 void fn_Line();
@@ -48,15 +49,21 @@ int main()
     else int_PeopleNum /= int_GroupCount;
 
     std::vector<std::string> vec_Group[int_GroupCount];
+    std::set<int> set_Check;
 
     while(!vec_Name.empty())
     {
-        int int_RandGroup = rand() % int_GroupCount;
+        int int_RandGroup;
 
-        while(vec_Group[int_RandGroup].size() >= int_PeopleNum)
+        do
         {
             int_RandGroup = rand() % int_GroupCount;
         }
+        while(set_Check.count(int_RandGroup));
+
+        set_Check.insert(int_RandGroup);
+
+        if(set_Check.size() == int_GroupCount) set_Check.clear();
 
         vec_Group[int_RandGroup].push_back(vec_Name.back());
         vec_Name.pop_back();
