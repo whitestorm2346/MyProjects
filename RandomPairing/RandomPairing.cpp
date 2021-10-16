@@ -4,11 +4,11 @@
 #include <string>
 #include <fstream>
 #include <vector>
+#include <set>
 #include <windows.h>
 
 void fn_Line();
 void fn_TryOpenFile(std::string& str_FilePath);
-int fn_GetPeopleNum(std::string str_FilePath, std::vector<std::string>& vec_Name);
 
 int main()
 {
@@ -61,15 +61,21 @@ int main()
     else int_PeopleNum /= int_GroupCount;
 
     std::vector<std::string> vec_Group[int_GroupCount];
+    std::set<int> set_Check;
 
     while(!vec_Name_junior.empty())
     {
-        int int_RandGroup = rand() % int_GroupCount;
+        int int_RandGroup;
 
-        while(vec_Group[int_RandGroup].size() >= int_PeopleNum)
+        do
         {
             int_RandGroup = rand() % int_GroupCount;
         }
+        while(set_Check.count(int_RandGroup));
+
+        set_Check.insert(int_RandGroup);
+
+        if(set_Check.size() == int_GroupCount) set_Check.clear();
 
         vec_Group[int_RandGroup].push_back(vec_Name_junior.back());
         vec_Name_junior.pop_back();
@@ -133,19 +139,4 @@ void fn_TryOpenFile(std::string& str_FilePath)
         std::cout<< "Please check if the file\'s path is right, and input the path again.\n\n";
         std::cout<< "\nInput the file\'s path.\n";
     }
-}
-
-int fn_GetPeopleNum(std::string str_FilePath, std::vector<std::string>& vec_Name)
-{
-    std::ifstream read_File;
-    std::string str_Name;
-    int int_Count = 0;
-
-    read_File.open(str_FilePath);
-
-
-
-    read_File.close();
-
-    return int_Count;
 }
