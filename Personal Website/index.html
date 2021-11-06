@@ -1,41 +1,69 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
   <head>
-    <meta charset="UTF-8" />
+    <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Tse-Hsun Yu's Website</title>
+    <meta name="author" content="資工一A 游昃勛" />
+    <meta name="keywords" content="游昃勛, 淡江大學, 資工系, 淡江校男排" />
+
+    <title>Yu,Tse-Hsun's Website</title>
+
+    <!-- font awesome cdn link -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+    />
+    <!-- custom css file link -->
+    <link rel="stylesheet" href="CSS/style.css" />
   </head>
+
   <body>
-    <header id="top">
-      <h1>山友登山會</h1>
-      <h3>不只有周末有活動，還有週間活動或當天來回的活動。</h3>
+    <div class="cursor-1"></div>
+    <div class="cursor-2"></div>
+
+    <div id="menu-bars" class="fas fa-bars"></div>
+
+    <header>
+      <a href="#" class="logo"><span>Tse-Hsun</span> Yu </a>
+
+      <nav class="navbar">
+        <a href="#home">home</a>
+        <a href="#about">about</a>
+        <a href="#service">service</a>
+        <a href="#experience">experience</a>
+        <a href="#portfolio">portfolio</a>
+        <a href="#contact">contact</a>
+      </nav>
+
+      <div class="follow">
+        <a href="#" class="fab fa-github"></a>
+        <a href="#" class="fab fa-instagram"></a>
+        <a href="#" class="fab fa-linkedin"></a>
+      </div>
     </header>
-    <nav id="mainNav">
-      <ul>
-        <li><a href="#">登山禮節</a></li>
-        <li><a href="#">登山準備</a></li>
-        <li><a href="#">登山種類</a></li>
-        <li><a href="#">登山要領</a></li>
-        <li><a href="#">登山食糧</a></li>
-      </ul>
-    </nav>
-    <section id="content">
-      <header>
-        <h3>登山禮節</h3>
-      </header>
-      <article id="manner">
-        <h4>只要</h4>
-        <p>只要在相遇時打聲招呼即可。</p>
-      </article>
-      <article id="manner">
-        <h4>當有必要超越時請先體諒對方。</h4>
-        <p>窄路超越對方時須先告知。</p>
-      </article>
-      <article id="manner">
-        <h4>上山吧...</h4>
-        <p>在山裡要懂得互相禮讓才能確保大家安全。</p>
-      </article>
+
+    <section class="home" id="home">
+      <div class="content">
+        <span class="hi"> hi there... </span>
+        <h3>i am <span> Tse-Hsun Yu </span></h3>
+        <p class="info">
+          i am a college student in
+          <abbr title="TamKang University">TKU</abbr>
+          <abbr title="Computer Science & Information Engineering">CSIE</abbr>
+        </p>
+        <p class="text">No pain no gain. Keep working hard!</p>
+        <a href="#about" class="btn">about me</a>
+      </div>
+
+      <div class="image">
+        <img src="image/me.jpg" alt="my photo" />
+      </div>
     </section>
+
+    <footer></footer>
+
+    <!-- custom JavaScript file link -->
+    <script src="JavaScript/script.js"></script>
   </body>
 </html>
