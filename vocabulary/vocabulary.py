@@ -32,10 +32,10 @@ def RenewFile(fname, lstname):
             f.write(lst + '\n')
 
 #Pack all contents in words into a list
-def ScanWord(fname, lstname):    
+def ScanWord(fname, lstname, splitchar=' '):
     with open(fname, 'r') as f:
         for line in f:                          
-            item = [i for i in line.split()]
+            item = [i for i in line.split(splitchar)]
             lstname.append(item)
             
     return lstname
@@ -111,7 +111,7 @@ while True:
 
     if options in option:      
         if options == 1:           
-            print('\n*Input a new word\n*Input \"END\" to stop adding the word '
+            print('\n*Input a new word to add in this file(word/part of speech/meaning)\n*Input \"END\" to stop adding the word '
                   + '\n  and back to the options\n')
         
             while True:                   
@@ -137,7 +137,7 @@ while True:
         if options == 2:                     
             words2 = []
             
-            ScanWord(filename, words2)
+            ScanWord(filename, words2, '/')
 
             print('\n*Input a word you want to remove\n')
 
@@ -187,9 +187,9 @@ while True:
             words2 = []
             numlst = []
                     
-            ScanWord(filename, words2)          
+            ScanWord(filename, words2, '/')
             
-            for i in range(1, len(words2) + 1):
+            for i in range(0, len(words2)):
                 numlst.append(i)
                 
             random.shuffle(numlst)
@@ -213,12 +213,13 @@ while True:
                     break
                 
                 else:                  
-                    rnum = numlst[count]-1                         
+                    rnum = numlst[count]
                     rword = words2[rnum][0]
                     lst = list(rword)
             
                     for i in range(1, len(lst) - 1):
-                        lst[i] = '_'
+                        if lst[i] != ' ':
+                            lst[i] = '_'
                   
                     sub = str()
                 
@@ -234,7 +235,7 @@ while True:
                         count2 += 1
 
                         print('\n*Correct!    Score:' + str(count2) + '\n\n' + 30 * '–' + '\n')
-                    
+
                     else:                       
                         life -= 1
                         count += 1
