@@ -58,6 +58,9 @@ def ChangeFile(fbox, fname, optnumlst, allfilelst):
             print('\n*Illegal inputs\n*Please input again!')
     
     fname = allfilelst[choose - 1][1]
+
+    if fname[-1] == '\n':
+        fname = fname[:-1]
     
     return fname
     
@@ -88,6 +91,10 @@ while True:
         print('\n*Illegal inputs\n*Please input again!')
     
 filename = allfile[choose - 1][1]
+
+if filename[-1] == '\n':
+    filename = filename[:-1]
+
 save = []
 
 while True:  
