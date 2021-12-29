@@ -1,36 +1,74 @@
 #include <iostream>
 #include <conio.h>
+#include <string>
 #include "function.hpp"
 
 int main()
 {
-    srand(time(nullptr));
-
-    const int titleHeight = 5;
+    const int titleHeight = 2;
     int bodyHeight = 5;
 
-    printLine(50);
-    printLine(50, ' ');
-    printLine(20, ' ', false);
+    std::cout<< "========= Random Seat =========\n\n";
+    std::cout<< "Press any key to continue...\n\n";
 
-    std::cout<< "Random Seat\n";
-
-    printLine(50, ' ');
-    printLine(50);
-    printLine(50, ' ');
-
-    std::cout<< "Press \"enter\" to start...\n";
-
-    printLine(50, ' ');
-    printLine(50); // gotoXY(0, 5);
-
-    for(int input = 0; input != 13; input = getch())
+    for(int input = 0; input != 13; )
     {
-        gotoXY(25, 6);
+        gotoXY(28, 2);
+
+        input = getch();
     }
 
+    gotoXY(0, 2);
 
+    std::cout<< "                                 \r";
 
+    int rowCount = 0, colCount = 0;
+
+    for(; rowCount <= 0 || rowCount > 20;)
+    {
+        gotoXY(0, 2);
+
+        std::cout<< "set row count(1~20):    \b\b\b";
+        std::cin>> rowCount;
+    }
+
+    for(; colCount <= 0 || colCount > 20;)
+    {
+        gotoXY(0, 3);
+
+        std::cout<< "set column count(1~20):    \b\b\b";
+        std::cin>> colCount;
+    }
+
+    cleanBoard();
+
+    std::cout<< '\n';
+
+    int size = rowCount * colCount;
+    int* Seat = new int[size];
+
+    bodyHeight = colCount * 2;
+
+    for(int i = 0; i < size; i++)
+    {
+        Seat[i] = i + 1;
+    }
+
+    RandomSeat(Seat, size);
+
+    for(int i = 0; i < colCount; i++)
+    {
+        for(int j = 0; j < rowCount; j++)
+        {
+            if(size < 10) printf(" %0d", *(Seat + i * rowCount + j));
+            else if(size < 100) printf(" %02d", *(Seat + i * rowCount + j));
+            else printf(" %03d", *(Seat + i * rowCount + j));
+        }
+
+        std::cout<< "\n\n";
+    }
+
+    delete [] Seat;
 
     gotoXY(0, titleHeight + bodyHeight);
 
