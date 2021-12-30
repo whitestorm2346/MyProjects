@@ -1,0 +1,12 @@
+# depslib dependency file v1.0
+1640800423 source:c:\users\andre\onedrive\орн▒\git_repositories\myprojects\randomseat\main.cpp
+	<iostream>
+	<conio.h>
+	<string>
+	"function.hpp"
+
+1640800339 c:\users\andre\onedrive\орн▒\git_repositories\myprojects\randomseat\function.hpp
+	<windows.h>
+	<cstdlib>
+	<ctime>
+
