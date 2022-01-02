@@ -62,15 +62,11 @@ int main()
                     switch(event.key.code)
                     {
                         case sf::Mouse::Right:
-                            std::cout<< "mouse right is pressed\n";
-
                             setRandomColor(bouncingBall);
 
                             break;
 
                         case sf::Mouse::Left:
-                            std::cout<< "mouse left is pressed\n";
-
                             if(isInCircle(bouncingBall.ball.getPosition(), getMousePosInWindow))
                                bouncingBall.isDrag = true;
 
@@ -84,14 +80,9 @@ int main()
                 case sf::Event::MouseButtonReleased:
                     switch(event.key.code)
                     {
-                        case sf::Mouse::Right:
-                            std::cout<< "mouse right is released\n";
-
-                            break;
+                        case sf::Mouse::Right: break;
 
                         case sf::Mouse::Left:
-                            std::cout<< "mouse left is released\n";
-
                             bouncingBall.isDrag = false;
 
                             break;
@@ -156,11 +147,27 @@ void setBallPos(Ball& obj, sf::Vector2i displacement)
     objPos.x += displacement.x;
     objPos.y += displacement.y;
 
-    if(objPos.x < ballRadius) objPos.x = ballRadius;
-    else if(objPos.x > winWidth - ballRadius) objPos.x = winWidth - ballRadius;
+    if(objPos.x < ballRadius)
+    {
+        objPos.x = ballRadius;
+        //setRandomColor(obj);
+    }
+    else if(objPos.x > winWidth - ballRadius)
+    {
+        objPos.x = winWidth - ballRadius;
+        //setRandomColor(obj);
+    }
 
-    if(objPos.y < ballRadius) objPos.y = ballRadius;
-    else if(objPos.y > winHeight - ballRadius) objPos.y = winHeight - ballRadius;
+    if(objPos.y < ballRadius)
+    {
+        objPos.y = ballRadius;
+        //setRandomColor(obj);
+    }
+    else if(objPos.y > winHeight - ballRadius)
+    {
+        objPos.y = winHeight - ballRadius;
+        //setRandomColor(obj);
+    }
 
     obj.ball.setPosition(objPos);
 }

@@ -1,5 +1,9 @@
 # depslib dependency file v1.0
-1584205426 source:c:\users\andre\onedrive\орн▒\git_repositories\myprojects\bouncingball\main.cpp
+1641148889 source:c:\users\andre\onedrive\орн▒\git_repositories\myprojects\bouncingball\main.cpp
+	<iostream>
+	<cstdlib>
+	<ctime>
+	<cmath>
 	<SFML/Graphics.hpp>
 
 1525812018 c:\program files\sfml-2.5.1-windows-gcc-7.3.0-mingw-64-bit\sfml-2.5.1\include\sfml\graphics.hpp
