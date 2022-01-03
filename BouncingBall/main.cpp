@@ -16,12 +16,15 @@ class Ball
 public:
     bool isCollide;
     bool isDrag;
+    float velocity;
+    const float accelery = 2.5f;
     sf::CircleShape ball;
 
     Ball()
     {
         isCollide = false;
         isDrag = false;
+        velocity = 0;
         ball.setRadius(ballRadius);
         ball.setFillColor(sf::Color::White);
         ball.setOrigin(ballRadius + 1, ballRadius + 1);
@@ -41,8 +44,9 @@ int main()
     sf::RenderWindow window_Main(sf::VideoMode(winWidth, winHeight), "Bouncing Ball", sf::Style::Close);
     sf::Vector2i mouseLastPos = getMousePosInWindow;
     sf::Vector2i mouseCurrPos = getMousePosInWindow;
+    sf::Vector2i dropping;
 
-    window_Main.setFramerateLimit(60);
+    window_Main.setFramerateLimit(90);
     Ball bouncingBall;
 
     while(window_Main.isOpen())
@@ -84,6 +88,7 @@ int main()
 
                         case sf::Mouse::Left:
                             bouncingBall.isDrag = false;
+                            bouncingBall.velocity = 0;
 
                             break;
 
@@ -95,12 +100,20 @@ int main()
                 case sf::Event::MouseMoved:
                     mouseCurrPos = getMousePosInWindow;
 
-                    if(bouncingBall.isDrag)
-                        setBallPos(bouncingBall, getMousePosDisplacement);
+                    if(bouncingBall.isDrag) setBallPos(bouncingBall, getMousePosDisplacement);
 
                     break;
 
                 default: break;
+            }
+
+            if(!bouncingBall.isDrag)
+            {
+                bouncingBall.velocity += bouncingBall.accelery;
+                dropping.x = 0;
+                dropping.y = bouncingBall.velocity;
+
+                setBallPos(bouncingBall, dropping);
             }
 
             mouseLastPos = mouseCurrPos;
@@ -161,13 +174,16 @@ void setBallPos(Ball& obj, sf::Vector2i displacement)
     if(objPos.y < ballRadius)
     {
         objPos.y = ballRadius;
-        //setRandomColor(obj);
+        obj.isCollide = false;
     }
     else if(objPos.y > winHeight - ballRadius)
     {
+        if(!obj.isCollide) setRandomColor(obj);
+
         objPos.y = winHeight - ballRadius;
-        //setRandomColor(obj);
+        obj.isCollide = true;
     }
+    else obj.isCollide = false;
 
     obj.ball.setPosition(objPos);
 }
