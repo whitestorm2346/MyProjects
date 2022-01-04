@@ -115,7 +115,6 @@ void Ball::setBallRadius(int delta)
 
     ball.setRadius(ballRadius);
     ball.setOrigin(ballRadius + 1, ballRadius + 1);
-    ball.setPosition(ball.getPosition().x, winHeight - ballRadius);
 }
 
 #endif // BALL_HPP_INCLUDED
