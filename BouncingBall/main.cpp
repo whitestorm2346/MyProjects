@@ -17,12 +17,12 @@ public:
     bool isCollide;
     bool isDrag;
     float velocity;
-    const float accelery = 2.5f;
+    const float accelery = 5.f;
     sf::CircleShape ball;
 
     Ball()
     {
-        isCollide = false;
+        isCollide = true;
         isDrag = false;
         velocity = 0;
         ball.setRadius(ballRadius);
@@ -46,7 +46,7 @@ int main()
     sf::Vector2i mouseCurrPos = getMousePosInWindow;
     sf::Vector2i dropping;
 
-    window_Main.setFramerateLimit(90);
+    window_Main.setFramerateLimit(60);
     Ball bouncingBall;
 
     while(window_Main.isOpen())
@@ -100,23 +100,23 @@ int main()
                 case sf::Event::MouseMoved:
                     mouseCurrPos = getMousePosInWindow;
 
-                    if(bouncingBall.isDrag) setBallPos(bouncingBall, getMousePosDisplacement);
-
                     break;
 
                 default: break;
             }
 
-            if(!bouncingBall.isDrag)
-            {
-                bouncingBall.velocity += bouncingBall.accelery;
-                dropping.x = 0;
-                dropping.y = bouncingBall.velocity;
-
-                setBallPos(bouncingBall, dropping);
-            }
+            if(bouncingBall.isDrag) setBallPos(bouncingBall, getMousePosDisplacement);
 
             mouseLastPos = mouseCurrPos;
+        }
+
+        if(!bouncingBall.isDrag)
+        {
+            bouncingBall.velocity += bouncingBall.accelery;
+            dropping.x = 0;
+            dropping.y = bouncingBall.velocity;
+
+            setBallPos(bouncingBall, dropping);
         }
 
         window_Main.clear(sf::Color::Black);
@@ -176,12 +176,15 @@ void setBallPos(Ball& obj, sf::Vector2i displacement)
         objPos.y = ballRadius;
         obj.isCollide = false;
     }
-    else if(objPos.y > winHeight - ballRadius)
+    else if(objPos.y > winHeight - ballRadius) // drop on floor
     {
         if(!obj.isCollide) setRandomColor(obj);
 
         objPos.y = winHeight - ballRadius;
         obj.isCollide = true;
+        obj.velocity = -(obj.velocity * 0.75f);
+
+        // if(abs(obj.velocity) < 0.001) obj.velocity = 0;
     }
     else obj.isCollide = false;
 
