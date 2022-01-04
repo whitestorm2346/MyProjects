@@ -1,10 +1,7 @@
 # depslib dependency file v1.0
-1641282751 source:c:\users\andre\onedrive\桌面\git_repositories\myprojects\bouncingball\main.cpp
-	<iostream>
-	<cstdlib>
-	<ctime>
-	<cmath>
+1641308715 source:c:\users\andre\onedrive\桌面\git_repositories\myprojects\bouncingball\main.cpp
 	<SFML/Graphics.hpp>
+	"ball.hpp"
 
 1525812018 c:\program files\sfml-2.5.1-windows-gcc-7.3.0-mingw-64-bit\sfml-2.5.1\include\sfml\graphics.hpp
 	<SFML/Window.hpp>
@@ -414,4 +411,13 @@
 	<SFML/Graphics/PrimitiveType.hpp>
 	<SFML/Graphics/Drawable.hpp>
 	<SFML/Window/GlResource.hpp>
+
+1641286277 source:c:\users\andre\onedrive\桌面\git_repositories\myprojects\bouncingball\ball.cpp
+	"ball.hpp"
+
+1641308853 c:\users\andre\onedrive\桌面\git_repositories\myprojects\bouncingball\ball.hpp
+	<SFML/Graphics.hpp>
+	<cstdlib>
+	<ctime>
+	<cmath>
 
