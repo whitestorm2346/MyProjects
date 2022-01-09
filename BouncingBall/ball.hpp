@@ -11,14 +11,21 @@
 #define winHeight 1000
 
 float ballRadius = 100.f;
+float ElasticityCoefficient = 0.75f;
+
+struct Coordinate
+{
+    float x;
+    float y;
+};
 
 class Ball
 {
 public:
     bool isCollide;
     bool isDrag;
-    float velocity;
-    const float accelery = 5.f;
+    Coordinate v;
+    Coordinate a;
     sf::CircleShape ball;
 
     Ball();
@@ -51,7 +58,10 @@ Ball::Ball()
 {
     isCollide = true;
     isDrag = false;
-    velocity = 0;
+    v.x = 0;
+    v.y = 0;
+    a.x = 0;
+    a.y = 5.f;
     ball.setRadius(ballRadius);
     ball.setFillColor(sf::Color::White);
     ball.setOrigin(ballRadius + 1, ballRadius + 1);
@@ -85,18 +95,13 @@ void Ball::setBallPos(sf::Vector2i displacement)
         //setRandomColor();
     }
 
-    if(objPos.y < ballRadius)
-    {
-        objPos.y = ballRadius;
-        isCollide = false;
-    }
-    else if(objPos.y > winHeight - ballRadius) // drop on floor
+    if(objPos.y > winHeight - ballRadius) // drop on floor
     {
         if(!isCollide) setRandomColor();
 
         objPos.y = winHeight - ballRadius;
         isCollide = true;
-        velocity = -(velocity * 0.75f);
+        v.y = -(v.y * ElasticityCoefficient);
     }
     else isCollide = false;
 

@@ -11,7 +11,7 @@ int main()
     sf::Vector2i mouseCurrPos = getMousePosInWindow;
     sf::Vector2i dropping;
 
-    window_Main.setFramerateLimit(90);
+    window_Main.setFramerateLimit(60);
     Ball bouncingBall;
 
     while(window_Main.isOpen())
@@ -53,7 +53,8 @@ int main()
 
                         case sf::Mouse::Left:
                             bouncingBall.isDrag = false;
-                            bouncingBall.velocity = 0;
+                            bouncingBall.v.x = 0;
+                            bouncingBall.v.y = 0;
 
                             break;
 
@@ -76,7 +77,21 @@ int main()
                     switch(event.key.code)
                     {
                         case sf::Keyboard::Space:
-                            bouncingBall.velocity = -75;
+                        case sf::Keyboard::Up:
+                        case sf::Keyboard::W:
+                            bouncingBall.v.y = -75.f;
+
+                            break;
+
+                        case sf::Keyboard::Left:
+                        case sf::Keyboard::A:
+                            bouncingBall.v.x -= 35.f;
+
+                            break;
+
+                        case sf::Keyboard::Right:
+                        case sf::Keyboard::D:
+                            bouncingBall.v.x += 35.f;
 
                             break;
 
@@ -93,9 +108,10 @@ int main()
 
         if(!bouncingBall.isDrag)
         {
-            bouncingBall.velocity += bouncingBall.accelery;
+            //bouncingBall.v.x += bouncingBall.a.x;
+            bouncingBall.v.y += bouncingBall.a.y;
             dropping.x = 0;
-            dropping.y = bouncingBall.velocity;
+            dropping.y = bouncingBall.v.y;
 
             bouncingBall.setBallPos(dropping);
         }
