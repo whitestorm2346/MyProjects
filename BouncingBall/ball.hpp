@@ -7,11 +7,10 @@
 #include <ctime>
 #include <cmath>
 
-#define winWidth 800
-#define winHeight 1000
-
+const float winWidth = 800.f;
+const float winHeight = 1000.f;
+const float ElasticityCoefficient = 0.75f;
 float ballRadius = 100.f;
-float ElasticityCoefficient = 0.75f;
 
 struct Coordinate
 {
