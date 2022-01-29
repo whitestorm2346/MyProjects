@@ -2,6 +2,7 @@
 #define BALL_HPP_INCLUDED
 
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 
 #include <cstdlib>
 #include <ctime>
@@ -11,6 +12,9 @@ const float winWidth = 800.f;
 const float winHeight = 1000.f;
 const float ElasticityCoefficient = 0.95f;
 float ballRadius = 100.f;
+
+sf::SoundBuffer sBuffer;
+sf::Sound Collide;
 
 template <typename type>
 struct Coordinate
@@ -67,6 +71,10 @@ Ball::Ball()
     ball.setFillColor(sf::Color::White);
     ball.setOrigin(ballRadius + 1, ballRadius + 1);
     ball.setPosition(winWidth / 2, winHeight - ballRadius);
+
+    if(!sBuffer.loadFromFile("gameBallBounce.wav")) exit(1);
+
+    Collide.setBuffer(sBuffer);
 }
 void Ball::setRandomColor()
 {
@@ -87,7 +95,11 @@ void Ball::setBallPos(sf::Vector2i displacement)
 
     if(objPos.x <= ballRadius)
     {
-        if(!isCollide.x && !isDrag) setRandomColor();
+        if(!isCollide.x && !isDrag)
+        {
+            setRandomColor();
+            Collide.play();
+        }
 
         objPos.x = ballRadius;
         isCollide.x = true;
@@ -95,7 +107,11 @@ void Ball::setBallPos(sf::Vector2i displacement)
     }
     else if(objPos.x >= winWidth - ballRadius)
     {
-        if(!isCollide.x && !isDrag) setRandomColor();
+        if(!isCollide.x && !isDrag)
+        {
+            setRandomColor();
+            Collide.play();
+        }
 
         objPos.x = winWidth - ballRadius;
         isCollide.x = true;
@@ -105,7 +121,11 @@ void Ball::setBallPos(sf::Vector2i displacement)
 
     if(objPos.y >= winHeight - ballRadius) // drop on floor
     {
-        if(!isCollide.y && !isDrag) setRandomColor();
+        if(!isCollide.y && !isDrag)
+        {
+            setRandomColor();
+            Collide.play();
+        }
 
         objPos.y = winHeight - ballRadius;
         isCollide.y = true;
