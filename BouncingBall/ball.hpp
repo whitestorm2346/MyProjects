@@ -9,22 +9,23 @@
 
 const float winWidth = 800.f;
 const float winHeight = 1000.f;
-const float ElasticityCoefficient = 0.75f;
+const float ElasticityCoefficient = 0.95f;
 float ballRadius = 100.f;
 
+template <typename type>
 struct Coordinate
 {
-    float x;
-    float y;
+    type x;
+    type y;
 };
 
 class Ball
 {
 public:
-    bool isCollide;
     bool isDrag;
-    Coordinate v;
-    Coordinate a;
+    Coordinate<bool> isCollide;
+    Coordinate<float> v;
+    Coordinate<float> a;
     sf::CircleShape ball;
 
     Ball();
@@ -55,8 +56,9 @@ sf::Vector2i mousePosDisplacement(const sf::Vector2i& lastPos, const sf::Vector2
 }
 Ball::Ball()
 {
-    isCollide = true;
     isDrag = false;
+    isCollide.x = false;
+    isCollide.y = true;
     v.x = 0;
     v.y = 0;
     a.x = 0;
@@ -69,9 +71,9 @@ Ball::Ball()
 void Ball::setRandomColor()
 {
     auto color = sf::Color{
-        static_cast<unsigned char>(rand() % 206 + 50),
-        static_cast<unsigned char>(rand() % 206 + 50),
-        static_cast<unsigned char>(rand() % 206 + 50)
+        static_cast<unsigned char>(rand() % 256),
+        static_cast<unsigned char>(rand() % 256),
+        static_cast<unsigned char>(rand() % 256)
     };
 
     ball.setFillColor(color);
@@ -83,26 +85,34 @@ void Ball::setBallPos(sf::Vector2i displacement)
     objPos.x += displacement.x;
     objPos.y += displacement.y;
 
-    if(objPos.x < ballRadius)
+    if(objPos.x <= ballRadius)
     {
-        objPos.x = ballRadius;
-        //setRandomColor();
-    }
-    else if(objPos.x > winWidth - ballRadius)
-    {
-        objPos.x = winWidth - ballRadius;
-        //setRandomColor();
-    }
+        if(!isCollide.x && !isDrag) setRandomColor();
 
-    if(objPos.y > winHeight - ballRadius) // drop on floor
+        objPos.x = ballRadius;
+        isCollide.x = true;
+        v.x = -(v.x * ElasticityCoefficient);
+    }
+    else if(objPos.x >= winWidth - ballRadius)
     {
-        if(!isCollide) setRandomColor();
+        if(!isCollide.x && !isDrag) setRandomColor();
+
+        objPos.x = winWidth - ballRadius;
+        isCollide.x = true;
+        v.x = -(v.x * ElasticityCoefficient);
+    }
+    else isCollide.x = false;
+
+    if(objPos.y >= winHeight - ballRadius) // drop on floor
+    {
+        if(!isCollide.y && !isDrag) setRandomColor();
 
         objPos.y = winHeight - ballRadius;
-        isCollide = true;
+        isCollide.y = true;
+        v.x *= ElasticityCoefficient;
         v.y = -(v.y * ElasticityCoefficient);
     }
-    else isCollide = false;
+    else isCollide.y = false;
 
     ball.setPosition(objPos);
 }

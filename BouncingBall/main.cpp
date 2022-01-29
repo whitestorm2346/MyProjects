@@ -85,13 +85,13 @@ int main()
 
                         case sf::Keyboard::Left:
                         case sf::Keyboard::A:
-                            bouncingBall.v.x -= 35.f;
+                            bouncingBall.v.x -= 20.f;
 
                             break;
 
                         case sf::Keyboard::Right:
                         case sf::Keyboard::D:
-                            bouncingBall.v.x += 35.f;
+                            bouncingBall.v.x += 20.f;
 
                             break;
 
@@ -108,9 +108,9 @@ int main()
 
         if(!bouncingBall.isDrag)
         {
-            //bouncingBall.v.x += bouncingBall.a.x;
+            bouncingBall.v.x += bouncingBall.a.x;
             bouncingBall.v.y += bouncingBall.a.y;
-            dropping.x = 0;
+            dropping.x = bouncingBall.v.x;
             dropping.y = bouncingBall.v.y;
 
             bouncingBall.setBallPos(dropping);
