@@ -6,11 +6,16 @@
 
 int main()
 {
+    sf::Image img_Icon;
+
+    img_Icon.loadFromFile("mySource/Ball.PNG");
+
     sf::RenderWindow window_Main(sf::VideoMode(winWidth, winHeight), "Bouncing Ball", sf::Style::Close);
     sf::Vector2i mouseLastPos = getMousePosInWindow;
     sf::Vector2i mouseCurrPos = getMousePosInWindow;
     sf::Vector2i dropping;
 
+    window_Main.setIcon(img_Icon.getSize().x, img_Icon.getSize().y, img_Icon.getPixelsPtr());
     window_Main.setFramerateLimit(60);
     Ball bouncingBall;
 

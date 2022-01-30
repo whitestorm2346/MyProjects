@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1643436590 source:c:\users\andre\onedrive\орн▒\git_repositories\myprojects\bouncingball\main.cpp
+1643521041 source:c:\users\andre\onedrive\орн▒\git_repositories\myprojects\bouncingball\main.cpp
 	<SFML/Graphics.hpp>
 	"ball.hpp"
 
@@ -525,4 +525,6 @@
 1525812018 c:\program files\sfml-2.5.1-windows-gcc-7.3.0-mingw-64-bit\sfml-2.5.1\include\sfml\audio\soundfilewriter.hpp
 	<SFML/Audio/Export.hpp>
 	<string>
+
+1643521085 source:c:\users\andre\onedrive\орн▒\git_repositories\myprojects\bouncingball\resources.rc
 

@@ -50,6 +50,11 @@
 		</Linker>
 		<Unit filename="ball.hpp" />
 		<Unit filename="main.cpp" />
+		<Unit filename="mySource/Ball.PNG" />
+		<Unit filename="mySource/Ball.ico" />
+		<Unit filename="resources.rc">
+			<Option compilerVar="WINDRES" />
+		</Unit>
 		<Extensions>
 			<lib_finder disable_auto="1" />
 		</Extensions>
