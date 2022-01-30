@@ -1,6 +1,6 @@
 #include <SFML/Graphics.hpp>
-#include "Game.h"
-#include "MainMenu.h"
+#include "mySource/Game.h"
+#include "mySource/MainMenu.h"
 
 int main()
 {
@@ -10,5 +10,3 @@ int main()
 
     return EXIT_SUCCESS;
 }
-
-

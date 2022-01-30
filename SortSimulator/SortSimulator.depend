@@ -1,8 +1,8 @@
 # depslib dependency file v1.0
-1625817034 source:c:\users\andre\onedrive\桌面\git_repositories\myprojects\sortsimulator\main.cpp
+1643521633 source:c:\users\andre\onedrive\桌面\git_repositories\myprojects\sortsimulator\main.cpp
 	<SFML/Graphics.hpp>
-	"Game.h"
-	"MainMenu.h"
+	"mySource/Game.h"
+	"mySource/MainMenu.h"
 
 1525812018 c:\program files\sfml-2.5.1-windows-gcc-7.3.0-mingw-64-bit\sfml-2.5.1\include\sfml\graphics.hpp
 	<SFML/Window.hpp>
@@ -413,7 +413,8 @@
 	<SFML/Graphics/Drawable.hpp>
 	<SFML/Window/GlResource.hpp>
 
-1625805168 c:\users\andre\onedrive\桌面\git_repositories\myprojects\sortsimulator\game.h
+1641272691 c:\users\andre\onedrive\桌面\git_repositories\myprojects\sortsimulator\game.h
+	<iostream>
 	<memory>
 	<SFML/Graphics/RenderWindow.hpp>
 	"StateManager.h"
@@ -467,4 +468,62 @@
 	<SFML/Graphics/Text.hpp>
 	"Game.h"
 	"State.h"
+
+1643521822 c:\users\andre\onedrive\桌面\git_repositories\myprojects\sortsimulator\mysource\game.h
+	<iostream>
+	<memory>
+	<SFML/Graphics/RenderWindow.hpp>
+	"StateManager.h"
+	"AssertManager.h"
+
+1625243476 c:\users\andre\onedrive\桌面\git_repositories\myprojects\sortsimulator\mysource\statemanager.h
+	<stack>
+	<memory>
+	"State.h"
+
+1625725731 c:\users\andre\onedrive\桌面\git_repositories\myprojects\sortsimulator\mysource\state.h
+	<SFML/System/Time.hpp>
+
+1625068385 c:\users\andre\onedrive\桌面\git_repositories\myprojects\sortsimulator\mysource\assertmanager.h
+	<map>
+	<memory>
+	<string>
+	<SFML/Graphics/Texture.hpp>
+	<SFML/Graphics/Font.hpp>
+
+1643521851 c:\users\andre\onedrive\桌面\git_repositories\myprojects\sortsimulator\mysource\mainmenu.h
+	<memory>
+	<SFML/Window/Event.hpp>
+	<SFML/Graphics/Text.hpp>
+	"State.h"
+	"Game.h"
+	"StartState.h"
+	"Option.h"
+
+1626366491 c:\users\andre\onedrive\桌面\git_repositories\myprojects\sortsimulator\mysource\startstate.h
+	<memory>
+	<deque>
+	<stack>
+	<SFML/Window/Event.hpp>
+	<SFML/Graphics/Text.hpp>
+	<SFML/Graphics/Texture.hpp>
+	<SFML/System/Time.hpp>
+	"Game.h"
+	"State.h"
+	"ClassObject.h"
+
+1625829795 c:\users\andre\onedrive\桌面\git_repositories\myprojects\sortsimulator\mysource\classobject.h
+	<cstdlib>
+	<ctime>
+	<set>
+	<deque>
+
+1625724379 c:\users\andre\onedrive\桌面\git_repositories\myprojects\sortsimulator\mysource\option.h
+	<memory>
+	<SFML/Window/Event.hpp>
+	<SFML/Graphics/Text.hpp>
+	"Game.h"
+	"State.h"
+
+1643521774 source:c:\users\andre\onedrive\桌面\git_repositories\myprojects\sortsimulator\resources.rc
 

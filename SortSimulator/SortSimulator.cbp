@@ -48,16 +48,19 @@
 			<Add library="dxguid" />
 			<Add directory="C:/Program Files/SFML-2.5.1-windows-gcc-7.3.0-mingw-64-bit/SFML-2.5.1/lib" />
 		</Linker>
-		<Unit filename="AssertManager.h" />
-		<Unit filename="Block.ico" />
-		<Unit filename="ClassObject.h" />
-		<Unit filename="Game.h" />
-		<Unit filename="MainMenu.h" />
-		<Unit filename="Option.h" />
-		<Unit filename="StartState.h" />
-		<Unit filename="State.h" />
-		<Unit filename="StateManager.h" />
 		<Unit filename="main.cpp" />
+		<Unit filename="mySource/AssertManager.h" />
+		<Unit filename="mySource/Block.png" />
+		<Unit filename="mySource/ClassObject.h" />
+		<Unit filename="mySource/Game.h" />
+		<Unit filename="mySource/MainMenu.h" />
+		<Unit filename="mySource/Option.h" />
+		<Unit filename="mySource/StartState.h" />
+		<Unit filename="mySource/State.h" />
+		<Unit filename="mySource/StateManager.h" />
+		<Unit filename="resources.rc">
+			<Option compilerVar="WINDRES" />
+		</Unit>
 		<Extensions>
 			<lib_finder disable_auto="1" />
 		</Extensions>
