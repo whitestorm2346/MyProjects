@@ -42,11 +42,11 @@ public:
 
 class Game
 {
+    int score;
     void setGame();
     void printMatrix();
 
 public:
-    int score;
     char matrix[MATRIX_HEIGHT + 2][MATRIX_WIDTH + 2];
     Snake snake;
 
@@ -57,44 +57,57 @@ public:
     void printHead();
     void removeTail();
     void generateFood();
+    void printScore(int);
 };
 
 int main()
 {
     hideCursor();
 
-    Game game;
+    Game* game = new Game();
     bool gameOver = false;
 
-    game.printHead();
-    game.generateFood();
+    game->printHead();
+    game->generateFood();
+    game->printScore(0);
 
     do
     {
-        char key;
+        char key = ' ';
 
         if(kbhit()) key = getch();
 
         switch(key)
         {
-            case 'w': case 'W': game.snake.direction = UP; break;
-            case 'a': case 'A': game.snake.direction = LEFT; break;
-            case 's': case 'S': game.snake.direction = DOWN; break;
-            case 'd': case 'D': game.snake.direction = RIGHT; break;
+            case 'w': case 'W': game->snake.direction = UP; break;
+            case 'a': case 'A': game->snake.direction = LEFT; break;
+            case 's': case 'S': game->snake.direction = DOWN; break;
+            case 'd': case 'D': game->snake.direction = RIGHT; break;
         }
 
-        game.snake.newHead();
+        game->snake.newHead();
 
-        if(!game.isEat()) game.removeTail();
-        else game.generateFood();
+        if(!game->isEat()) game->removeTail();
+        else
+        {
+            game->generateFood();
+            game->snake.speed -= 5;
+            game->printScore(20);
+        }
 
-        if(game.isCollide()) gameOver = true;
+        if(game->isCollide()) gameOver = true;
 
-        game.printHead();
+        game->printHead();
 
-        Sleep(game.snake.speed);
+        Sleep(game->snake.speed);
+
+        game->printScore(1);
     }
     while(!gameOver);
+
+    delete game;
+
+    system("pause");
 
     return 0;
 }
@@ -193,9 +206,9 @@ Game::Game()
 }
 Game::~Game()
 {
-    gotoXY(0, MATRIX_HEIGHT + 4);
+    gotoXY(0, MATRIX_HEIGHT + 5);
 
-    std::cout<< "GAME OVER!!";
+    std::cout<< "GAME OVER!!\n\n";
 }
 bool Game::isCollide()
 {
@@ -252,4 +265,12 @@ void Game::generateFood()
     gotoXY(x, y);
 
     std::cout<< '@';
+}
+void Game::printScore(int delta)
+{
+    score += delta;
+
+    gotoXY(0, MATRIX_HEIGHT + 3);
+
+    std::cout<< "Score: " << score;
 }
