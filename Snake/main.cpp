@@ -4,9 +4,9 @@
 #include <windows.h>
 #include <conio.h>
 #include <queue>
+#include <string>
 
-#define MATRIX_HEIGHT 10
-#define MATRIX_WIDTH (2 * MATRIX_HEIGHT)
+#define MATRIX_SIZE 10
 
 enum Direction
 {
@@ -18,6 +18,7 @@ enum Direction
 
 void gotoXY(short, short);
 void hideCursor();
+void setColor(int, bool);
 
 class Body
 {
@@ -45,9 +46,10 @@ class Game
     int score;
     void setGame();
     void printMatrix();
+    HANDLE hOut;
 
 public:
-    char matrix[MATRIX_HEIGHT + 2][MATRIX_WIDTH + 2];
+    std::string matrix[MATRIX_SIZE + 2][MATRIX_SIZE + 2];
     Snake snake;
 
     Game();
@@ -79,10 +81,10 @@ int main()
 
         switch(key)
         {
-            case 'w': case 'W': game->snake.direction = UP; break;
-            case 'a': case 'A': game->snake.direction = LEFT; break;
-            case 's': case 'S': game->snake.direction = DOWN; break;
-            case 'd': case 'D': game->snake.direction = RIGHT; break;
+            case 'w': case 'W': if(game->snake.direction != DOWN) game->snake.direction = UP; break;
+            case 'a': case 'A': if(game->snake.direction != RIGHT) game->snake.direction = LEFT; break;
+            case 's': case 'S': if(game->snake.direction != UP) game->snake.direction = DOWN; break;
+            case 'd': case 'D': if(game->snake.direction != LEFT) game->snake.direction = RIGHT; break;
         }
 
         game->snake.newHead();
@@ -137,7 +139,7 @@ Body::Body(short x, short y)
 }
 Snake::Snake()
 {
-    body.push(new Body(MATRIX_WIDTH / 2, MATRIX_HEIGHT / 2));
+    body.push(new Body(MATRIX_SIZE / 2, MATRIX_SIZE / 2));
     direction = RIGHT;
     speed = 500;
 }
@@ -165,48 +167,53 @@ void Game::setGame()
 {
     score = 0;
 
-    for(int i = 0; i < MATRIX_WIDTH + 2; i++)
+    for(int i = 0; i < MATRIX_SIZE + 2; i++)
     {
-        matrix[0][i] = '#';
-        matrix[MATRIX_HEIGHT + 1][i] = '#';
+        matrix[0][i] = "―";
+        matrix[MATRIX_SIZE + 1][i] = "―";
     }
 
-    for(int i = 1; i < MATRIX_HEIGHT + 1; i++)
+    for(int i = 1; i < MATRIX_SIZE + 1; i++)
     {
-        matrix[i][0] = '#';
-        matrix[i][MATRIX_WIDTH + 1] = '#';
+        matrix[i][0] = "―";
+        matrix[i][MATRIX_SIZE + 1] = "―";
     }
 
-    for(int i = 1; i < MATRIX_HEIGHT + 1; i++)
+    for(int i = 1; i < MATRIX_SIZE + 1; i++)
     {
-        for(int j = 1; j < MATRIX_WIDTH + 1; j++)
+        for(int j = 1; j < MATRIX_SIZE + 1; j++)
         {
-            matrix[i][j] = ' ';
+            matrix[i][j] = "  ";
         }
     }
 }
 void Game::printMatrix()
 {
     gotoXY(0, 0);
+    SetConsoleTextAttribute(hOut, FOREGROUND_RED | FOREGROUND_INTENSITY);
 
-    for(int i = 0; i < MATRIX_HEIGHT + 2; i++)
+    for(int i = 0; i < MATRIX_SIZE + 2; i++)
     {
-        for(int j = 0; j < MATRIX_WIDTH + 2; j++)
+        for(int j = 0; j < MATRIX_SIZE + 2; j++)
         {
             std::cout<< matrix[i][j];
         }
 
         std::cout<< '\n';
     }
+
+    SetConsoleTextAttribute(hOut, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
 }
 Game::Game()
 {
+    hOut = GetStdHandle(STD_OUTPUT_HANDLE);
+
     setGame();
     printMatrix();
 }
 Game::~Game()
 {
-    gotoXY(0, MATRIX_HEIGHT + 5);
+    gotoXY(0, MATRIX_SIZE + 5);
 
     std::cout<< "GAME OVER!!\n\n";
 }
@@ -214,38 +221,40 @@ bool Game::isCollide()
 {
     std::pair<short, short> headPos = snake.body.back()->pos;
 
-    return (matrix[headPos.second][headPos.first] == '#') ||
-           (matrix[headPos.second][headPos.first] == 'O');
+    return matrix[headPos.second][headPos.first] == "―";
 }
 bool Game::isEat()
 {
     std::pair<short, short> headPos = snake.body.back()->pos;
 
-    return matrix[headPos.second][headPos.first] == '@';
+    return matrix[headPos.second][headPos.first] == "〃";
 }
 void Game::printHead()
 {
     std::pair<short, short> headPos = snake.body.back()->pos;
 
-    gotoXY(headPos.first, headPos.second);
+    gotoXY(headPos.first * 2, headPos.second);
+    SetConsoleTextAttribute(hOut, FOREGROUND_GREEN | FOREGROUND_INTENSITY);
 
-    std::cout<< 'O';
+    std::cout<< "―";
 
-    matrix[headPos.second][headPos.first] = 'O';
+    SetConsoleTextAttribute(hOut, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
+
+    matrix[headPos.second][headPos.first] = "―";
 }
 void Game::removeTail()
 {
     std::pair<short, short> tailPos = snake.body.front()->pos;
 
-    gotoXY(tailPos.first, tailPos.second);
+    gotoXY(tailPos.first * 2, tailPos.second);
 
-    std::cout<< ' ';
+    std::cout<< "  ";
 
     delete snake.body.front();
 
     snake.body.pop();
 
-    matrix[tailPos.second][tailPos.first] = ' ';
+    matrix[tailPos.second][tailPos.first] = "  ";
 }
 void Game::generateFood()
 {
@@ -255,22 +264,26 @@ void Game::generateFood()
 
     do
     {
-        x = rand() % MATRIX_WIDTH + 1;
-        y = rand() % MATRIX_HEIGHT + 1;
+        x = rand() % MATRIX_SIZE + 1;
+        y = rand() % MATRIX_SIZE + 1;
     }
-    while(matrix[y][x] != ' ');
+    while(matrix[y][x] != "  ");
 
-    matrix[y][x] = '@';
+    matrix[y][x] = "〃";
 
-    gotoXY(x, y);
+    gotoXY(x * 2, y);
+    SetConsoleTextAttribute(hOut, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_INTENSITY);
 
-    std::cout<< '@';
+    std::cout<< "〃";
+
+    SetConsoleTextAttribute(hOut, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
 }
 void Game::printScore(int delta)
 {
     score += delta;
 
-    gotoXY(0, MATRIX_HEIGHT + 3);
+    gotoXY(0, MATRIX_SIZE + 3);
+    SetConsoleTextAttribute(hOut, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
 
     std::cout<< "Score: " << score;
 }
