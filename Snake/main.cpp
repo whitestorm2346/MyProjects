@@ -75,16 +75,45 @@ int main()
 
     do
     {
-        char key = ' ';
+        int key = 0;
 
         if(kbhit()) key = getch();
 
-        switch(key)
+        if(key == 244)
         {
-            case 'w': case 'W': if(game->snake.direction != DOWN) game->snake.direction = UP; break;
-            case 'a': case 'A': if(game->snake.direction != RIGHT) game->snake.direction = LEFT; break;
-            case 's': case 'S': if(game->snake.direction != UP) game->snake.direction = DOWN; break;
-            case 'd': case 'D': if(game->snake.direction != LEFT) game->snake.direction = RIGHT; break;
+            key = getch();
+
+            switch(key)
+            {
+                case 72:
+                    if(game->snake.direction != DOWN) game->snake.direction = UP; break;
+
+                case 75:
+                    if(game->snake.direction != RIGHT) game->snake.direction = LEFT; break;
+
+                case 80:
+                    if(game->snake.direction != UP) game->snake.direction = DOWN; break;
+
+                case 77:
+                    if(game->snake.direction != LEFT) game->snake.direction = RIGHT; break;
+            }
+        }
+        else
+        {
+            switch(key)
+            {
+                case 'w': case 'W':
+                    if(game->snake.direction != DOWN) game->snake.direction = UP; break;
+
+                case 'a': case 'A':
+                    if(game->snake.direction != RIGHT) game->snake.direction = LEFT; break;
+
+                case 's': case 'S':
+                    if(game->snake.direction != UP) game->snake.direction = DOWN; break;
+
+                case 'd': case 'D':
+                    if(game->snake.direction != LEFT) game->snake.direction = RIGHT; break;
+            }
         }
 
         game->snake.newHead();
@@ -93,8 +122,8 @@ int main()
         else
         {
             game->generateFood();
-            game->snake.speed -= 5;
-            game->printScore(20);
+            game->snake.speed -= 3;
+            game->printScore(5);
         }
 
         if(game->isCollide()) gameOver = true;
@@ -102,8 +131,6 @@ int main()
         game->printHead();
 
         Sleep(game->snake.speed);
-
-        game->printScore(1);
     }
     while(!gameOver);
 

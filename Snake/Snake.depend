@@ -1,0 +1,10 @@
+# depslib dependency file v1.0
+1645723504 source:c:\users\andre\onedrive\орн▒\git_repositories\myprojects\snake\main.cpp
+	<iostream>
+	<cstdlib>
+	<ctime>
+	<windows.h>
+	<conio.h>
+	<queue>
+	<string>
+
