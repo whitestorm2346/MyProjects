@@ -64,8 +64,6 @@ public:
 
 int main()
 {
-    hideCursor();
-
     Game* game = new Game();
     bool gameOver = false;
 
@@ -168,7 +166,7 @@ Snake::Snake()
 {
     body.push(new Body(MATRIX_SIZE / 2, MATRIX_SIZE / 2));
     direction = RIGHT;
-    speed = 500;
+    speed = 400;
 }
 Snake::~Snake()
 {
@@ -218,6 +216,7 @@ void Game::printMatrix()
 {
     gotoXY(0, 0);
     SetConsoleTextAttribute(hOut, FOREGROUND_RED | FOREGROUND_INTENSITY);
+    hideCursor();
 
     for(int i = 0; i < MATRIX_SIZE + 2; i++)
     {
@@ -235,6 +234,7 @@ Game::Game()
 {
     hOut = GetStdHandle(STD_OUTPUT_HANDLE);
 
+    system("pause");
     setGame();
     printMatrix();
 }
