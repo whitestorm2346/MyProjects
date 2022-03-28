@@ -5,11 +5,14 @@
 
 class GameState: public State
 {
+    Entity player;
+
 public:
     GameState(sf::RenderWindow* window);
     virtual ~GameState();
 
     void endState();
+    void updateKeybinds(const float& deltaTime);
     void update(const float& deltaTime);
     void render(sf::RenderTarget* target = nullptr);
 };

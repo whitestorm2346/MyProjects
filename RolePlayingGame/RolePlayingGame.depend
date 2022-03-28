@@ -411,11 +411,11 @@
 	<SFML/Graphics/Drawable.hpp>
 	<SFML/Window/GlResource.hpp>
 
-1648398076 source:c:\users\andre\onedrive\桌面\git_repositories\myprojects\roleplayinggame\game.cpp
+1648489744 source:c:\users\andre\onedrive\桌面\git_repositories\myprojects\roleplayinggame\game.cpp
 	"Game.hpp"
 
-1648398879 c:\users\andre\onedrive\桌面\git_repositories\myprojects\roleplayinggame\game.hpp
-	"State/GameState.hpp"
+1648490627 c:\users\andre\onedrive\桌面\git_repositories\myprojects\roleplayinggame\game.hpp
+	"GameState.hpp"
 
 1525812018 c:\program files\sfml-2.5.1-windows-gcc-7.3.0-mingw-64-bit\sfml-2.5.1\include\sfml\audio.hpp
 	<SFML/System.hpp>
@@ -596,22 +596,28 @@
 	<SFML/Network/IpAddress.hpp>
 	<vector>
 
-1648396124 c:\users\andre\onedrive\桌面\git_repositories\myprojects\roleplayinggame\state.hpp
-	<SFML/Graphics.hpp>
-	<SFML/System.hpp>
-	<SFML/Window.hpp>
-	<SFML/Audio.hpp>
-	<SFML/Network.hpp>
-	<iostream>
-	<string>
-	<vector>
-	<fstream>
-	<sstream>
+1648490499 c:\users\andre\onedrive\桌面\git_repositories\myprojects\roleplayinggame\state.hpp
+	"Entity.hpp"
 
-1648394819 source:c:\users\andre\onedrive\桌面\git_repositories\myprojects\roleplayinggame\state.cpp
+1648431760 source:c:\users\andre\onedrive\桌面\git_repositories\myprojects\roleplayinggame\state.cpp
 	"State.hpp"
 
-1648398990 c:\users\andre\onedrive\桌面\git_repositories\myprojects\roleplayinggame\state\state.hpp
+1648490499 c:\users\andre\onedrive\桌面\git_repositories\myprojects\roleplayinggame\state\state.hpp
+	"Entity.hpp"
+
+1648434566 source:c:\users\andre\onedrive\桌面\git_repositories\myprojects\roleplayinggame\state\gamestate.cpp
+	"GameState.hpp"
+
+1648433691 c:\users\andre\onedrive\桌面\git_repositories\myprojects\roleplayinggame\state\gamestate.hpp
+	"State.hpp"
+
+1648431760 source:c:\users\andre\onedrive\桌面\git_repositories\myprojects\roleplayinggame\state\state.cpp
+	"State.hpp"
+
+1648490181 source:c:\users\andre\onedrive\桌面\git_repositories\myprojects\roleplayinggame\entities\entity.cpp
+	"Entity.hpp"
+
+1648490441 c:\users\andre\onedrive\桌面\git_repositories\myprojects\roleplayinggame\entities\entity.hpp
 	<SFML/Graphics.hpp>
 	<SFML/System.hpp>
 	<SFML/Window.hpp>
@@ -625,12 +631,23 @@
 	<fstream>
 	<sstream>
 
-1648398987 source:c:\users\andre\onedrive\桌面\git_repositories\myprojects\roleplayinggame\state\gamestate.cpp
+1648492040 c:\users\andre\onedrive\桌面\git_repositories\myprojects\roleplayinggame\gamestate.hpp
+	"State.hpp"
+
+1648492154 c:\users\andre\onedrive\桌面\git_repositories\myprojects\roleplayinggame\entity.hpp
+	<SFML/Graphics.hpp>
+	<SFML/System.hpp>
+	<SFML/Window.hpp>
+	<SFML/Audio.hpp>
+	<SFML/Network.hpp>
+	<iostream>
+	<string>
+	<vector>
+	<stack>
+	<map>
+	<fstream>
+	<sstream>
+
+1648434566 source:c:\users\andre\onedrive\桌面\git_repositories\myprojects\roleplayinggame\gamestate.cpp
 	"GameState.hpp"
-
-1648398989 c:\users\andre\onedrive\桌面\git_repositories\myprojects\roleplayinggame\state\gamestate.hpp
-	"State.hpp"
-
-1648398028 source:c:\users\andre\onedrive\桌面\git_repositories\myprojects\roleplayinggame\state\state.cpp
-	"State.hpp"
 

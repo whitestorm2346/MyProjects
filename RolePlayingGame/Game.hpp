@@ -1,7 +1,7 @@
 #ifndef GAME_HPP_INCLUDED
 #define GAME_HPP_INCLUDED
 
-#include "State/GameState.hpp"
+#include "GameState.hpp"
 
 class Game
 {
@@ -20,9 +20,12 @@ public:
     Game();
     virtual ~Game();
 
+    void endApplication();
+
     void updateDeltaTime();
     void updateSFMLEvents();
     void update();
+
     void render();
     void run();
 };

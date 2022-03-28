@@ -45,6 +45,10 @@ void Game::initState()
 {
     states.push(new GameState(window));
 }
+void Game::endApplication()
+{
+    std::cout<< "Ending Application!\n";
+}
 void Game::updateDeltaTime()
 {
     deltaTime = dtClock.restart().asSeconds();
@@ -60,7 +64,24 @@ void Game::update()
 {
     updateSFMLEvents();
 
-    if(!states.empty()) states.top()->update(deltaTime);
+    if(!states.empty())
+    {
+        states.top()->update(deltaTime);
+
+        if(states.top()->getQuit())
+        {
+            states.top()->endState();
+
+            delete states.top();
+
+            states.pop();
+        }
+    }
+    else
+    {
+        endApplication();
+        window->close();
+    }
 }
 void Game::render()
 {
@@ -78,5 +99,4 @@ void Game::run()
         update();
         render();
     }
-
 }
