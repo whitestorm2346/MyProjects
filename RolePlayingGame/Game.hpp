@@ -2,6 +2,7 @@
 #define GAME_HPP_INCLUDED
 
 #include "GameState.hpp"
+#include "MainMenuState.hpp"
 
 class Game
 {

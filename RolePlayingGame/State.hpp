@@ -12,6 +12,10 @@ protected:
     std::vector<sf::Texture> textures;
     bool quit;
 
+    sf::Vector2i mousePosScreen;
+    sf::Vector2i mousePosWindow;
+    sf::Vector2f mousePosView;
+
     virtual void initKeybinds() = 0;
 
 public:
@@ -22,6 +26,7 @@ public:
 
     virtual void checkForQuit();
     virtual void endState() = 0;
+    virtual void updateMousePositions();
     virtual void updateInput(const float& deltaTime) = 0;
     virtual void update(const float& deltaTime) = 0;
     virtual void render(sf::RenderTarget* target = nullptr) = 0;

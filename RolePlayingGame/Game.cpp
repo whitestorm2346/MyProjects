@@ -44,15 +44,24 @@ void Game::initWindow()
 }
 void Game::initStates()
 {
-    states.push(new GameState(window, &supportedKeys));
+    states.push(new MainMenuState(window, &supportedKeys));
 }
 void Game::initKeys()
 {
-    supportedKeys["Escape"] = sf::Keyboard::Escape;
-    supportedKeys["W"] = sf::Keyboard::W;
-    supportedKeys["A"] = sf::Keyboard::A;
-    supportedKeys["S"] = sf::Keyboard::S;
-    supportedKeys["D"] = sf::Keyboard::D;
+    std::ifstream ifs("Config/supportedKeys.ini");
+
+    if(ifs.is_open())
+    {
+        std::string key;
+        int value;
+
+        for(; ifs>> key >> value;)
+        {
+            supportedKeys[key] = value;
+        }
+    }
+
+    ifs.close();
 }
 void Game::endApplication()
 {

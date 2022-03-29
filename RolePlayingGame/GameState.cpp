@@ -12,11 +12,19 @@ GameState::~GameState()
 
 void GameState::initKeybinds()
 {
-    keybinds["CLOSE"] = supportedKeys->at("Escape");
-    keybinds["MOVE_LEFT"] = supportedKeys->at("A");
-    keybinds["MOVE_RIGHT"] = supportedKeys->at("D");
-    keybinds["MOVE_UP"] = supportedKeys->at("W");
-    keybinds["MOVE_DOWN"] = supportedKeys->at("S");
+    std::ifstream ifs("Config/gameStateKeybinds.ini");
+
+    if(ifs.is_open())
+    {
+        std::string key, value;
+
+        for(; ifs>> key >> value;)
+        {
+            keybinds[key] = supportedKeys->at(value);
+        }
+    }
+
+    ifs.close();
 }
 void GameState::endState()
 {
@@ -40,6 +48,7 @@ void GameState::updateInput(const float& deltaTime)
 }
 void GameState::update(const float& deltaTime)
 {
+    updateMousePositions();
     updateInput(deltaTime);
 
     player.update(deltaTime);
