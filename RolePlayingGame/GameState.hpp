@@ -7,12 +7,14 @@ class GameState: public State
 {
     Entity player;
 
+    void initKeybinds();
+
 public:
-    GameState(sf::RenderWindow* window);
+    GameState(sf::RenderWindow* window, std::map<std::string, int>* supportedKeys);
     virtual ~GameState();
 
     void endState();
-    void updateKeybinds(const float& deltaTime);
+    void updateInput(const float& deltaTime);
     void update(const float& deltaTime);
     void render(sf::RenderTarget* target = nullptr);
 };

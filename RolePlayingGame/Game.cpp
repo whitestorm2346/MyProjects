@@ -3,7 +3,8 @@
 Game::Game()
 {
     initWindow();
-    initState();
+    initKeys();
+    initStates();
 }
 Game::~Game()
 {
@@ -41,9 +42,17 @@ void Game::initWindow()
     window->setFramerateLimit(framerate_limit);
     window->setVerticalSyncEnabled(vertical_sync_enabled);
 }
-void Game::initState()
+void Game::initStates()
 {
-    states.push(new GameState(window));
+    states.push(new GameState(window, &supportedKeys));
+}
+void Game::initKeys()
+{
+    supportedKeys["Escape"] = sf::Keyboard::Escape;
+    supportedKeys["W"] = sf::Keyboard::W;
+    supportedKeys["A"] = sf::Keyboard::A;
+    supportedKeys["S"] = sf::Keyboard::S;
+    supportedKeys["D"] = sf::Keyboard::D;
 }
 void Game::endApplication()
 {

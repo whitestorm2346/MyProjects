@@ -12,9 +12,11 @@ class Game
     float deltaTime;
 
     std::stack<State*> states;
+    std::map<std::string, int> supportedKeys;
 
     void initWindow();
-    void initState();
+    void initStates();
+    void initKeys();
 
 public:
     Game();
