@@ -18,33 +18,51 @@ Game::~Game()
     }
 }
 
+void Game::initVariables()
+{
+    window = nullptr;
+    deltaTime = 0.f;
+    fullscreen = false;
+}
 void Game::initWindow()
 {
     std::ifstream ifs("Config/window.ini");
+    videoModes = sf::VideoMode::getFullscreenModes();
+
     std::string title = "title";
-    sf::VideoMode window_bounds(800, 600);
+    sf::VideoMode window_bounds = sf::VideoMode::getDesktopMode();
     unsigned int framerate_limit = 120;
     bool vertical_sync_enabled = false;
+    unsigned antialiasing_level = 0;
+
+    fullscreen = false;
 
     if(ifs.is_open())
     {
         std::getline(ifs, title);
 
         ifs>> window_bounds.width >> window_bounds.height;
+        ifs>> fullscreen;
         ifs>> framerate_limit;
         ifs>> vertical_sync_enabled;
+        ifs>> antialiasing_level;
     }
 
     ifs.close();
 
-    window = new sf::RenderWindow(window_bounds, title);
+    windowSettings.antialiasingLevel = antialiasing_level;
+
+    if(fullscreen)
+        window = new sf::RenderWindow(window_bounds, title, sf::Style::Fullscreen, windowSettings);
+    else
+        window = new sf::RenderWindow(window_bounds, title, sf::Style::Titlebar | sf::Style::Close, windowSettings);
 
     window->setFramerateLimit(framerate_limit);
     window->setVerticalSyncEnabled(vertical_sync_enabled);
 }
 void Game::initStates()
 {
-    states.push(new MainMenuState(window, &supportedKeys));
+    states.push(new MainMenuState(window, &supportedKeys, &states));
 }
 void Game::initKeys()
 {

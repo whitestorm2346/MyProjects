@@ -8,6 +8,9 @@ class Game
 {
     sf::RenderWindow* window;
     sf::Event sfEvent;
+    std::vector<sf::VideoMode> videoModes;
+    sf::ContextSettings windowSettings;
+    bool fullscreen;
 
     sf::Clock dtClock;
     float deltaTime;
@@ -15,6 +18,7 @@ class Game
     std::stack<State*> states;
     std::map<std::string, int> supportedKeys;
 
+    void initVariables();
     void initWindow();
     void initStates();
     void initKeys();
