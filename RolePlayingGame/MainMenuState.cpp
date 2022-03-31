@@ -5,12 +5,11 @@ MainMenuState::MainMenuState(sf::RenderWindow* window,
                              std::stack<State*>* states)
     : State(window, supportedKeys, states)
 {
+    initVariables();
+    initBackground();
     initFonts();
     initKeybinds();
     initButtons();
-
-    background.setSize(sf::Vector2f(window->getSize().x, window->getSize().y));
-    background.setFillColor(sf::Color::Cyan);
 }
 MainMenuState::~MainMenuState()
 {
@@ -21,25 +20,49 @@ MainMenuState::~MainMenuState()
     }
 }
 
+void MainMenuState::initVariables()
+{
+
+}
+void MainMenuState::initBackground()
+{
+    background.setSize(sf::Vector2f(static_cast<float>(window->getSize().x),
+                                    static_cast<float>(window->getSize().y)));
+
+    if(!backgroundTexture.loadFromFile("Resources/Images/Backgrounds/bg1.png"))
+    {
+        throw("ERROR::MAINMENUSTATE::COULD_NOT_LOAD_BACKGROUND");
+    }
+
+    background.setTexture(&backgroundTexture);
+}
 void MainMenuState::initFonts()
 {
     if(!font.loadFromFile("Font/consola.ttf"))
     {
-        throw("ERROR::MAINMENUSTATE::COULD NOT LOAD FONT");
+        throw("ERROR::MAINMENUSTATE::COULD_NOT_LOAD_FONT");
     }
 }
 void MainMenuState::initButtons()
 {
     buttons["GAME_STATE"] = new Button(
-        100, 100, 150, 50,
+        1275, 750, 150, 50,
         &font, "New Game",
-        sf::Color(70, 70, 70, 200),
+        sf::Color(100, 100, 100, 200),
+        sf::Color(150, 150, 150, 255),
+        sf::Color(20, 20, 20, 200)
+    );
+
+    buttons["SETTINGS"] = new Button(
+        1100, 750, 150, 50,
+        &font, "Settings",
+        sf::Color(100, 100, 100, 200),
         sf::Color(150, 150, 150, 255),
         sf::Color(20, 20, 20, 200)
     );
 
     buttons["EXIT_STATE"] = new Button(
-        100, 300, 150, 50,
+        925, 750, 150, 50,
         &font, "Quit",
         sf::Color(100, 100, 100, 200),
         sf::Color(150, 150, 150, 255),
@@ -80,6 +103,8 @@ void MainMenuState::updateButtons()
 
     if(buttons["GAME_STATE"]->isPressed()) states->push(new GameState(window, supportedKeys, states));
 
+    if(buttons["SETTINGS"]->isPressed());
+
     if(buttons["EXIT_STATE"]->isPressed()) quit = true;
 }
 void MainMenuState::update(const float& deltaTime)
@@ -91,8 +116,7 @@ void MainMenuState::update(const float& deltaTime)
 void MainMenuState::renderButtons(sf::RenderTarget* target /** = nullptr */)
 {
     for(std::map<std::string, Button*>::iterator iter = buttons.begin();
-        iter != buttons.end(); ++iter)
-    {
+        iter != buttons.end(); ++iter){
         iter->second->render(target);
     }
 }
@@ -101,6 +125,17 @@ void MainMenuState::render(sf::RenderTarget* target /** = nullptr */)
     if(!target) target = window;
 
     target->draw(background);
-
     renderButtons(target);
+
+    /**
+    sf::Text mouseText;
+    mouseText.setPosition(mousePosView.x, mousePosView.y - 30);
+    mouseText.setFont(font);
+    mouseText.setColor(sf::Color::Black);
+    mouseText.setCharacterSize(20);
+    std::stringstream ss;
+    ss<< mousePosView.x << ' ' << mousePosView.y;
+    mouseText.setString(ss.str());
+    target->draw(mouseText);
+    */
 }

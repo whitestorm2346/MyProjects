@@ -5,6 +5,7 @@
 
 class GameState: public State
 {
+private:
     Entity player;
 
     void initKeybinds();

@@ -19,6 +19,7 @@ enum button_state{
 
 class Button
 {
+private:
     unsigned short buttonState;
 
     sf::RectangleShape shape;

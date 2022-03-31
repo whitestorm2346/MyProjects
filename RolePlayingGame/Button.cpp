@@ -13,7 +13,7 @@ Button::Button(float x, float y, float width, float height,
     this->text.setFont(*this->font);
     this->text.setString(text);
     this->text.setFillColor(sf::Color::White);
-    this->text.setCharacterSize(12);
+    this->text.setCharacterSize(20);
     this->text.setOrigin(
         this->text.getGlobalBounds().left + this->text.getGlobalBounds().width / 2.f,
         this->text.getGlobalBounds().top + this->text.getGlobalBounds().height / 2.f

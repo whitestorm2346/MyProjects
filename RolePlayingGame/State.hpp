@@ -5,6 +5,8 @@
 
 class State
 {
+private:
+
 protected:
     std::stack<State*>* states;
     sf::RenderWindow* window;

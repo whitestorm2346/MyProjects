@@ -6,6 +6,7 @@
 
 class Game
 {
+private:
     sf::RenderWindow* window;
     sf::Event sfEvent;
     std::vector<sf::VideoMode> videoModes;
