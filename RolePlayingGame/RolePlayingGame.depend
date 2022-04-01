@@ -597,10 +597,10 @@
 	<SFML/Network/IpAddress.hpp>
 	<vector>
 
-1648744246 c:\users\andre\onedrive\桌面\git_repositories\myprojects\roleplayinggame\state.hpp
-	"Entity.hpp"
+1648834117 c:\users\andre\onedrive\桌面\git_repositories\myprojects\roleplayinggame\state.hpp
+	"Player.hpp"
 
-1648659976 source:c:\users\andre\onedrive\桌面\git_repositories\myprojects\roleplayinggame\state.cpp
+1648829523 source:c:\users\andre\onedrive\桌面\git_repositories\myprojects\roleplayinggame\state.cpp
 	"State.hpp"
 
 1648490499 c:\users\andre\onedrive\桌面\git_repositories\myprojects\roleplayinggame\state\state.hpp
@@ -632,30 +632,19 @@
 	<fstream>
 	<sstream>
 
-1648744237 c:\users\andre\onedrive\桌面\git_repositories\myprojects\roleplayinggame\gamestate.hpp
+1648834156 c:\users\andre\onedrive\桌面\git_repositories\myprojects\roleplayinggame\gamestate.hpp
 	"State.hpp"
 
-1648744292 c:\users\andre\onedrive\桌面\git_repositories\myprojects\roleplayinggame\entity.hpp
-	<SFML/Graphics.hpp>
-	<SFML/System.hpp>
-	<SFML/Window.hpp>
-	<SFML/Audio.hpp>
-	<SFML/Network.hpp>
-	<iostream>
-	<string>
-	<vector>
-	<stack>
-	<map>
-	<fstream>
-	<sstream>
+1648837134 c:\users\andre\onedrive\桌面\git_repositories\myprojects\roleplayinggame\entity.hpp
+	"MovementComponents.hpp"
 
-1648660144 source:c:\users\andre\onedrive\桌面\git_repositories\myprojects\roleplayinggame\gamestate.cpp
+1648835605 source:c:\users\andre\onedrive\桌面\git_repositories\myprojects\roleplayinggame\gamestate.cpp
 	"GameState.hpp"
 
-1648536273 source:c:\users\andre\onedrive\桌面\git_repositories\myprojects\roleplayinggame\entity.cpp
+1648837379 source:c:\users\andre\onedrive\桌面\git_repositories\myprojects\roleplayinggame\entity.cpp
 	"Entity.hpp"
 
-1648744569 c:\users\andre\onedrive\桌面\git_repositories\myprojects\roleplayinggame\mainmenustate.hpp
+1648829571 c:\users\andre\onedrive\桌面\git_repositories\myprojects\roleplayinggame\mainmenustate.hpp
 	"GameState.hpp"
 	"Button.hpp"
 
@@ -672,6 +661,26 @@
 1648746886 source:c:\users\andre\onedrive\桌面\git_repositories\myprojects\roleplayinggame\button.cpp
 	"Button.hpp"
 
-1648745991 source:c:\users\andre\onedrive\桌面\git_repositories\myprojects\roleplayinggame\mainmenustate.cpp
+1648835762 source:c:\users\andre\onedrive\桌面\git_repositories\myprojects\roleplayinggame\mainmenustate.cpp
 	"MainMenuState.hpp"
+
+1648834427 c:\users\andre\onedrive\桌面\git_repositories\myprojects\roleplayinggame\player.hpp
+	"Entity.hpp"
+
+1648837418 source:c:\users\andre\onedrive\桌面\git_repositories\myprojects\roleplayinggame\player.cpp
+	"Player.hpp"
+
+1648836939 c:\users\andre\onedrive\桌面\git_repositories\myprojects\roleplayinggame\movementcomponents.hpp
+	<SFML/Graphics.hpp>
+	<SFML/System.hpp>
+	<SFML/Window.hpp>
+	<SFML/Audio.hpp>
+	<SFML/Network.hpp>
+	<iostream>
+	<string>
+	<vector>
+	<stack>
+	<map>
+	<fstream>
+	<sstream>
 

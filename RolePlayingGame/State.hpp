@@ -1,7 +1,7 @@
 #ifndef STATE_HPP_INCLUDED
 #define STATE_HPP_INCLUDED
 
-#include "Entity.hpp"
+#include "Player.hpp"
 
 class State
 {
@@ -12,7 +12,7 @@ protected:
     sf::RenderWindow* window;
     std::map<std::string, int>* supportedKeys;
     std::map<std::string, int>  keybinds;
-    std::vector<sf::Texture> textures;
+    std::map<std::string, sf::Texture> textures;
     bool quit;
 
     sf::Vector2i mousePosScreen;
@@ -28,9 +28,8 @@ public:
     virtual ~State();
 
     const bool& getQuit() const;
+    void endState();
 
-    virtual void checkForQuit();
-    virtual void endState() = 0;
     virtual void updateMousePositions();
     virtual void updateInput(const float& deltaTime) = 0;
     virtual void update(const float& deltaTime) = 0;

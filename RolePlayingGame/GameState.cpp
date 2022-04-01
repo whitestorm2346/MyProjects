@@ -6,10 +6,12 @@ GameState::GameState(sf::RenderWindow* window,
     : State(window, supportedKeys, states)
 {
     initKeybinds();
+    initTextures();
+    initPlayers();
 }
 GameState::~GameState()
 {
-
+    delete player;
 }
 
 void GameState::initKeybinds()
@@ -28,36 +30,44 @@ void GameState::initKeybinds()
 
     ifs.close();
 }
-void GameState::endState()
+void GameState::initTextures()
 {
-    std::cout<< "Ending GameState!\n";
+    if(!textures["PLAYER_IDLE"].loadFromFile("Resources/Images/Sprites/Player/img1.png"))
+    {
+        throw("ERROR::GAME_STATE::COULD_NOT_LOAD_PLAYER_IDLE_TEXTURE");
+    }
+}
+void GameState::initPlayers()
+{
+    player = new Player(0, 0, &textures["PLAYER_IDLE"]);
 }
 void GameState::updateInput(const float& deltaTime)
 {
-    checkForQuit();
-
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key(keybinds.at("MOVE_UP"))))
-        player.move(deltaTime, 0.f, -1.f);
+        player->move(deltaTime, 0.f, -1.f);
 
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key(keybinds.at("MOVE_LEFT"))))
-        player.move(deltaTime, -1.f, 0.f);
+        player->move(deltaTime, -1.f, 0.f);
 
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key(keybinds.at("MOVE_DOWN"))))
-        player.move(deltaTime,  0.f, 1.f);
+        player->move(deltaTime,  0.f, 1.f);
 
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key(keybinds.at("MOVE_RIGHT"))))
-        player.move(deltaTime,  1.f, 0.f);
+        player->move(deltaTime,  1.f, 0.f);
+
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key(keybinds.at("CLOSE"))))
+        endState();
 }
 void GameState::update(const float& deltaTime)
 {
     updateMousePositions();
     updateInput(deltaTime);
 
-    player.update(deltaTime);
+    player->update(deltaTime);
 }
 void GameState::render(sf::RenderTarget* target /** = nullptr */)
 {
     if(!target) target = window;
 
-    player.render(target);
+    player->render(target);
 }

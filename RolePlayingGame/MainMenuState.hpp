@@ -25,7 +25,6 @@ public:
                   std::stack<State*>* states);
     virtual ~MainMenuState();
 
-    void endState();
     void updateInput(const float& deltaTime);
     void updateButtons();
     void update(const float& deltaTime);

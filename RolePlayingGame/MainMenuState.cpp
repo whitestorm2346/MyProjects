@@ -85,13 +85,9 @@ void MainMenuState::initKeybinds()
 
     ifs.close();
 }
-void MainMenuState::endState()
-{
-    std::cout<< "Ending MainMenuState!\n";
-}
 void MainMenuState::updateInput(const float& deltaTime)
 {
-    checkForQuit();
+
 }
 void MainMenuState::updateButtons()
 {
@@ -105,7 +101,7 @@ void MainMenuState::updateButtons()
 
     if(buttons["SETTINGS"]->isPressed());
 
-    if(buttons["EXIT_STATE"]->isPressed()) quit = true;
+    if(buttons["EXIT_STATE"]->isPressed()) endState();
 }
 void MainMenuState::update(const float& deltaTime)
 {

@@ -6,9 +6,11 @@
 class GameState: public State
 {
 private:
-    Entity player;
+    Player* player;
 
     void initKeybinds();
+    void initTextures();
+    void initPlayers();
 
 public:
     GameState(sf::RenderWindow* window,
@@ -16,7 +18,6 @@ public:
               std::stack<State*>* states);
     virtual ~GameState();
 
-    void endState();
     void updateInput(const float& deltaTime);
     void update(const float& deltaTime);
     void render(sf::RenderTarget* target = nullptr);
