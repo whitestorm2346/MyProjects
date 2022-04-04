@@ -10,8 +10,10 @@ private:
     void initComponents();
 
 public:
-    Player(float x, float y, sf::Texture& texture);
+    Player(float x, float y, sf::Texture& textureSheet);
     virtual ~Player();
+
+    virtual void update(const float& deltaTime);
 };
 
 #endif // PLAYER_HPP_INCLUDED

@@ -32,7 +32,7 @@ void GameState::initKeybinds()
 }
 void GameState::initTextures()
 {
-    if(!textures["PLAYER_IDLE"].loadFromFile("Resources/Images/Sprites/Player/img1.png"))
+    if(!textures["PLAYER_IDLE"].loadFromFile("Resources/Images/Sprites/Player/idle.png"))
     {
         throw("ERROR::GAME_STATE::COULD_NOT_LOAD_PLAYER_IDLE_TEXTURE");
     }

@@ -47,26 +47,30 @@ void MainMenuState::initButtons()
 {
     buttons["GAME_STATE"] = new Button(
         1275, 750, 150, 50,
-        &font, "New Game",
-        sf::Color(100, 100, 100, 200),
-        sf::Color(150, 150, 150, 255),
-        sf::Color(20, 20, 20, 200)
+        &font, "New Game", 25,
+        sf::Color(255, 255, 255, 255), sf::Color(250, 250, 250, 250), sf::Color(130, 130, 130, 150),
+        sf::Color(100, 100, 100, 150), sf::Color(150, 150, 150, 255), sf::Color(50, 50, 50, 200)
     );
 
     buttons["SETTINGS"] = new Button(
         1100, 750, 150, 50,
-        &font, "Settings",
-        sf::Color(100, 100, 100, 200),
-        sf::Color(150, 150, 150, 255),
-        sf::Color(20, 20, 20, 200)
+        &font, "Settings", 25,
+        sf::Color(255, 255, 255, 255), sf::Color(250, 250, 250, 250), sf::Color(130, 130, 130, 150),
+        sf::Color(100, 100, 100, 150), sf::Color(150, 150, 150, 255), sf::Color(50, 50, 50, 200)
+    );
+
+    buttons["EDITOR_STATE"] = new Button(
+        925, 750, 150, 50,
+        &font, "Editor", 25,
+        sf::Color(255, 255, 255, 255), sf::Color(250, 250, 250, 250), sf::Color(130, 130, 130, 150),
+        sf::Color(100, 100, 100, 150), sf::Color(150, 150, 150, 255), sf::Color(50, 50, 50, 200)
     );
 
     buttons["EXIT_STATE"] = new Button(
-        925, 750, 150, 50,
-        &font, "Quit",
-        sf::Color(100, 100, 100, 200),
-        sf::Color(150, 150, 150, 255),
-        sf::Color(20, 20, 20, 200)
+        750, 750, 150, 50,
+        &font, "Quit", 25,
+        sf::Color(255, 255, 255, 255), sf::Color(250, 250, 250, 250), sf::Color(130, 130, 130, 150),
+        sf::Color(100, 100, 100, 150), sf::Color(150, 150, 150, 255), sf::Color(50, 50, 50, 200)
     );
 }
 void MainMenuState::initKeybinds()
@@ -100,6 +104,8 @@ void MainMenuState::updateButtons()
     if(buttons["GAME_STATE"]->isPressed()) states->push(new GameState(window, supportedKeys, states));
 
     if(buttons["SETTINGS"]->isPressed());
+
+    if(buttons["EDITOR_STATE"]->isPressed());
 
     if(buttons["EXIT_STATE"]->isPressed()) endState();
 }

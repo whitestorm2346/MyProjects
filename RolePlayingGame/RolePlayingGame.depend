@@ -635,20 +635,21 @@
 1648834156 c:\users\andre\onedrive\桌面\git_repositories\myprojects\roleplayinggame\gamestate.hpp
 	"State.hpp"
 
-1649004198 c:\users\andre\onedrive\桌面\git_repositories\myprojects\roleplayinggame\entity.hpp
+1649092680 c:\users\andre\onedrive\桌面\git_repositories\myprojects\roleplayinggame\entity.hpp
 	"MovementComponents.hpp"
+	"AnimationComponent.hpp"
 
-1649003977 source:c:\users\andre\onedrive\桌面\git_repositories\myprojects\roleplayinggame\gamestate.cpp
+1649093537 source:c:\users\andre\onedrive\桌面\git_repositories\myprojects\roleplayinggame\gamestate.cpp
 	"GameState.hpp"
 
-1649004723 source:c:\users\andre\onedrive\桌面\git_repositories\myprojects\roleplayinggame\entity.cpp
+1649092686 source:c:\users\andre\onedrive\桌面\git_repositories\myprojects\roleplayinggame\entity.cpp
 	"Entity.hpp"
 
 1648829571 c:\users\andre\onedrive\桌面\git_repositories\myprojects\roleplayinggame\mainmenustate.hpp
 	"GameState.hpp"
 	"Button.hpp"
 
-1648744261 c:\users\andre\onedrive\桌面\git_repositories\myprojects\roleplayinggame\button.hpp
+1649087285 c:\users\andre\onedrive\桌面\git_repositories\myprojects\roleplayinggame\button.hpp
 	<SFML/Graphics.hpp>
 	<SFML/System.hpp>
 	<SFML/Window.hpp>
@@ -658,16 +659,16 @@
 	<string>
 	<sstream>
 
-1648746886 source:c:\users\andre\onedrive\桌面\git_repositories\myprojects\roleplayinggame\button.cpp
+1649087468 source:c:\users\andre\onedrive\桌面\git_repositories\myprojects\roleplayinggame\button.cpp
 	"Button.hpp"
 
-1648835762 source:c:\users\andre\onedrive\桌面\git_repositories\myprojects\roleplayinggame\mainmenustate.cpp
+1649088049 source:c:\users\andre\onedrive\桌面\git_repositories\myprojects\roleplayinggame\mainmenustate.cpp
 	"MainMenuState.hpp"
 
-1649003370 c:\users\andre\onedrive\桌面\git_repositories\myprojects\roleplayinggame\player.hpp
+1649092915 c:\users\andre\onedrive\桌面\git_repositories\myprojects\roleplayinggame\player.hpp
 	"Entity.hpp"
 
-1649004701 source:c:\users\andre\onedrive\桌面\git_repositories\myprojects\roleplayinggame\player.cpp
+1649093772 source:c:\users\andre\onedrive\桌面\git_repositories\myprojects\roleplayinggame\player.cpp
 	"Player.hpp"
 
 1649004784 c:\users\andre\onedrive\桌面\git_repositories\myprojects\roleplayinggame\movementcomponents.hpp
@@ -684,6 +685,19 @@
 	<fstream>
 	<sstream>
 
-1649004881 source:c:\users\andre\onedrive\桌面\git_repositories\myprojects\roleplayinggame\movementcomponents.cpp
+1649084998 source:c:\users\andre\onedrive\桌面\git_repositories\myprojects\roleplayinggame\movementcomponents.cpp
 	"MovementComponents.hpp"
+
+1649092226 c:\users\andre\onedrive\桌面\git_repositories\myprojects\roleplayinggame\animationcomponent.hpp
+	<SFML/Graphics.hpp>
+	<SFML/System.hpp>
+	<SFML/Window.hpp>
+	<SFML/Audio.hpp>
+	<SFML/Network.hpp>
+	<iostream>
+	<string>
+	<map>
+
+1649093699 source:c:\users\andre\onedrive\桌面\git_repositories\myprojects\roleplayinggame\animationcomponent.cpp
+	"AnimationComponent.hpp"
 
