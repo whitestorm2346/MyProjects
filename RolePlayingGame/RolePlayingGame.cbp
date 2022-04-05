@@ -48,7 +48,36 @@
 			<Add library="dxguid" />
 			<Add directory="C:/Program Files/SFML-2.5.1-windows-gcc-7.3.0-mingw-64-bit/SFML-2.5.1/lib" />
 		</Linker>
-		<Unit filename="cb.bmp" />
+		<Unit filename="AnimationComponent.cpp" />
+		<Unit filename="AnimationComponent.hpp" />
+		<Unit filename="Button.cpp" />
+		<Unit filename="Button.hpp" />
+		<Unit filename="Config/gameStateKeybinds.ini" />
+		<Unit filename="Config/mainMenuKeybinds.ini" />
+		<Unit filename="Config/supportedKeys.ini" />
+		<Unit filename="Config/window.ini" />
+		<Unit filename="Entity.cpp" />
+		<Unit filename="Entity.hpp" />
+		<Unit filename="Font/consola.ttf" />
+		<Unit filename="Font/consolab.ttf" />
+		<Unit filename="Font/consolai.ttf" />
+		<Unit filename="Font/consolaz.ttf" />
+		<Unit filename="Game.cpp" />
+		<Unit filename="Game.hpp" />
+		<Unit filename="GameState.cpp" />
+		<Unit filename="GameState.hpp" />
+		<Unit filename="MainMenuState.cpp" />
+		<Unit filename="MainMenuState.hpp" />
+		<Unit filename="MovementComponents.cpp" />
+		<Unit filename="MovementComponents.hpp" />
+		<Unit filename="Player.cpp" />
+		<Unit filename="Player.hpp" />
+		<Unit filename="Resources/Images/Backgrounds/bg1.png" />
+		<Unit filename="Resources/Images/Backgrounds/bg2.png" />
+		<Unit filename="Resources/Images/Backgrounds/bg3.png" />
+		<Unit filename="Resources/Images/Sprites/Player/img1.png" />
+		<Unit filename="State.cpp" />
+		<Unit filename="State.hpp" />
 		<Unit filename="main.cpp" />
 		<Extensions>
 			<lib_finder disable_auto="1" />

@@ -32,14 +32,14 @@ void GameState::initKeybinds()
 }
 void GameState::initTextures()
 {
-    if(!textures["PLAYER_IDLE"].loadFromFile("Resources/Images/Sprites/Player/idle.png"))
+    if(!textures["PLAYER_SHEET"].loadFromFile("Resources/Images/Sprites/Player/playerSheet.png"))
     {
         throw("ERROR::GAME_STATE::COULD_NOT_LOAD_PLAYER_IDLE_TEXTURE");
     }
 }
 void GameState::initPlayers()
 {
-    player = new Player(0, 0, textures["PLAYER_IDLE"]);
+    player = new Player(0, 0, textures["PLAYER_SHEET"]);
 }
 void GameState::updateInput(const float& deltaTime)
 {

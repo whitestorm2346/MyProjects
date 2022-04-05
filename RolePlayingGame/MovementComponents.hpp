@@ -32,6 +32,7 @@ public:
     virtual ~MovementComponent();
 
     const sf::Vector2f& getVelocity() const;
+    const bool idle() const;
 
     void move(const float dir_x, const float dir_y, const float& deltaTime);
     void update(const float& deltaTime);
