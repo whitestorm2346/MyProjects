@@ -1,0 +1,59 @@
+Character
+    pair position
+    char name
+    int speed
+    move()
+    checkCollide()
+
+Monster: Character -> 'M'
+    move() -> always moving
+
+Player: Character -> 'P'
+    move() -> UI control
+
+Obstacle -> '*'
+    pair position
+    pair size
+
+Field -> 2D array
+    pair size
+    LinkedList obstacles
+    char** matrix
+
+Distance -> 2D array
+    pair size
+    int** distance
+    BFS()
+
+Timer
+    checkPoint
+    timeGap
+    resetTimer()
+    setTimeGap(timeGap)
+    OverOneSec()
+
+Node -> template
+    data
+    next
+
+LinkedList -> template
+    front
+    back
+    nodeCount
+    insert()
+    erase()
+    empty()
+
+UserInterface
+    action()
+
+Game
+    pair size
+    Field field
+    LinkedList characters
+    UserInterface control
+    run() -> main loop
+
+main()
+  Game game
+  game.run()

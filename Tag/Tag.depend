@@ -1,0 +1,43 @@
+# depslib dependency file v1.0
+1651649673 source:c:\users\andre\onedrive\桌面\git_repositories\myprojects\tag\game.cpp
+	"Game.hpp"
+
+1651672388 c:\users\andre\onedrive\桌面\git_repositories\myprojects\tag\game.hpp
+	<utility>
+	"UserInterface.hpp"
+
+1651649923 c:\users\andre\onedrive\桌面\git_repositories\myprojects\tag\userinterface.hpp
+	<conio.h>
+
+1651648825 source:c:\users\andre\onedrive\桌面\git_repositories\myprojects\tag\main.cpp
+	"Game.hpp"
+
+1651650002 source:c:\users\andre\onedrive\桌面\git_repositories\myprojects\tag\userinterface.cpp
+	"UserInterface.hpp"
+
+1651671887 source:c:\users\andre\onedrive\桌面\git_repositories\myprojects\tag\charactor.cpp
+	"Charactor.hpp"
+
+1651671615 c:\users\andre\onedrive\桌面\git_repositories\myprojects\tag\charactor.hpp
+	<utility>
+	<string>
+	"Timer.hpp"
+
+1651671826 c:\users\andre\onedrive\桌面\git_repositories\myprojects\tag\timer.hpp
+	<ctime>
+
+1651658187 source:c:\users\andre\onedrive\桌面\git_repositories\myprojects\tag\monster.cpp
+	"Monster.hpp"
+
+1651658110 c:\users\andre\onedrive\桌面\git_repositories\myprojects\tag\monster.hpp
+	"Charactor.hpp"
+
+1651671841 source:c:\users\andre\onedrive\桌面\git_repositories\myprojects\tag\timer.cpp
+	"Timer.hpp"
+
+1651658308 source:c:\users\andre\onedrive\桌面\git_repositories\myprojects\tag\player.cpp
+	"Player.hpp"
+
+1651671894 c:\users\andre\onedrive\桌面\git_repositories\myprojects\tag\player.hpp
+	"Charactor.hpp"
+
