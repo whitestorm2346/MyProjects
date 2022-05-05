@@ -9,8 +9,7 @@ public:
     Node<Type>* prev;
     Node<Type>* next;
 
-    Node();
-    virtual ~Node();
+    Node(Type data);
 };
 
 template <typename Type>
@@ -23,7 +22,7 @@ private:
 
 public:
     List();
-    virtual ~List();
+    ~List();
 
     void insert(Node<Type>* newNode);
     void erase();

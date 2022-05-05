@@ -1,10 +1,13 @@
 # depslib dependency file v1.0
-1651649673 source:c:\users\andre\onedrive\桌面\git_repositories\myprojects\tag\game.cpp
+1651743625 source:c:\users\andre\onedrive\桌面\git_repositories\myprojects\tag\game.cpp
 	"Game.hpp"
 
-1651672388 c:\users\andre\onedrive\桌面\git_repositories\myprojects\tag\game.hpp
+1651743283 c:\users\andre\onedrive\桌面\git_repositories\myprojects\tag\game.hpp
 	<utility>
 	"UserInterface.hpp"
+	"Charactor.hpp"
+	"List.hpp"
+	"Field.hpp"
 
 1651649923 c:\users\andre\onedrive\桌面\git_repositories\myprojects\tag\userinterface.hpp
 	<conio.h>
@@ -15,10 +18,10 @@
 1651650002 source:c:\users\andre\onedrive\桌面\git_repositories\myprojects\tag\userinterface.cpp
 	"UserInterface.hpp"
 
-1651671887 source:c:\users\andre\onedrive\桌面\git_repositories\myprojects\tag\charactor.cpp
+1651676567 source:c:\users\andre\onedrive\桌面\git_repositories\myprojects\tag\charactor.cpp
 	"Charactor.hpp"
 
-1651671615 c:\users\andre\onedrive\桌面\git_repositories\myprojects\tag\charactor.hpp
+1651676563 c:\users\andre\onedrive\桌面\git_repositories\myprojects\tag\charactor.hpp
 	<utility>
 	<string>
 	"Timer.hpp"
@@ -40,4 +43,28 @@
 
 1651671894 c:\users\andre\onedrive\桌面\git_repositories\myprojects\tag\player.hpp
 	"Charactor.hpp"
+
+1651743857 c:\users\andre\onedrive\桌面\git_repositories\myprojects\tag\list.hpp
+
+1651743275 c:\users\andre\onedrive\桌面\git_repositories\myprojects\tag\field.hpp
+	<utility>
+	"List.hpp"
+	"Obstacle.hpp"
+
+1651676426 source:c:\users\andre\onedrive\桌面\git_repositories\myprojects\tag\distance.cpp
+	"Distance.hpp"
+
+1651676389 c:\users\andre\onedrive\桌面\git_repositories\myprojects\tag\distance.hpp
+
+1651743262 source:c:\users\andre\onedrive\桌面\git_repositories\myprojects\tag\field.cpp
+	"Field.hpp"
+
+1651743392 source:c:\users\andre\onedrive\桌面\git_repositories\myprojects\tag\obstacle.cpp
+	"Obstacle.hpp"
+
+1651742699 c:\users\andre\onedrive\桌面\git_repositories\myprojects\tag\obstacle.hpp
+	<utility>
+
+1651743640 source:c:\users\andre\onedrive\桌面\git_repositories\myprojects\tag\list.cpp
+	"List.hpp"
 

@@ -1,41 +1,87 @@
 #include "List.hpp"
 
-Node::Node(): data(NULL), prev(nullptr), next(nullptr)
+template <typename Type>
+Node<Type>::Node(Type data)
 {
-
-}
-Node::~Node()
-{
-
-}
-
-List::List(): front(nullptr), back(nullptr), nodeCount(0)
-{
-
-}
-List::~List()
-{
-
+    this->data = data;
+    prev = nullptr;
+    next = nullptr;
 }
 
-void List::insert(Node<Type>* newNode)
+template <typename Type>
+List<Type>::List()
 {
-
-}
-void List::erase()
-{
-
-}
-bool List::empty()
-{
-
+    front = nullptr;
+    back = nullptr;
+    nodeCount = 0;
 }
 
-Node<Type>* List::getFront()
+template <typename Type>
+List<Type>::~List()
 {
-
+    while(!empty())
+    {
+        erase();
+    }
 }
-Node<Type>* List::getBack()
-{
 
+template <typename Type>
+void List<Type>::insert(Node<Type>* newNode)
+{
+    if(nodeCount == 0)
+    {
+        front = back = newNode;
+        newNode->next = newNode->prev = newNode;
+    }
+    else
+    {
+        front->prev = back->next = newNode;
+        newNode->next = front;
+        newNode->prev = back;
+        back = newNode;
+    }
+
+    nodeCount++;
+}
+
+template <typename Type>
+void List<Type>::erase()
+{
+    if(nodeCount <= 0) return;
+
+    Node<Type>* temp = back;
+
+    if(nodeCount == 1)
+    {
+        front = nullptr;
+        back = nullptr;
+    }
+    else
+    {
+        front->prev = back->prev;
+        back->prev->next = front;
+        back = back->prev;
+    }
+
+    nodeCount--;
+
+    delete temp;
+}
+
+template <typename Type>
+bool List<Type>::empty()
+{
+    return (nodeCount == 0);
+}
+
+template <typename Type>
+Node<Type>* List<Type>::getFront()
+{
+    return front;
+}
+
+template <typename Type>
+Node<Type>* List<Type>::getBack()
+{
+    return back;
 }
