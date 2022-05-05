@@ -2,6 +2,8 @@
 
 Game::Game()
 {
+    srand(time(nullptr));
+
     size = {30, 30};
     gameOver = false;
     field = new Field(size.first, size.second);

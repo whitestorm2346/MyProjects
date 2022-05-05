@@ -1,9 +1,10 @@
 # depslib dependency file v1.0
-1651743625 source:c:\users\andre\onedrive\桌面\git_repositories\myprojects\tag\game.cpp
+1651767569 source:c:\users\andre\onedrive\桌面\git_repositories\myprojects\tag\game.cpp
 	"Game.hpp"
 
-1651762454 c:\users\andre\onedrive\桌面\git_repositories\myprojects\tag\game.hpp
+1651767555 c:\users\andre\onedrive\桌面\git_repositories\myprojects\tag\game.hpp
 	<utility>
+	<cstdlib>
 	"UserInterface.hpp"
 	"Charactor.hpp"
 	"List.hpp"
@@ -12,7 +13,7 @@
 1651649923 c:\users\andre\onedrive\桌面\git_repositories\myprojects\tag\userinterface.hpp
 	<conio.h>
 
-1651648825 source:c:\users\andre\onedrive\桌面\git_repositories\myprojects\tag\main.cpp
+1651767569 source:c:\users\andre\onedrive\桌面\git_repositories\myprojects\tag\main.cpp
 	"Game.hpp"
 
 1651650002 source:c:\users\andre\onedrive\桌面\git_repositories\myprojects\tag\userinterface.cpp
@@ -44,9 +45,9 @@
 1651671894 c:\users\andre\onedrive\桌面\git_repositories\myprojects\tag\player.hpp
 	"Charactor.hpp"
 
-1651762524 c:\users\andre\onedrive\桌面\git_repositories\myprojects\tag\list.hpp
+1651763663 c:\users\andre\onedrive\桌面\git_repositories\myprojects\tag\list.hpp
 
-1651762527 c:\users\andre\onedrive\桌面\git_repositories\myprojects\tag\field.hpp
+1651767400 c:\users\andre\onedrive\桌面\git_repositories\myprojects\tag\field.hpp
 	<utility>
 	"List.hpp"
 	"Obstacle.hpp"
@@ -59,10 +60,10 @@
 1651761535 source:c:\users\andre\onedrive\桌面\git_repositories\myprojects\tag\field.cpp
 	"Field.hpp"
 
-1651743392 source:c:\users\andre\onedrive\桌面\git_repositories\myprojects\tag\obstacle.cpp
+1651767465 source:c:\users\andre\onedrive\桌面\git_repositories\myprojects\tag\obstacle.cpp
 	"Obstacle.hpp"
 
-1651742699 c:\users\andre\onedrive\桌面\git_repositories\myprojects\tag\obstacle.hpp
+1651767166 c:\users\andre\onedrive\桌面\git_repositories\myprojects\tag\obstacle.hpp
 	<utility>
 
 1651762164 source:c:\users\andre\onedrive\桌面\git_repositories\myprojects\tag\list.cpp

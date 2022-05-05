@@ -27,6 +27,7 @@ public:
     void insert(Node<Type>* newNode);
     void erase();
     bool empty();
+    int  size();
 
     Node<Type>* getFront();
     Node<Type>* getBack();
@@ -104,6 +105,12 @@ template <typename Type>
 bool List<Type>::empty()
 {
     return (nodeCount == 0);
+}
+
+template <typename Type>
+int List<Type>::size()
+{
+    return nodeCount;
 }
 
 template <typename Type>

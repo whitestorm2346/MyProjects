@@ -34,6 +34,7 @@ Timer
 
 Node -> template
     data
+    prev
     next
 
 LinkedList -> template
@@ -43,6 +44,7 @@ LinkedList -> template
     insert()
     erase()
     empty()
+    size()
 
 UserInterface
     action()

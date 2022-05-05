@@ -12,6 +12,9 @@ private:
 public:
     Obstacle(int x, int y, int width, int height);
     virtual ~Obstacle();
+
+    void setSize(int width, int height);
+    void setPosition(int x, int y);
 };
 
 #endif // OBSTACLE_HPP_INCLUDED

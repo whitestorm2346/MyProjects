@@ -2,6 +2,7 @@
 #define FIELD_HPP_INCLUDED
 
 #include <utility>
+#include <cstdlib>
 
 #include "List.hpp"
 #include "Obstacle.hpp"
@@ -13,8 +14,15 @@ private:
     List<Obstacle*>* obstacles;
 
 public:
+    char** matrix;
+
     Field(int width, int height);
-    ~Field();
+    virtual ~Field();
+
+    void setSize(int width, int height);
+    void addObstacle();
+    void popObstacle();
+    void generate();
 };
 
 #endif // FIELD_HPP_INCLUDED

@@ -2,6 +2,8 @@
 #define GAME_HPP_INCLUDED
 
 #include <utility>
+#include <cstdlib>
+#include <ctime>
 
 #include "UserInterface.hpp"
 #include "Charactor.hpp"
@@ -19,7 +21,7 @@ private:
 
 public:
     Game();
-    ~Game();
+    virtual ~Game();
 
     void run();
 };
