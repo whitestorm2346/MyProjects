@@ -21,8 +21,8 @@ public:
 
     void setSize(int width, int height);
     void addObstacle();
-    void popObstacle();
     void generate();
+    void print();
 };
 
 #endif // FIELD_HPP_INCLUDED

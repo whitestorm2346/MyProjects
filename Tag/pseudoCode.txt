@@ -1,60 +1,77 @@
 Character
-    pair position
+    pair<int, int> position
     char name
     int speed
-    move()
-    checkCollide()
+    virtual void move() = 0
+    virtual bool checkCollide()
 
 Monster: Character -> 'M'
-    move() -> always moving
+    Distance* toPlayer
+    void move() // always moving
 
 Player: Character -> 'P'
-    move() -> UI control
+    void move() // UI control
 
 Obstacle -> '*'
-    pair position
-    pair size
+    pair<int, int> size
+    pair<int, int> position
+    void setSize(size)
+    void setPosition(position)
 
 Field -> 2D array
-    pair size
-    LinkedList obstacles
-    char** matrix
+    pair<int, int> size
+    List<Obstacle*>* obstacles
+    char** matrix -> public
+    void setSize(size)
+    void addObstacle()
+    void generate()
+    void print()
 
 Distance -> 2D array
-    pair size
+    pair<int, int> position
+    Field* field
     int** distance
-    BFS()
+    void setField(field*)
+    void countDistance() -> BFS
 
 Timer
-    checkPoint
-    timeGap
-    resetTimer()
-    setTimeGap(timeGap)
-    OverOneSec()
+    clock_t checkPoint
+    double timeGap
+    void resetTimer()
+    void setTimeGap(timeGap)
+    bool exceedTimeGap()
 
-Node -> template
-    data
-    prev
-    next
+Node<Type> -> template
+    Type data
+    Node<Type>* prev
+    Node<Type>* next
 
-LinkedList -> template
-    front
-    back
-    nodeCount
-    insert()
-    erase()
-    empty()
-    size()
+List<Type> -> template
+    Node<Type>* front
+    Node<Type>* back
+    int nodeCount
+    void insert(node)
+    void erase()
+    bool empty()
+    int  size()
+    Node<Type>* getFront()
+    Node<Type>* getBack()
 
 UserInterface
-    action()
+    void action()
 
 Game
-    pair size
-    Field field
-    LinkedList characters
-    UserInterface control
-    run() -> main loop
+    pair<int, int> size
+    Field* field
+    List<Type>* characters
+    UserInterface* control
+    void run() -> main loop
+
+OutputControl
+    void gotoxy(x, y)
+    void hideCursor()
+    void setFontColor(color)
+    void setBackgroundColor(color)
 
 main()
   Game game

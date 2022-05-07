@@ -39,15 +39,21 @@ void Field::addObstacle()
                         rand() % (size.first / 10) + 1,
                         rand() % (size.second / 10) + 1));
 }
-void Field::popObstacle()
-{
-    if(obstacles->empty()) return;
-
-    obstacles->erase();
-}
 void Field::generate()
 {
     /**
         wait to be implemented
     */
+}
+void Field::print()
+{
+    for(int i = 0; i < size.second; i++)
+    {
+        for(int j = 0; j < size.second; j++)
+        {
+            std::cout<< matrix[i][j];
+        }
+
+        std::cout<< '\n';
+    }
 }
