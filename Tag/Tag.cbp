@@ -32,7 +32,28 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
+		<Unit filename="Charactor.cpp" />
+		<Unit filename="Charactor.hpp" />
+		<Unit filename="Distance.cpp" />
+		<Unit filename="Distance.hpp" />
+		<Unit filename="Field.cpp" />
+		<Unit filename="Field.hpp" />
+		<Unit filename="Game.cpp" />
+		<Unit filename="Game.hpp" />
+		<Unit filename="List.hpp" />
+		<Unit filename="Monster.cpp" />
+		<Unit filename="Monster.hpp" />
+		<Unit filename="Obstacle.cpp" />
+		<Unit filename="Obstacle.hpp" />
+		<Unit filename="OutputControl.hpp" />
+		<Unit filename="Player.cpp" />
+		<Unit filename="Player.hpp" />
+		<Unit filename="Timer.cpp" />
+		<Unit filename="Timer.hpp" />
+		<Unit filename="UserInterface.cpp" />
+		<Unit filename="UserInterface.hpp" />
 		<Unit filename="main.cpp" />
+		<Unit filename="pseudoCode.txt" />
 		<Extensions>
 			<lib_finder disable_auto="1" />
 		</Extensions>
