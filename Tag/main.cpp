@@ -9,6 +9,11 @@
 #define FIELD_WIDTH  30
 #define FIELD_HEIGHT 30
 
+#define FAST 'F'
+#define SLOW 'S'
+#define BOMB 'B'
+#define TURN 'T'
+
 template <typename Type> class Node; // doubly node
 template <typename Type> class List; // circular linked list
 
@@ -113,8 +118,8 @@ public:
 
 class Character{
 private:
-    std::string name;
     std::pair<int, int> position;
+    char name;
     double speed; // unit: seconds per step
     Timer* timer;
 
@@ -147,10 +152,10 @@ public:
 class Item{
 private:
     std::pair<int, int> position;
-    int type;
+    char type;
 
 public:
-    Item();
+    Item(std::pair<int, int> position, char type);
     virtual ~Item();
 };
 
@@ -235,7 +240,7 @@ void UserInterface::action(){
 
 }
 
-Item::Item(std::pair<int, int> position, int type): position(position), type(type){
+Item::Item(std::pair<int, int> position, char type): position(position), type(type){
 
 }
 Item::~Item(){
@@ -263,7 +268,7 @@ void Player::move(){
 }
 
 Character::Character(){
-    name = "O";
+    name = 'C';
     position = {0, 0};
     speed = 0.5;
     timer = new Timer(speed);
@@ -272,6 +277,10 @@ Character::~Character(){
     delete timer;
 }
 bool Character::checkCollide(){
+    /**
+        wait to be implemented
+    */
+
     return true;
 }
 
