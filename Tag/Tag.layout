@@ -2,74 +2,14 @@
 <CodeBlocks_layout_file>
 	<FileVersion major="1" minor="0" />
 	<ActiveTarget name="Debug" />
-	<File name="Game.hpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="2" zoom_2="0">
+	<File name="pseudoCode.txt" open="1" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="4" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="112" topLine="0" />
+			<Cursor1 position="342" topLine="0" />
 		</Cursor>
 	</File>
-	<File name="Distance.hpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="main.cpp" open="1" top="1" tabpos="2" split="0" active="1" splitpos="0" zoom_1="2" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="212" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="Field.hpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="4" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="96" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="Obstacle.hpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="2" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="349" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="Charactor.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="5" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="198" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="Timer.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="3" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="261" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="pseudoCode.txt" open="1" top="1" tabpos="1" split="0" active="1" splitpos="0" zoom_1="4" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="342" topLine="48" />
-		</Cursor>
-	</File>
-	<File name="Game.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="6" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="352" topLine="3" />
-		</Cursor>
-	</File>
-	<File name="Field.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="3" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="982" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="Timer.hpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="3" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="280" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="Charactor.hpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="3" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="26" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="List.hpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="1770" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="Obstacle.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="4" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="325" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="Player.hpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="5" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="189" topLine="0" />
+			<Cursor1 position="165" topLine="3" />
 		</Cursor>
 	</File>
 </CodeBlocks_layout_file>
