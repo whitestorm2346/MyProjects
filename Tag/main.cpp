@@ -6,7 +6,7 @@
 #include <conio.h>
 #include <windows.h>
 
-#define FIELD_WIDTH  30
+#define FIELD_WIDTH  60
 #define FIELD_HEIGHT 30
 
 #define OBSTACLE_COUNT_MIN 3
@@ -19,6 +19,13 @@
 #define SLOW 'S'
 #define BOMB 'B'
 #define TURN 'T'
+
+enum MonsterType{
+    REGULAR = 1,
+    BERSERKER,
+    SHOOTER,
+    PHANTOMS
+};
 
 // finished part
 template <typename Type> class Node; // doubly node
@@ -121,15 +128,15 @@ public:
 
 class Distance{
 private:
-    std::pair<int, int> playerPosition;
+    Player* player;
     Field* field;
     int distance[FIELD_HEIGHT][FIELD_HEIGHT];
 
 public:
-    Distance(std::pair<int, int> playerPosition, Field* field);
+    Distance(Player* player, Field* field);
     virtual ~Distance();
 
-    void setPlayerPosition(std::pair<int, int> playerPosition);
+    void setPlayer(Player* player);
     void setField(Field* field);
     void countDistance();
 };
@@ -142,18 +149,20 @@ private:
     Timer* timer;
 
 public:
-    Character();
+    Character(int x, int y, char name);
     virtual ~Character();
 
     virtual void move() = 0;
     virtual void action() = 0;
-    virtual bool checkCollide();
+    virtual void print();
+    virtual bool checkCollide(int x, int y, Field* field);
+    virtual std::pair<int, int> getPosition();
 };
 
 class Player: public Character{
 private:
 public:
-    Player();
+    Player(int x, int y);
     virtual ~Player();
 
     void move();
@@ -162,8 +171,10 @@ public:
 
 class Monster: public Character{
 private:
+    int type;
+
 public:
-    Monster();
+    Monster(int x, int y, int type);
     virtual ~Monster();
 
     void move();
@@ -176,8 +187,10 @@ private:
     char type;
 
 public:
-    Item(std::pair<int, int> position, char type);
+    Item(int x, int y, char type);
     virtual ~Item();
+
+    void print();
 };
 
 class UserInterface{
@@ -191,35 +204,29 @@ public:
 class Game{
 private:
     bool gameOver;
+    bool noChange;
     Field* field;
     UserInterface* control;
     List<Character*>* characters;
+    List<Item*>* items;
 
 public:
     Game();
     virtual ~Game();
 
     void run();
+    void printField();
+    void printCharacters();
+    void printItems();
 };
 
 void gotoxy(int x, int y);
 void hideCursor();
 
 int main(){
-    srand(time(nullptr));
-
-    Field* field = new Field();
-
-    field->generate();
-    field->print();
-
-    delete field;
-
-    /*
     Game game;
 
     game.run();
-    */
 
     return 0;
 }
@@ -243,18 +250,54 @@ void hideCursor(){
 
 Game::Game(){
     gameOver = false;
+    noChange = false;
     field = new Field();
     control = new UserInterface();
     characters = new List<Character*>();
+    items = new List<Item*>();
 }
 Game::~Game(){
     delete field;
     delete control;
     delete characters;
+    delete items;
 }
 void Game::run(){
-    while(!gameOver){
+    srand(time(nullptr));
 
+    field->generate();
+    characters->insert(new Node<Character*>(new Player(0, 0)));
+    characters->insert(new Node<Character*>(new Monster(3, 3, REGULAR)));
+
+    while(!gameOver){
+        if(!noChange){
+            printField();
+            printItems();
+            printCharacters();
+
+            noChange = true;
+        }
+    }
+}
+void Game::printField(){
+    gotoxy(0, 0);
+    field->print();
+    hideCursor();
+}
+void Game::printCharacters(){
+    Node<Character*>* curr = characters->getFront();
+
+    for(int i = 0; i < characters->size(); i++, curr = curr->next()){
+        curr->data()->print();
+    }
+
+    hideCursor();
+}
+void Game::printItems(){
+    Node<Item*>* curr = items->getFront();
+
+    for(int i = 0; i < items->size(); i++, curr = curr->next()){
+        curr->data()->print();
     }
 }
 
@@ -268,14 +311,19 @@ void UserInterface::action(){
 
 }
 
-Item::Item(std::pair<int, int> position, char type): position(position), type(type){
+Item::Item(int x, int y, char type): position({x, y}), type(type){
 
 }
 Item::~Item(){
 
 }
+void Item::print(){
+    gotoxy(position.first + 1, position.second + 1);
+    hideCursor();
+    std::cout<< type;
+}
 
-Monster::Monster(){
+Monster::Monster(int x, int y, int type): Character(x, y, (type + '0')), type(type){
 
 }
 Monster::~Monster(){
@@ -288,7 +336,7 @@ void Monster::action(){
 
 }
 
-Player::Player(){
+Player::Player(int x, int y): Character(x, y, 'P'){
 
 }
 Player::~Player(){
@@ -301,31 +349,35 @@ void Player::action(){
 
 }
 
-Character::Character(){
-    name = 'C';
-    position = {0, 0};
+Character::Character(int x, int y, char name){
+    this->name = name;
+    position = {x, y};
     speed = 0.5;
     timer = new Timer(speed);
 }
 Character::~Character(){
     delete timer;
 }
-bool Character::checkCollide(){
-    /**
-        wait to be implemented
-    */
-
-    return true;
+void Character::print(){
+    gotoxy(position.first + 1, position.second + 1);
+    hideCursor();
+    std::cout<< name;
+}
+bool Character::checkCollide(int x, int y, Field* field){
+    return (field->getMatrix(x, y) == '#') || (field->getMatrix(x, y) == '*');
+}
+std::pair<int, int> Character::getPosition(){
+    return position;
 }
 
-Distance::Distance(std::pair<int, int> playerPosition, Field* field): playerPosition(playerPosition), field(field){
+Distance::Distance(Player* player, Field* field): player(player), field(field){
 
 }
 Distance::~Distance(){
 
 }
-void Distance::setPlayerPosition(std::pair<int, int> playerPosition){
-    this->playerPosition = playerPosition;
+void Distance::setPlayer(Player* player){
+    this->player = player;
 }
 void Distance::setField(Field* field){
     this->field = field;
@@ -334,8 +386,9 @@ void Distance::countDistance(){
     bool check[FIELD_HEIGHT][FIELD_WIDTH] = {};
 
     List<std::pair<int, int>> que;
+    std::pair<int, int> playerPosition = player->getPosition();
 
-    que.insert(new Node<std::pair<int, int>>({playerPosition.first, playerPosition.second}));
+    que.insert(new Node<std::pair<int, int>>(playerPosition));
     distance[playerPosition.second][playerPosition.first] = 0;
 
     while(!que.empty()){
