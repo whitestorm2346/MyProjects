@@ -115,7 +115,7 @@ public:
 class Timer{
 private:
     clock_t checkPoint;
-    double timeGap;
+    double timeGap; // unit: second
 
 public:
     Timer(double timeGap = 1.0);
@@ -138,7 +138,7 @@ public:
 
     void setPlayer(Player* player);
     void setField(Field* field);
-    void countDistance();
+    void calculate();
 };
 
 class Character{
@@ -172,6 +172,7 @@ public:
 class Monster: public Character{
 private:
     int type;
+    Timer* skillCountDown;
 
 public:
     Monster(int x, int y, int type);
@@ -183,6 +184,7 @@ public:
 
 class Item{
 private:
+    Timer* duration;
     std::pair<int, int> position;
     char type;
 
@@ -205,7 +207,13 @@ class Game{
 private:
     bool gameOver;
     bool noChange;
+    int  score;
+    int  duration;
+    Timer* overOneSecond;
+    Timer* generateCharacter;
+    Timer* generateItem;
     Field* field;
+    Distance* distance;
     UserInterface* control;
     List<Character*>* characters;
     List<Item*>* items;
@@ -218,6 +226,7 @@ public:
     void printField();
     void printCharacters();
     void printItems();
+    void printInformation();
 };
 
 void gotoxy(int x, int y);
@@ -251,12 +260,21 @@ void hideCursor(){
 Game::Game(){
     gameOver = false;
     noChange = false;
+    score = 0;
+    duration = 0;
+    overOneSecond = new Timer(1.0);
+    generateCharacter = new Timer(20.0);
+    generateItem = new Timer(10.0);
     field = new Field();
+    distance = new Distance(nullptr, field);
     control = new UserInterface();
     characters = new List<Character*>();
     items = new List<Item*>();
 }
 Game::~Game(){
+    delete overOneSecond;
+    delete generateCharacter;
+    delete generateItem;
     delete field;
     delete control;
     delete characters;
@@ -266,8 +284,12 @@ void Game::run(){
     srand(time(nullptr));
 
     field->generate();
+
     characters->insert(new Node<Character*>(new Player(0, 0)));
     characters->insert(new Node<Character*>(new Monster(3, 3, REGULAR)));
+
+    distance->setPlayer(reinterpret_cast<Player*>(characters->getFront()->data()));
+    //distance->calculate();
 
     while(!gameOver){
         if(!noChange){
@@ -277,6 +299,14 @@ void Game::run(){
 
             noChange = true;
         }
+
+        if(overOneSecond->exceedTimeGap()){
+            ++score;
+            ++duration;
+            overOneSecond->resetTimer();
+        }
+
+        printInformation();
     }
 }
 void Game::printField(){
@@ -299,6 +329,13 @@ void Game::printItems(){
     for(int i = 0; i < items->size(); i++, curr = curr->next()){
         curr->data()->print();
     }
+}
+void Game::printInformation(){
+    gotoxy(0, FIELD_HEIGHT + 4);
+    hideCursor();
+
+    std::cout<< "Score: " << score << '\n';
+    std::cout<< "Time: " << duration << '\n';
 }
 
 UserInterface::UserInterface(){
@@ -382,7 +419,7 @@ void Distance::setPlayer(Player* player){
 void Distance::setField(Field* field){
     this->field = field;
 }
-void Distance::countDistance(){
+void Distance::calculate(){
     bool check[FIELD_HEIGHT][FIELD_WIDTH] = {};
 
     List<std::pair<int, int>> que;
@@ -398,32 +435,32 @@ void Distance::countDistance(){
         check[currPos.second][currPos.first] = true;
 
         // up
-        if(((!check[currPos.second - 1][currPos.first]) || (currPos.second - 1 >= 0)) &&
-            (field->getMatrix(currPos.first + 1, currPos.second) == ' ')){
+        if(((currPos.second - 1 >= 0) || (!check[currPos.second - 1][currPos.first])) &&
+           (field->getMatrix(currPos.first + 1, currPos.second) == ' ')){
             check[currPos.second - 1][currPos.first] = true;
             distance[currPos.second - 1][currPos.first] = distance[currPos.second][currPos.first] + 1;
             que.insert(new Node<std::pair<int, int>>({currPos.first, currPos.second - 1}));
         }
 
         // right
-        if(((!check[currPos.second][currPos.first + 1]) || (currPos.first + 1 < FIELD_WIDTH)) &&
-            (field->getMatrix(currPos.first + 2, currPos.second + 1) == ' ')){
+        if(((currPos.first + 1 < FIELD_WIDTH) || (!check[currPos.second][currPos.first + 1])) &&
+           (field->getMatrix(currPos.first + 2, currPos.second + 1) == ' ')){
             check[currPos.second][currPos.first + 1] = true;
             distance[currPos.second][currPos.first + 1] = distance[currPos.second][currPos.first] + 1;
             que.insert(new Node<std::pair<int, int>>({currPos.first + 1, currPos.second}));
         }
 
         // down
-        if(((!check[currPos.second + 1][currPos.first]) || (currPos.second + 1 < FIELD_HEIGHT)) &&
-            (field->getMatrix(currPos.first + 1, currPos.second + 2) == ' ')){
+        if(((currPos.second + 1 < FIELD_HEIGHT) || (!check[currPos.second + 1][currPos.first])) &&
+           (field->getMatrix(currPos.first + 1, currPos.second + 2) == ' ')){
             check[currPos.second + 1][currPos.first] = true;
             distance[currPos.second + 1][currPos.first] = distance[currPos.second][currPos.first] + 1;
             que.insert(new Node<std::pair<int, int>>({currPos.first, currPos.second + 1}));
         }
 
         // left
-        if(((!check[currPos.second][currPos.first - 1]) || (currPos.first - 1 >= 0)) &&
-            (field->getMatrix(currPos.first, currPos.second + 1) == ' ')){
+        if(((currPos.first - 1 >= 0) || (!check[currPos.second][currPos.first - 1])) &&
+           (field->getMatrix(currPos.first, currPos.second + 1) == ' ')){
             check[currPos.second][currPos.first - 1] = true;
             distance[currPos.second][currPos.first - 1] = distance[currPos.second][currPos.first] + 1;
             que.insert(new Node<std::pair<int, int>>({currPos.first - 1, currPos.second}));
