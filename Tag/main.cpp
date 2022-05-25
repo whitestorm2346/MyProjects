@@ -9,22 +9,33 @@
 #define FIELD_WIDTH  60
 #define FIELD_HEIGHT 30
 
-#define OBSTACLE_COUNT_MIN 3
+#define OBSTACLE_COUNT_MIN 5
 #define OBSTACLE_COUNT_MAX 10
 
 #define OBSTACLE_SIZE_MIN 3
 #define OBSTACLE_SIZE_MAX 10
 
-#define FAST 'F'
-#define SLOW 'S'
-#define BOMB 'B'
-#define TURN 'T'
+#define SizeOfItemType 4
+enum ItemType{
+    FAST = 1,
+    SLOW,
+    BOMB,
+    TURN
+};
 
+#define SizeOfMonsterType 4
 enum MonsterType{
     REGULAR = 1,
     BERSERKER,
     SHOOTER,
     PHANTOMS
+};
+
+enum Direction{
+    UP = 0,
+    RIGHT,
+    DOWN,
+    LEFT
 };
 
 // finished part
@@ -33,10 +44,10 @@ template <typename Type> class List; // circular linked list
 class Obstacle;
 class Field;
 class Timer;
-
-// unfinished part
 class Distance;
 class Character;
+
+// unfinished part
 class Player;
 class Monster;
 class Item;
@@ -153,7 +164,7 @@ public:
     Character(int x, int y, char name);
     virtual ~Character();
 
-    virtual void move() = 0;
+    virtual void move(int direction) = 0;
     virtual void action() = 0;
     virtual void print();
     virtual bool checkCollide(int x, int y, Field* field);
@@ -166,7 +177,7 @@ public:
     Player(int x, int y);
     virtual ~Player();
 
-    void move();
+    void move(int direction);
     void action();
 };
 
@@ -179,7 +190,7 @@ public:
     Monster(int x, int y, int type);
     virtual ~Monster();
 
-    void move();
+    void move(int direction);
     void action();
 };
 
@@ -201,7 +212,7 @@ public:
     UserInterface();
     virtual ~UserInterface();
 
-    void action();
+    int action();
 };
 
 class Game{
@@ -228,6 +239,7 @@ public:
     void printCharacters();
     void printItems();
     void printInformation();
+    std::pair<int, int> getRandomSpace();
 };
 
 void gotoxy(int x, int y);
@@ -307,6 +319,66 @@ void Game::run(){
             overOneSecond->resetTimer();
         }
 
+        if(generateCharacter->exceedTimeGap()){
+            std::pair<int, int> position = getRandomSpace();
+
+            switch(rand() % SizeOfMonsterType + 1){
+                case REGULAR:
+                    characters->insert(new Node<Character*>(new Monster(position.first, position.second, REGULAR)));
+                    break;
+
+                case BERSERKER:
+                    characters->insert(new Node<Character*>(new Monster(position.first, position.second, BERSERKER)));
+                    break;
+
+                case SHOOTER:
+                    characters->insert(new Node<Character*>(new Monster(position.first, position.second, SHOOTER)));
+                    break;
+
+                case PHANTOMS:
+                    characters->insert(new Node<Character*>(new Monster(position.first, position.second, PHANTOMS)));
+                    break;
+            }
+
+            noChange = false;
+
+            generateCharacter->resetTimer();
+        }
+
+        if(generateItem->exceedTimeGap()){
+            std::pair<int, int> position = getRandomSpace();
+
+            switch(rand() % SizeOfItemType + 1){
+                case FAST:
+                    items->insert(new Node<Item*>(new Item(position.first, position.second, 'F')));
+                    break;
+
+                case SLOW:
+                    items->insert(new Node<Item*>(new Item(position.first, position.second, 'S')));
+                    break;
+
+                case BOMB:
+                    items->insert(new Node<Item*>(new Item(position.first, position.second, 'B')));
+                    break;
+
+                case TURN:
+                    items->insert(new Node<Item*>(new Item(position.first, position.second, 'T')));
+                    break;
+            }
+
+            noChange = false;
+
+            generateItem->resetTimer();
+        }
+
+        switch(control->action()){
+            case UP:
+            case RIGHT:
+            case DOWN:
+            case LEFT:
+            default: break;
+        }
+
         printInformation();
     }
 }
@@ -338,6 +410,16 @@ void Game::printInformation(){
     std::cout<< "Score: " << score << '\n';
     std::cout<< "Time: " << duration << '\n';
 }
+std::pair<int, int> Game::getRandomSpace(){
+    int y = rand() % FIELD_HEIGHT;
+    int x = rand() % FIELD_WIDTH;
+
+    while(field->getMatrix(x + 1, y + 1) != ' '){
+        x = rand() % FIELD_WIDTH;
+    }
+
+    return {x, y};
+}
 
 UserInterface::UserInterface(){
 
@@ -345,8 +427,36 @@ UserInterface::UserInterface(){
 UserInterface::~UserInterface(){
 
 }
-void UserInterface::action(){
+int UserInterface::action(){
+    if(kbhit())
+    {
+        int key = getch();
 
+        if(key == 224)
+        {
+            key = getch();
+
+            switch(key)
+            {
+                case 72: return UP;
+                case 75: return LEFT;
+                case 80: return DOWN;
+                case 77: return RIGHT;
+            }
+        }
+        else
+        {
+            switch(key)
+            {
+                case 'W': case 'w': return UP;
+                case 'A': case 'a': return LEFT;
+                case 'S': case 's': return DOWN;
+                case 'D': case 'd': return RIGHT;
+            }
+        }
+    }
+
+    return -1;
 }
 
 Item::Item(int x, int y, char type): position({x, y}), type(type){
@@ -367,7 +477,7 @@ Monster::Monster(int x, int y, int type): Character(x, y, (type + '0')), type(ty
 Monster::~Monster(){
 
 }
-void Monster::move(){
+void Monster::move(int direction){
 
 }
 void Monster::action(){
@@ -380,7 +490,7 @@ Player::Player(int x, int y): Character(x, y, 'P'){
 Player::~Player(){
 
 }
-void Player::move(){
+void Player::move(int direction){
 
 }
 void Player::action(){
@@ -423,7 +533,7 @@ void Distance::setPlayer(Player* player){
 void Distance::setField(Field* field){
     this->field = field;
 }
-void Distance::calculate(){ // still have some bugs need to fix
+void Distance::calculate(){ // BFS
     bool check[FIELD_HEIGHT][FIELD_WIDTH] = {};
 
     List<std::pair<int, int>>* que = new List<std::pair<int, int>>();
@@ -438,6 +548,9 @@ void Distance::calculate(){ // still have some bugs need to fix
         int y = currPos.second;
 
         que->pop_front();
+
+        //std::cout<< que->size() << " -> " << x << ' ' << y << '\n';
+
         check[y][x] = true;
 
         // up
