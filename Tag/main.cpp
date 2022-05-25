@@ -154,9 +154,10 @@ public:
 };
 
 class Character{
-private:
+protected:
     std::pair<int, int> position;
     char name;
+    bool canMove;
     double speed; // unit: seconds per step
     Timer* timer;
 
@@ -164,8 +165,8 @@ public:
     Character(int x, int y, char name);
     virtual ~Character();
 
-    virtual void move(int direction) = 0;
-    virtual void action() = 0;
+    virtual void action(int buff = -1) = 0;
+    virtual void move(int direction = -1);
     virtual void print();
     virtual bool checkCollide(int x, int y, Field* field);
     virtual std::pair<int, int> getPosition();
@@ -173,12 +174,12 @@ public:
 
 class Player: public Character{
 private:
+
 public:
     Player(int x, int y);
     virtual ~Player();
 
-    void move(int direction);
-    void action();
+    void action(int buff = -1);
 };
 
 class Monster: public Character{
@@ -190,8 +191,8 @@ public:
     Monster(int x, int y, int type);
     virtual ~Monster();
 
-    void move(int direction);
-    void action();
+    void action(int buff = -1);
+    bool checkCatchPlayer(int x, int y);
 };
 
 class Item{
@@ -205,6 +206,7 @@ public:
     virtual ~Item();
 
     void print();
+    bool checkPlayerCollect(int x, int y);
 };
 
 class UserInterface{
@@ -373,9 +375,21 @@ void Game::run(){
 
         switch(control->action()){
             case UP:
+                characters->getFront()->data()->move(UP);
+                break;
+
             case RIGHT:
+                characters->getFront()->data()->move(RIGHT);
+                break;
+
             case DOWN:
+                characters->getFront()->data()->move(DOWN);
+                break;
+
             case LEFT:
+                characters->getFront()->data()->move(LEFT);
+                break;
+
             default: break;
         }
 
@@ -470,6 +484,9 @@ void Item::print(){
     hideCursor();
     std::cout<< type;
 }
+bool Item::checkPlayerCollect(int x, int y){
+    return (position.first == x && position.second == y);
+}
 
 Monster::Monster(int x, int y, int type): Character(x, y, (type + '0')), type(type){
 
@@ -477,11 +494,11 @@ Monster::Monster(int x, int y, int type): Character(x, y, (type + '0')), type(ty
 Monster::~Monster(){
 
 }
-void Monster::move(int direction){
+void Monster::action(int buff /* = -1 */){
 
 }
-void Monster::action(){
-
+bool Monster::checkCatchPlayer(int x, int y){
+    return (position.first == x && position.second == y);
 }
 
 Player::Player(int x, int y): Character(x, y, 'P'){
@@ -490,22 +507,51 @@ Player::Player(int x, int y): Character(x, y, 'P'){
 Player::~Player(){
 
 }
-void Player::move(int direction){
-
-}
-void Player::action(){
+void Player::action(int buff /* = -1 */){
 
 }
 
 Character::Character(int x, int y, char name){
     this->name = name;
     position = {x, y};
+    canMove = true;
     speed = 0.5;
     timer = new Timer(speed);
 }
 Character::~Character(){
     delete timer;
 }
+void Character::move(int direction /* = -1 */){
+    if(timer->exceedTimeGap()){
+        canMove = true;
+    }
+
+    if(canMove){
+        switch(direction){
+            case UP:
+                position = {position.first, position.second - 1};
+                break;
+
+            case RIGHT:
+                position = {position.first + 1, position.second};
+                break;
+
+            case DOWN:
+                position = {position.first, position.second + 1};
+                break;
+
+            case LEFT:
+                position = {position.first - 1, position.second};
+                break;
+
+            default: break;
+        }
+
+        canMove = false;
+        timer->resetTimer();
+    }
+}
+
 void Character::print(){
     gotoxy(position.first + 1, position.second + 1);
     hideCursor();
@@ -548,8 +594,6 @@ void Distance::calculate(){ // BFS
         int y = currPos.second;
 
         que->pop_front();
-
-        //std::cout<< que->size() << " -> " << x << ' ' << y << '\n';
 
         check[y][x] = true;
 
