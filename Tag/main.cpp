@@ -136,6 +136,7 @@ public:
     Distance(Player* player, Field* field);
     virtual ~Distance();
 
+    bool isInside(int x, int y);
     void setPlayer(Player* player);
     void setField(Field* field);
     void calculate();
@@ -289,7 +290,7 @@ void Game::run(){
     characters->insert(new Node<Character*>(new Monster(3, 3, REGULAR)));
 
     distance->setPlayer(reinterpret_cast<Player*>(characters->getFront()->data()));
-    //distance->calculate();
+    distance->calculate();
 
     while(!gameOver){
         if(!noChange){
@@ -413,59 +414,66 @@ Distance::Distance(Player* player, Field* field): player(player), field(field){
 Distance::~Distance(){
 
 }
+bool Distance::isInside(int x, int y){
+    return (x >= 0 && x < FIELD_WIDTH) && (y >= 0 && y < FIELD_HEIGHT);
+}
 void Distance::setPlayer(Player* player){
     this->player = player;
 }
 void Distance::setField(Field* field){
     this->field = field;
 }
-void Distance::calculate(){
+void Distance::calculate(){ // still have some bugs need to fix
     bool check[FIELD_HEIGHT][FIELD_WIDTH] = {};
 
-    List<std::pair<int, int>> que;
+    List<std::pair<int, int>>* que = new List<std::pair<int, int>>();
     std::pair<int, int> playerPosition = player->getPosition();
 
-    que.insert(new Node<std::pair<int, int>>(playerPosition));
+    que->insert(new Node<std::pair<int, int>>(playerPosition));
     distance[playerPosition.second][playerPosition.first] = 0;
 
-    while(!que.empty()){
-        std::pair<int, int> currPos = que.getFront()->data();
+    while(!que->empty()){
+        std::pair<int, int> currPos = que->getFront()->data();
+        int x = currPos.first;
+        int y = currPos.second;
 
-        que.pop_front();
-        check[currPos.second][currPos.first] = true;
+        que->pop_front();
+        check[y][x] = true;
 
         // up
-        if(((currPos.second - 1 >= 0) || (!check[currPos.second - 1][currPos.first])) &&
-           (field->getMatrix(currPos.first + 1, currPos.second) == ' ')){
-            check[currPos.second - 1][currPos.first] = true;
-            distance[currPos.second - 1][currPos.first] = distance[currPos.second][currPos.first] + 1;
-            que.insert(new Node<std::pair<int, int>>({currPos.first, currPos.second - 1}));
+        if(isInside(x, y - 1)){
+            if((!check[y - 1][x]) && (field->getMatrix(x + 1, y) == ' ')){
+                distance[y - 1][x] = distance[y][x] + 1;
+                que->insert(new Node<std::pair<int, int>>({x, y - 1}));
+            }
         }
 
         // right
-        if(((currPos.first + 1 < FIELD_WIDTH) || (!check[currPos.second][currPos.first + 1])) &&
-           (field->getMatrix(currPos.first + 2, currPos.second + 1) == ' ')){
-            check[currPos.second][currPos.first + 1] = true;
-            distance[currPos.second][currPos.first + 1] = distance[currPos.second][currPos.first] + 1;
-            que.insert(new Node<std::pair<int, int>>({currPos.first + 1, currPos.second}));
+        if(isInside(x + 1, y)){
+            if((!check[y][x + 1]) && (field->getMatrix(x + 2, y + 1) == ' ')){
+                distance[y][x + 1] = distance[y][x] + 1;
+                que->insert(new Node<std::pair<int, int>>({x + 1, y}));
+            }
         }
 
         // down
-        if(((currPos.second + 1 < FIELD_HEIGHT) || (!check[currPos.second + 1][currPos.first])) &&
-           (field->getMatrix(currPos.first + 1, currPos.second + 2) == ' ')){
-            check[currPos.second + 1][currPos.first] = true;
-            distance[currPos.second + 1][currPos.first] = distance[currPos.second][currPos.first] + 1;
-            que.insert(new Node<std::pair<int, int>>({currPos.first, currPos.second + 1}));
+        if(isInside(x, y + 1)){
+            if((!check[y + 1][x]) && (field->getMatrix(x + 1, y + 2) == ' ')){
+                distance[y + 1][x] = distance[y][x] + 1;
+                que->insert(new Node<std::pair<int, int>>({x, y + 1}));
+            }
         }
 
         // left
-        if(((currPos.first - 1 >= 0) || (!check[currPos.second][currPos.first - 1])) &&
-           (field->getMatrix(currPos.first, currPos.second + 1) == ' ')){
-            check[currPos.second][currPos.first - 1] = true;
-            distance[currPos.second][currPos.first - 1] = distance[currPos.second][currPos.first] + 1;
-            que.insert(new Node<std::pair<int, int>>({currPos.first - 1, currPos.second}));
+        if(isInside(x - 1, y)){
+            if((!check[y][x - 1]) && (field->getMatrix(x, y + 1) == ' ')){
+                distance[y][x - 1] = distance[y][x] + 1;
+                que->insert(new Node<std::pair<int, int>>({x - 1, y}));
+            }
         }
     }
+
+    delete que;
 }
 
 Timer::Timer(double timeGap): checkPoint(clock()), timeGap(timeGap){
