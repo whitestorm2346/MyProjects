@@ -3,10 +3,11 @@
 #include <ctime>
 #include <string>
 #include <utility>
+#include <queue>
 #include <conio.h>
 #include <windows.h>
 
-#define FIELD_WIDTH  60
+#define FIELD_WIDTH  30
 #define FIELD_HEIGHT 30
 
 #define OBSTACLE_COUNT_MIN 5
@@ -46,12 +47,12 @@ class Field;
 class Timer;
 class Distance;
 class Character;
+class Player;
+class UserInterface;
 
 // unfinished part
-class Player;
 class Monster;
 class Item;
-class UserInterface;
 class Game;
 
 template <typename Type>
@@ -147,10 +148,12 @@ public:
     Distance(Player* player, Field* field);
     virtual ~Distance();
 
+    int  getDistance(int x, int y);
     bool isInside(int x, int y);
     void setPlayer(Player* player);
     void setField(Field* field);
     void calculate();
+    void print();
 };
 
 class Character{
@@ -166,7 +169,7 @@ public:
     virtual ~Character();
 
     virtual void action(int buff = -1) = 0;
-    virtual void move(int direction = -1);
+    virtual void move(bool& noChange, int direction = -1);
     virtual void print();
     virtual bool checkCollide(int x, int y, Field* field);
     virtual std::pair<int, int> getPosition();
@@ -220,7 +223,7 @@ public:
 class Game{
 private:
     bool gameOver;
-    bool noChange;
+    bool noChange; // if the view is not changed, then the field does not need to be refresh
     int  score;
     int  duration;
     Timer* overOneSecond;
@@ -241,6 +244,11 @@ public:
     void printCharacters();
     void printItems();
     void printInformation();
+    void checkOverOneSecond();
+    void checkGenerateCharacter();
+    void checkGenerateItem();
+    void checkPlayerMoving();
+    void checkMonsterMoving();
     std::pair<int, int> getRandomSpace();
 };
 
@@ -300,8 +308,18 @@ void Game::run(){ // main loop
 
     field->generate();
 
-    characters->insert(new Node<Character*>(new Player(0, 0)));
-    characters->insert(new Node<Character*>(new Monster(3, 3, REGULAR)));
+    std::pair<int, int> randomSpot = getRandomSpace();
+
+    characters->insert(new Node<Character*>(new Player(randomSpot.first, randomSpot.second)));
+
+    randomSpot = getRandomSpace();
+
+    characters->insert(new Node<Character*>(new Monster(randomSpot.first, randomSpot.second, REGULAR)));
+
+    printField();
+    printItems();
+    printCharacters();
+    gotoxy(0, FIELD_HEIGHT + 3);
 
     distance->setPlayer(reinterpret_cast<Player*>(characters->getFront()->data()));
     distance->calculate();
@@ -312,113 +330,23 @@ void Game::run(){ // main loop
             printItems();
             printCharacters();
 
+            getch();
+
+            gotoxy(0, FIELD_HEIGHT + 3);
+
+            distance->print();
+
+            getch();
+
             noChange = true;
         }
 
-        if(overOneSecond->exceedTimeGap()){
-            ++score;
-            ++duration;
-            overOneSecond->resetTimer();
-        }
+        checkOverOneSecond();
+        checkGenerateCharacter();
+        checkGenerateItem();
 
-        if(generateCharacter->exceedTimeGap()){
-            std::pair<int, int> position = getRandomSpace();
-
-            switch(rand() % SizeOfMonsterType + 1){
-                case REGULAR:
-                    characters->insert(new Node<Character*>(new Monster(position.first, position.second, REGULAR)));
-                    break;
-
-                case BERSERKER:
-                    characters->insert(new Node<Character*>(new Monster(position.first, position.second, BERSERKER)));
-                    break;
-
-                case SHOOTER:
-                    characters->insert(new Node<Character*>(new Monster(position.first, position.second, SHOOTER)));
-                    break;
-
-                case PHANTOMS:
-                    characters->insert(new Node<Character*>(new Monster(position.first, position.second, PHANTOMS)));
-                    break;
-            }
-
-            noChange = false;
-
-            generateCharacter->resetTimer();
-        }
-
-        if(generateItem->exceedTimeGap()){
-            std::pair<int, int> position = getRandomSpace();
-
-            switch(rand() % SizeOfItemType + 1){
-                case FAST:
-                    items->insert(new Node<Item*>(new Item(position.first, position.second, 'F')));
-                    break;
-
-                case SLOW:
-                    items->insert(new Node<Item*>(new Item(position.first, position.second, 'S')));
-                    break;
-
-                case BOMB:
-                    items->insert(new Node<Item*>(new Item(position.first, position.second, 'B')));
-                    break;
-
-                case TURN:
-                    items->insert(new Node<Item*>(new Item(position.first, position.second, 'T')));
-                    break;
-            }
-
-            noChange = false;
-
-            generateItem->resetTimer();
-        }
-
-        Player* player = reinterpret_cast<Player*>(characters->getFront()->data());
-        std::pair<int, int> playerPosition = player->getPosition();
-
-        switch(control->action()){
-            case UP:
-                if(distance->isInside(playerPosition.first, playerPosition.second - 1)){
-                    if((field->getMatrix(playerPosition.first + 1, playerPosition.second) != '#') &&
-                       (field->getMatrix(playerPosition.first + 1, playerPosition.second) != '*')){
-                        noChange = false;
-                        player->move(UP);
-                    }
-                }
-                break;
-
-            case RIGHT:
-                if(distance->isInside(playerPosition.first + 1, playerPosition.second)){
-                    if((field->getMatrix(playerPosition.first + 2, playerPosition.second + 1) != '#') &&
-                       (field->getMatrix(playerPosition.first + 2, playerPosition.second + 1) != '*')){
-                        noChange = false;
-                        player->move(RIGHT);
-                    }
-                }
-                break;
-
-            case DOWN:
-                if(distance->isInside(playerPosition.first, playerPosition.second + 1)){
-                    if((field->getMatrix(playerPosition.first + 1, playerPosition.second + 2) != '#') &&
-                       (field->getMatrix(playerPosition.first + 1, playerPosition.second + 2) != '*')){
-                        noChange = false;
-                        player->move(DOWN);
-                    }
-                }
-                break;
-
-            case LEFT:
-                if(distance->isInside(playerPosition.first - 1, playerPosition.second)){
-                    if((field->getMatrix(playerPosition.first, playerPosition.second + 1) != '#') &&
-                       (field->getMatrix(playerPosition.first, playerPosition.second + 1) != '*')){
-                        noChange = false;
-                        player->move(LEFT);
-                    }
-                }
-                break;
-
-            default: break;
-        }
+        checkPlayerMoving();
+        checkMonsterMoving();
 
         printInformation();
     }
@@ -450,6 +378,172 @@ void Game::printInformation(){
 
     std::cout<< "Score: " << score << '\n';
     std::cout<< "Time: " << duration << '\n';
+}
+void Game::checkOverOneSecond(){
+    if(overOneSecond->exceedTimeGap()){
+        ++score;
+        ++duration;
+        overOneSecond->resetTimer();
+    }
+}
+void Game::checkGenerateCharacter(){
+    if(generateCharacter->exceedTimeGap()){
+        std::pair<int, int> position = getRandomSpace();
+
+        switch(rand() % SizeOfMonsterType + 1){
+            case REGULAR:
+                characters->insert(new Node<Character*>(new Monster(position.first, position.second, REGULAR)));
+                break;
+
+            case BERSERKER:
+                characters->insert(new Node<Character*>(new Monster(position.first, position.second, BERSERKER)));
+                break;
+
+            case SHOOTER:
+                characters->insert(new Node<Character*>(new Monster(position.first, position.second, SHOOTER)));
+                break;
+
+            case PHANTOMS:
+                characters->insert(new Node<Character*>(new Monster(position.first, position.second, PHANTOMS)));
+                break;
+        }
+
+        noChange = false;
+
+        generateCharacter->resetTimer();
+    }
+}
+void Game::checkGenerateItem(){
+    if(generateItem->exceedTimeGap()){
+        std::pair<int, int> position = getRandomSpace();
+
+        switch(rand() % SizeOfItemType + 1){
+            case FAST:
+                items->insert(new Node<Item*>(new Item(position.first, position.second, 'F')));
+                break;
+
+            case SLOW:
+                items->insert(new Node<Item*>(new Item(position.first, position.second, 'S')));
+                break;
+
+            case BOMB:
+                items->insert(new Node<Item*>(new Item(position.first, position.second, 'B')));
+                break;
+
+            case TURN:
+                items->insert(new Node<Item*>(new Item(position.first, position.second, 'T')));
+                break;
+        }
+
+        noChange = false;
+
+        generateItem->resetTimer();
+    }
+}
+void Game::checkPlayerMoving(){
+    Player* player = reinterpret_cast<Player*>(characters->getFront()->data());
+    std::pair<int, int> playerPosition = player->getPosition();
+
+    switch(control->action()){
+        case UP:
+            if(distance->isInside(playerPosition.first, playerPosition.second - 1)){
+                if((field->getMatrix(playerPosition.first + 1, playerPosition.second) != '#') &&
+                   (field->getMatrix(playerPosition.first + 1, playerPosition.second) != '*')){
+                    player->move(noChange, UP);
+                }
+            }
+            break;
+
+        case RIGHT:
+            if(distance->isInside(playerPosition.first + 1, playerPosition.second)){
+                if((field->getMatrix(playerPosition.first + 2, playerPosition.second + 1) != '#') &&
+                   (field->getMatrix(playerPosition.first + 2, playerPosition.second + 1) != '*')){
+                    player->move(noChange, RIGHT);
+                }
+            }
+            break;
+
+        case DOWN:
+            if(distance->isInside(playerPosition.first, playerPosition.second + 1)){
+                if((field->getMatrix(playerPosition.first + 1, playerPosition.second + 2) != '#') &&
+                   (field->getMatrix(playerPosition.first + 1, playerPosition.second + 2) != '*')){
+                    player->move(noChange, DOWN);
+                }
+            }
+            break;
+
+        case LEFT:
+            if(distance->isInside(playerPosition.first - 1, playerPosition.second)){
+                if((field->getMatrix(playerPosition.first, playerPosition.second + 1) != '#') &&
+                   (field->getMatrix(playerPosition.first, playerPosition.second + 1) != '*')){
+                    player->move(noChange, LEFT);
+                }
+            }
+            break;
+
+        default: break;
+    }
+}
+void Game::checkMonsterMoving(){
+    Node<Character*>* currMonsterNode = characters->getFront()->next();
+
+    for(int i = 1; i < characters->size(); ++i, currMonsterNode = currMonsterNode->next()){
+        Monster* monster = reinterpret_cast<Monster*>(currMonsterNode->data());
+        std::pair<int, int> monsterPosition = monster->getPosition();
+        int currDistance = 0;
+        int minDistance = FIELD_HEIGHT * FIELD_WIDTH;
+        int direction = -1;
+
+        if(distance->isInside(monsterPosition.first, monsterPosition.second - 1)){ // up
+            if((field->getMatrix(monsterPosition.first + 1, monsterPosition.second) != '#') &&
+               (field->getMatrix(monsterPosition.first + 1, monsterPosition.second) != '*')){
+                currDistance = distance->getDistance(monsterPosition.first, monsterPosition.second - 1);
+
+                if(currDistance < minDistance){
+                    minDistance = currDistance;
+                    direction = UP;
+                }
+            }
+        }
+
+        if(distance->isInside(monsterPosition.first + 1, monsterPosition.second)){ // right
+            if((field->getMatrix(monsterPosition.first + 2, monsterPosition.second + 1) != '#') &&
+               (field->getMatrix(monsterPosition.first + 2, monsterPosition.second + 1) != '*')){
+                currDistance = distance->getDistance(monsterPosition.first + 1, monsterPosition.second);
+
+                if(currDistance < minDistance){
+                    minDistance = currDistance;
+                    direction = RIGHT;
+                }
+            }
+        }
+
+        if(distance->isInside(monsterPosition.first, monsterPosition.second + 1)){ // down
+            if((field->getMatrix(monsterPosition.first + 1, monsterPosition.second + 2) != '#') &&
+               (field->getMatrix(monsterPosition.first + 1, monsterPosition.second + 2) != '*')){
+                currDistance = distance->getDistance(monsterPosition.first, monsterPosition.second + 1);
+
+                if(currDistance < minDistance){
+                    minDistance = currDistance;
+                    direction = DOWN;
+                }
+            }
+        }
+
+        if(distance->isInside(monsterPosition.first - 1, monsterPosition.second)){ // left
+            if((field->getMatrix(monsterPosition.first, monsterPosition.second + 1) != '#') &&
+               (field->getMatrix(monsterPosition.first, monsterPosition.second + 1) != '*')){
+                currDistance = distance->getDistance(monsterPosition.first - 1, monsterPosition.second);
+
+                if(currDistance < minDistance){
+                    minDistance = currDistance;
+                    direction = LEFT;
+                }
+            }
+        }
+
+        monster->move(noChange, direction);
+    }
 }
 std::pair<int, int> Game::getRandomSpace(){
     int y = rand() % FIELD_HEIGHT;
@@ -554,7 +648,7 @@ Character::Character(int x, int y, char name){
 Character::~Character(){
     delete timer;
 }
-void Character::move(int direction /* = -1 */){
+void Character::move(bool& noChange, int direction /* = -1 */){
     if(timer->exceedTimeGap()){
         canMove = true;
     }
@@ -582,6 +676,7 @@ void Character::move(int direction /* = -1 */){
 
         if(direction != -1){
             canMove = false;
+            noChange = false;
             timer->resetTimer();
         }
     }
@@ -605,6 +700,9 @@ Distance::Distance(Player* player, Field* field): player(player), field(field){
 Distance::~Distance(){
 
 }
+int Distance::getDistance(int x, int y){
+    return distance[y][x];
+}
 bool Distance::isInside(int x, int y){
     return (x >= 0 && x < FIELD_WIDTH) && (y >= 0 && y < FIELD_HEIGHT);
 }
@@ -615,57 +713,83 @@ void Distance::setField(Field* field){
     this->field = field;
 }
 void Distance::calculate(){ // BFS
-    bool check[FIELD_HEIGHT][FIELD_WIDTH] = {};
+    bool check[FIELD_HEIGHT][FIELD_WIDTH];
 
-    List<std::pair<int, int>>* que = new List<std::pair<int, int>>();
+    for(int i = 0; i < FIELD_HEIGHT; i++){
+        for(int j = 0; j < FIELD_WIDTH; j++){
+            check[i][j] = false;
+            distance[i][j] = 99; //INT_MAX;
+        }
+    }
+
+    std::queue<std::pair<int, int>> que;
     std::pair<int, int> playerPosition = player->getPosition();
 
-    que->insert(new Node<std::pair<int, int>>(playerPosition));
+    que.push(playerPosition);
     distance[playerPosition.second][playerPosition.first] = 0;
 
-    while(!que->empty()){
-        std::pair<int, int> currPos = que->getFront()->data();
+    while(!que.empty()){
+        std::pair<int, int> currPos = que.front();
         int x = currPos.first;
         int y = currPos.second;
 
-        que->pop_front();
+        que.pop();
+
+        printf("(%d, %d)\n", x, y);
+        getch();
 
         check[y][x] = true;
 
         // up
         if(isInside(x, y - 1)){
-            if((!check[y - 1][x]) && (field->getMatrix(x + 1, y) == ' ')){
-                distance[y - 1][x] = distance[y][x] + 1;
-                que->insert(new Node<std::pair<int, int>>({x, y - 1}));
+            if(!check[y - 1][x]){
+                if((field->getMatrix(x + 1, y) != '#') && (field->getMatrix(x + 1, y) != '*')){
+                    distance[y - 1][x] = distance[y][x] + 1;
+                    que.push({x, y - 1});
+                }
             }
         }
 
+
         // right
         if(isInside(x + 1, y)){
-            if((!check[y][x + 1]) && (field->getMatrix(x + 2, y + 1) == ' ')){
-                distance[y][x + 1] = distance[y][x] + 1;
-                que->insert(new Node<std::pair<int, int>>({x + 1, y}));
+            if(!check[y][x + 1]){
+                if((field->getMatrix(x + 2, y + 1) != '#') && (field->getMatrix(x + 2, y + 1) != '*')){
+                    distance[y][x + 1] = distance[y][x] + 1;
+                    que.push({x + 1, y});
+                }
             }
         }
 
         // down
         if(isInside(x, y + 1)){
-            if((!check[y + 1][x]) && (field->getMatrix(x + 1, y + 2) == ' ')){
-                distance[y + 1][x] = distance[y][x] + 1;
-                que->insert(new Node<std::pair<int, int>>({x, y + 1}));
+            if(!check[y + 1][x]){
+                if((field->getMatrix(x + 1, y + 2) != '#') && (field->getMatrix(x + 1, y + 2) != '*')){
+                    distance[y + 1][x] = distance[y][x] + 1;
+                    que.push({x, y + 1});
+                }
             }
         }
 
         // left
         if(isInside(x - 1, y)){
-            if((!check[y][x - 1]) && (field->getMatrix(x, y + 1) == ' ')){
-                distance[y][x - 1] = distance[y][x] + 1;
-                que->insert(new Node<std::pair<int, int>>({x - 1, y}));
+            if(!check[y][x - 1]){
+                if((field->getMatrix(x, y + 1) != '#') && (field->getMatrix(x, y + 1) != '*')){
+                    distance[y][x - 1] = distance[y][x] + 1;
+                    que.push({x - 1, y});
+                }
             }
         }
     }
+}
+void Distance::print(){
+    for(int i = 0 ; i < FIELD_HEIGHT; i++){
+        for(int j = 0; j < FIELD_WIDTH; j++){
+            printf("%2d ", distance[i][j]);
+        }
 
-    delete que;
+        std::cout<< '\n';
+    }
 }
 
 Timer::Timer(double timeGap /* = 1.0 */): checkPoint(clock()), timeGap(timeGap){
