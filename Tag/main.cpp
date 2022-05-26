@@ -55,7 +55,7 @@ class UserInterface;
 class Game;
 
 template <typename Type>
-class Node{
+class Node{ // doubly node
 private:
     Type _data_;
     Node<Type>* _prev_;
@@ -72,7 +72,7 @@ public:
 };
 
 template <typename Type>
-class List{
+class List{ // circular linked list
 private:
     Node<Type>* front;
     Node<Type>* back;
@@ -94,7 +94,7 @@ public:
 
 class Obstacle{
 private:
-    std::pair<int, int> size;
+    std::pair<int, int> size; // rectangle shape
     std::pair<int, int> position;
 
 public:
@@ -110,7 +110,7 @@ public:
 class Field{
 private:
     List<Obstacle*>* obstacles;
-    std::string matrix[FIELD_HEIGHT + 2];
+    std::string matrix[FIELD_HEIGHT + 2]; // string.length() -> FIELD_WIDTH + 2
 
 public:
     Field();
@@ -295,7 +295,7 @@ Game::~Game(){
     delete characters;
     delete items;
 }
-void Game::run(){
+void Game::run(){ // main loop
     srand(time(nullptr));
 
     field->generate();
@@ -373,21 +373,48 @@ void Game::run(){
             generateItem->resetTimer();
         }
 
+        Player* player = reinterpret_cast<Player*>(characters->getFront()->data());
+        std::pair<int, int> playerPosition = player->getPosition();
+
         switch(control->action()){
             case UP:
-                characters->getFront()->data()->move(UP);
+                if(distance->isInside(playerPosition.first, playerPosition.second - 1)){
+                    if((field->getMatrix(playerPosition.first + 1, playerPosition.second) != '#') &&
+                       (field->getMatrix(playerPosition.first + 1, playerPosition.second) != '*')){
+                        noChange = false;
+                        player->move(UP);
+                    }
+                }
                 break;
 
             case RIGHT:
-                characters->getFront()->data()->move(RIGHT);
+                if(distance->isInside(playerPosition.first + 1, playerPosition.second)){
+                    if((field->getMatrix(playerPosition.first + 2, playerPosition.second + 1) != '#') &&
+                       (field->getMatrix(playerPosition.first + 2, playerPosition.second + 1) != '*')){
+                        noChange = false;
+                        player->move(RIGHT);
+                    }
+                }
                 break;
 
             case DOWN:
-                characters->getFront()->data()->move(DOWN);
+                if(distance->isInside(playerPosition.first, playerPosition.second + 1)){
+                    if((field->getMatrix(playerPosition.first + 1, playerPosition.second + 2) != '#') &&
+                       (field->getMatrix(playerPosition.first + 1, playerPosition.second + 2) != '*')){
+                        noChange = false;
+                        player->move(DOWN);
+                    }
+                }
                 break;
 
             case LEFT:
-                characters->getFront()->data()->move(LEFT);
+                if(distance->isInside(playerPosition.first - 1, playerPosition.second)){
+                    if((field->getMatrix(playerPosition.first, playerPosition.second + 1) != '#') &&
+                       (field->getMatrix(playerPosition.first, playerPosition.second + 1) != '*')){
+                        noChange = false;
+                        player->move(LEFT);
+                    }
+                }
                 break;
 
             default: break;
@@ -442,6 +469,12 @@ UserInterface::~UserInterface(){
 
 }
 int UserInterface::action(){
+    /*
+    while(kbhit()){
+        getch();
+    }
+    */
+
     if(kbhit())
     {
         int key = getch();
@@ -547,8 +580,10 @@ void Character::move(int direction /* = -1 */){
             default: break;
         }
 
-        canMove = false;
-        timer->resetTimer();
+        if(direction != -1){
+            canMove = false;
+            timer->resetTimer();
+        }
     }
 }
 
@@ -633,7 +668,7 @@ void Distance::calculate(){ // BFS
     delete que;
 }
 
-Timer::Timer(double timeGap): checkPoint(clock()), timeGap(timeGap){
+Timer::Timer(double timeGap /* = 1.0 */): checkPoint(clock()), timeGap(timeGap){
 
 }
 Timer::~Timer(){
