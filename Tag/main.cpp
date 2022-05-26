@@ -7,8 +7,8 @@
 #include <conio.h>
 #include <windows.h>
 
-#define FIELD_WIDTH  30
-#define FIELD_HEIGHT 30
+#define FIELD_WIDTH  40
+#define FIELD_HEIGHT 20
 
 #define OBSTACLE_COUNT_MIN 5
 #define OBSTACLE_COUNT_MAX 10
@@ -316,24 +316,16 @@ void Game::run(){ // main loop
 
     characters->insert(new Node<Character*>(new Monster(randomSpot.first, randomSpot.second, REGULAR)));
 
-    printField();
-    printItems();
-    printCharacters();
-    gotoxy(0, FIELD_HEIGHT + 3);
-
     distance->setPlayer(reinterpret_cast<Player*>(characters->getFront()->data()));
-    distance->calculate();
+    distance->calculate(); // have bug
 
     while(!gameOver){
         if(!noChange){
             printField();
             printItems();
-            printCharacters();
+            printCharacters(); // have bug
 
-            getch();
-
-            gotoxy(0, FIELD_HEIGHT + 3);
-
+            gotoxy(0, FIELD_HEIGHT + 5);
             distance->print();
 
             getch();
@@ -450,6 +442,7 @@ void Game::checkPlayerMoving(){
                 if((field->getMatrix(playerPosition.first + 1, playerPosition.second) != '#') &&
                    (field->getMatrix(playerPosition.first + 1, playerPosition.second) != '*')){
                     player->move(noChange, UP);
+                    distance->calculate();
                 }
             }
             break;
@@ -459,6 +452,7 @@ void Game::checkPlayerMoving(){
                 if((field->getMatrix(playerPosition.first + 2, playerPosition.second + 1) != '#') &&
                    (field->getMatrix(playerPosition.first + 2, playerPosition.second + 1) != '*')){
                     player->move(noChange, RIGHT);
+                    distance->calculate();
                 }
             }
             break;
@@ -468,6 +462,7 @@ void Game::checkPlayerMoving(){
                 if((field->getMatrix(playerPosition.first + 1, playerPosition.second + 2) != '#') &&
                    (field->getMatrix(playerPosition.first + 1, playerPosition.second + 2) != '*')){
                     player->move(noChange, DOWN);
+                    distance->calculate();
                 }
             }
             break;
@@ -477,6 +472,7 @@ void Game::checkPlayerMoving(){
                 if((field->getMatrix(playerPosition.first, playerPosition.second + 1) != '#') &&
                    (field->getMatrix(playerPosition.first, playerPosition.second + 1) != '*')){
                     player->move(noChange, LEFT);
+                    distance->calculate();
                 }
             }
             break;
@@ -727,35 +723,33 @@ void Distance::calculate(){ // BFS
 
     que.push(playerPosition);
     distance[playerPosition.second][playerPosition.first] = 0;
+    check[playerPosition.second][playerPosition.first] = true;
 
     while(!que.empty()){
         std::pair<int, int> currPos = que.front();
         int x = currPos.first;
         int y = currPos.second;
+        int currDistance = distance[y][x];
 
         que.pop();
-
-        printf("(%d, %d)\n", x, y);
-        getch();
-
-        check[y][x] = true;
 
         // up
         if(isInside(x, y - 1)){
             if(!check[y - 1][x]){
                 if((field->getMatrix(x + 1, y) != '#') && (field->getMatrix(x + 1, y) != '*')){
-                    distance[y - 1][x] = distance[y][x] + 1;
+                    distance[y - 1][x] = currDistance + 1;
+                    check[y - 1][x] = true;
                     que.push({x, y - 1});
                 }
             }
         }
 
-
         // right
         if(isInside(x + 1, y)){
             if(!check[y][x + 1]){
                 if((field->getMatrix(x + 2, y + 1) != '#') && (field->getMatrix(x + 2, y + 1) != '*')){
-                    distance[y][x + 1] = distance[y][x] + 1;
+                    distance[y][x + 1] = currDistance + 1;
+                    check[y][x + 1] = true;
                     que.push({x + 1, y});
                 }
             }
@@ -765,7 +759,8 @@ void Distance::calculate(){ // BFS
         if(isInside(x, y + 1)){
             if(!check[y + 1][x]){
                 if((field->getMatrix(x + 1, y + 2) != '#') && (field->getMatrix(x + 1, y + 2) != '*')){
-                    distance[y + 1][x] = distance[y][x] + 1;
+                    distance[y + 1][x] = currDistance + 1;
+                    check[y + 1][x] = true;
                     que.push({x, y + 1});
                 }
             }
@@ -775,7 +770,8 @@ void Distance::calculate(){ // BFS
         if(isInside(x - 1, y)){
             if(!check[y][x - 1]){
                 if((field->getMatrix(x, y + 1) != '#') && (field->getMatrix(x, y + 1) != '*')){
-                    distance[y][x - 1] = distance[y][x] + 1;
+                    distance[y][x - 1] = currDistance + 1;
+                    check[y][x - 1] = true;
                     que.push({x - 1, y});
                 }
             }
@@ -840,7 +836,7 @@ void Field::addObstacle(){
     );
 }
 void Field::generate(){
-    for(int times = rand() % (OBSTACLE_COUNT_MAX - OBSTACLE_COUNT_MIN + 1) + OBSTACLE_COUNT_MIN; times >= 0; --times){
+    for(int times = rand() % (OBSTACLE_COUNT_MAX - OBSTACLE_COUNT_MIN + 1) + OBSTACLE_COUNT_MIN; times > 0; --times){
         addObstacle();
     }
 
@@ -875,9 +871,8 @@ char Field::getMatrix(int x, int y){
     return matrix[y][x];
 }
 
-Obstacle::Obstacle(int x, int y, int width, int height){
-    size = {width, height};
-    position = {x, y};
+Obstacle::Obstacle(int x, int y, int width, int height): size({width, height}), position({x, y}){
+
 }
 Obstacle::~Obstacle(){
 
