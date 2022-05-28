@@ -7,8 +7,8 @@
 #include <conio.h>
 #include <windows.h>
 
-#define FIELD_WIDTH  40
-#define FIELD_HEIGHT 20
+#define FIELD_WIDTH  30
+#define FIELD_HEIGHT 15
 
 #define OBSTACLE_COUNT_MIN 5
 #define OBSTACLE_COUNT_MAX 10
@@ -142,7 +142,7 @@ class Distance{
 private:
     Player* player;
     Field* field;
-    int distance[FIELD_HEIGHT][FIELD_HEIGHT];
+    int distance[FIELD_HEIGHT][FIELD_WIDTH];
 
 public:
     Distance(Player* player, Field* field);
@@ -152,7 +152,7 @@ public:
     bool isInside(int x, int y);
     void setPlayer(Player* player);
     void setField(Field* field);
-    void calculate();
+    void calculate(); // BFS
     void print();
 };
 
@@ -308,7 +308,9 @@ void Game::run(){ // main loop
 
     field->generate();
 
-    std::pair<int, int> randomSpot = getRandomSpace();
+    std::pair<int, int> randomSpot;
+
+    randomSpot = getRandomSpace();
 
     characters->insert(new Node<Character*>(new Player(randomSpot.first, randomSpot.second)));
 
@@ -317,18 +319,16 @@ void Game::run(){ // main loop
     characters->insert(new Node<Character*>(new Monster(randomSpot.first, randomSpot.second, REGULAR)));
 
     distance->setPlayer(reinterpret_cast<Player*>(characters->getFront()->data()));
-    distance->calculate(); // have bug
+    distance->calculate();
 
     while(!gameOver){
         if(!noChange){
             printField();
             printItems();
-            printCharacters(); // have bug
+            printCharacters();
 
-            gotoxy(0, FIELD_HEIGHT + 5);
+            gotoxy(0, FIELD_HEIGHT + 7);
             distance->print();
-
-            getch();
 
             noChange = true;
         }
@@ -542,8 +542,8 @@ void Game::checkMonsterMoving(){
     }
 }
 std::pair<int, int> Game::getRandomSpace(){
-    int y = rand() % FIELD_HEIGHT;
     int x = rand() % FIELD_WIDTH;
+    int y = rand() % FIELD_HEIGHT;
 
     while(field->getMatrix(x + 1, y + 1) != ' '){
         x = rand() % FIELD_WIDTH;
@@ -636,7 +636,8 @@ void Player::action(int buff /* = -1 */){
 
 Character::Character(int x, int y, char name){
     this->name = name;
-    position = {x, y};
+    position.first = x;
+    position.second = y;
     canMove = true;
     speed = 0.5;
     timer = new Timer(speed);
@@ -680,8 +681,8 @@ void Character::move(bool& noChange, int direction /* = -1 */){
 
 void Character::print(){
     gotoxy(position.first + 1, position.second + 1);
-    hideCursor();
     std::cout<< name;
+    hideCursor();
 }
 bool Character::checkCollide(int x, int y, Field* field){
     return (field->getMatrix(x, y) == '#') || (field->getMatrix(x, y) == '*');
@@ -726,9 +727,8 @@ void Distance::calculate(){ // BFS
     check[playerPosition.second][playerPosition.first] = true;
 
     while(!que.empty()){
-        std::pair<int, int> currPos = que.front();
-        int x = currPos.first;
-        int y = currPos.second;
+        int x = que.front().first;
+        int y = que.front().second;
         int currDistance = distance[y][x];
 
         que.pop();
@@ -736,9 +736,11 @@ void Distance::calculate(){ // BFS
         // up
         if(isInside(x, y - 1)){
             if(!check[y - 1][x]){
-                if((field->getMatrix(x + 1, y) != '#') && (field->getMatrix(x + 1, y) != '*')){
-                    distance[y - 1][x] = currDistance + 1;
+                if((field->getMatrix(x + 1, y) != '#') &&
+                   (field->getMatrix(x + 1, y) != '*')){
                     check[y - 1][x] = true;
+                    distance[y - 1][x] = currDistance + 1;
+
                     que.push({x, y - 1});
                 }
             }
@@ -747,9 +749,11 @@ void Distance::calculate(){ // BFS
         // right
         if(isInside(x + 1, y)){
             if(!check[y][x + 1]){
-                if((field->getMatrix(x + 2, y + 1) != '#') && (field->getMatrix(x + 2, y + 1) != '*')){
-                    distance[y][x + 1] = currDistance + 1;
+                if((field->getMatrix(x + 2, y + 1) != '#') &&
+                   (field->getMatrix(x + 2, y + 1) != '*')){
                     check[y][x + 1] = true;
+                    distance[y][x + 1] = currDistance + 1;
+
                     que.push({x + 1, y});
                 }
             }
@@ -758,9 +762,11 @@ void Distance::calculate(){ // BFS
         // down
         if(isInside(x, y + 1)){
             if(!check[y + 1][x]){
-                if((field->getMatrix(x + 1, y + 2) != '#') && (field->getMatrix(x + 1, y + 2) != '*')){
-                    distance[y + 1][x] = currDistance + 1;
+                if((field->getMatrix(x + 1, y + 2) != '#') &&
+                   (field->getMatrix(x + 1, y + 2) != '*')){
                     check[y + 1][x] = true;
+                    distance[y + 1][x] = currDistance + 1;
+
                     que.push({x, y + 1});
                 }
             }
@@ -769,9 +775,11 @@ void Distance::calculate(){ // BFS
         // left
         if(isInside(x - 1, y)){
             if(!check[y][x - 1]){
-                if((field->getMatrix(x, y + 1) != '#') && (field->getMatrix(x, y + 1) != '*')){
-                    distance[y][x - 1] = currDistance + 1;
+                if((field->getMatrix(x, y + 1) != '#') &&
+                   (field->getMatrix(x, y + 1) != '*')){
                     check[y][x - 1] = true;
+                    distance[y][x - 1] = currDistance + 1;
+
                     que.push({x - 1, y});
                 }
             }
