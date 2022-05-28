@@ -7,13 +7,21 @@
 #include <conio.h>
 #include <windows.h>
 
-#define FIELD_WIDTH  30
-#define FIELD_HEIGHT 15
+#define DEFUALT -1
+
+#define GENERATE_CHARACTER_COUNT_DOWN 20.0
+#define GENERATE_ITEM_COUNT_DOWN 10.0
+
+#define FIELD_WIDTH  60
+#define FIELD_HEIGHT 30
+
+#define PLAYER_SPEED 0.5
+#define MONSTER_SPEED 0.8
 
 #define OBSTACLE_COUNT_MIN 5
 #define OBSTACLE_COUNT_MAX 10
 
-#define OBSTACLE_SIZE_MIN 3
+#define OBSTACLE_SIZE_MIN 5
 #define OBSTACLE_SIZE_MAX 10
 
 #define SizeOfItemType 4
@@ -130,7 +138,7 @@ private:
     double timeGap; // unit: second
 
 public:
-    Timer(double timeGap = 1.0);
+    Timer(double timeGap);
     virtual ~Timer();
 
     void resetTimer();
@@ -165,11 +173,11 @@ protected:
     Timer* timer;
 
 public:
-    Character(int x, int y, char name);
+    Character(int x, int y, char name, double speed);
     virtual ~Character();
 
-    virtual void action(int buff = -1) = 0;
-    virtual void move(bool& noChange, int direction = -1);
+    virtual void action(int buff = DEFUALT) = 0;
+    virtual void move(bool& noChange, int direction = DEFUALT);
     virtual void print();
     virtual bool checkCollide(int x, int y, Field* field);
     virtual std::pair<int, int> getPosition();
@@ -182,7 +190,7 @@ public:
     Player(int x, int y);
     virtual ~Player();
 
-    void action(int buff = -1);
+    void action(int buff = DEFUALT);
 };
 
 class Monster: public Character{
@@ -194,7 +202,7 @@ public:
     Monster(int x, int y, int type);
     virtual ~Monster();
 
-    void action(int buff = -1);
+    void action(int buff = DEFUALT);
     bool checkCatchPlayer(int x, int y);
 };
 
@@ -286,8 +294,8 @@ Game::Game(){
     score = 0;
     duration = 0;
     overOneSecond = new Timer(1.0);
-    generateCharacter = new Timer(20.0);
-    generateItem = new Timer(10.0);
+    generateCharacter = new Timer(GENERATE_CHARACTER_COUNT_DOWN);
+    generateItem = new Timer(GENERATE_ITEM_COUNT_DOWN);
     field = new Field();
     distance = new Distance(nullptr, field);
     control = new UserInterface();
@@ -326,8 +334,6 @@ void Game::run(){ // main loop
             printField();
             printItems();
             printCharacters();
-
-            distance->print();
 
             noChange = true;
         }
@@ -610,7 +616,7 @@ bool Item::checkPlayerCollect(int x, int y){
     return (position.first == x && position.second == y);
 }
 
-Monster::Monster(int x, int y, int type): Character(x, y, (type + '0')), type(type){
+Monster::Monster(int x, int y, int type): Character(x, y, (type + '0'), MONSTER_SPEED), type(type){
 
 }
 Monster::~Monster(){
@@ -623,7 +629,7 @@ bool Monster::checkCatchPlayer(int x, int y){
     return (position.first == x && position.second == y);
 }
 
-Player::Player(int x, int y): Character(x, y, 'P'){
+Player::Player(int x, int y): Character(x, y, 'P', PLAYER_SPEED){
 
 }
 Player::~Player(){
@@ -633,12 +639,12 @@ void Player::action(int buff /* = -1 */){
 
 }
 
-Character::Character(int x, int y, char name){
+Character::Character(int x, int y, char name, double speed){
     this->name = name;
+    this->speed = speed;
     position.first = x;
     position.second = y;
     canMove = true;
-    speed = 0.5;
     timer = new Timer(speed);
 }
 Character::~Character(){
@@ -799,7 +805,7 @@ void Distance::print(){
     }
 }
 
-Timer::Timer(double timeGap /* = 1.0 */): checkPoint(clock()), timeGap(timeGap){
+Timer::Timer(double timeGap): checkPoint(clock()), timeGap(timeGap){
 
 }
 Timer::~Timer(){
