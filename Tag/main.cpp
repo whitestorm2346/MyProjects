@@ -153,7 +153,7 @@ public:
     void setPlayer(Player* player);
     void setField(Field* field);
     void calculate(); // BFS
-    void print();
+    void print(); // for testing
 };
 
 class Character{
@@ -327,7 +327,6 @@ void Game::run(){ // main loop
             printItems();
             printCharacters();
 
-            gotoxy(0, FIELD_HEIGHT + 7);
             distance->print();
 
             noChange = true;
@@ -787,6 +786,10 @@ void Distance::calculate(){ // BFS
     }
 }
 void Distance::print(){
+    gotoxy(0, FIELD_HEIGHT + 7);
+
+    std::cout<< "distance to player:\n";
+
     for(int i = 0 ; i < FIELD_HEIGHT; i++){
         for(int j = 0; j < FIELD_WIDTH; j++){
             printf("%2d ", distance[i][j]);
