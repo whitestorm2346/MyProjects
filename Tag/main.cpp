@@ -60,7 +60,17 @@ class UserInterface;
 
 // unfinished part
 class Monster;
+class RegularMonster;
+class BerserkerMonster;
+class ShooterMonster;
+class PhantomsMonster;
+
 class Item;
+class FastItem;
+class SlowItem;
+class BombItem;
+class TurnItem;
+
 class Game;
 
 template <typename Type>
@@ -75,6 +85,7 @@ public:
 
     void setPrev(Node<Type>* prev);
     void setNext(Node<Type>* next);
+    void pop_self(); // use for killing monsters or collecting items
     Type data();
     Node<Type>* prev();
     Node<Type>* next();
@@ -199,11 +210,39 @@ private:
     Timer* skillCountDown;
 
 public:
-    Monster(int x, int y, int type);
+    Monster(int x, int y, char type);
     virtual ~Monster();
 
     void action(int buff = DEFUALT);
     bool checkCatchPlayer(int x, int y);
+};
+
+class RegularMonster: public Monster{
+private:
+public:
+    RegularMonster(int x, int y);
+    virtual ~RegularMonster();
+};
+
+class BerserkerMonster: public Monster{
+private:
+public:
+    BerserkerMonster(int x, int y);
+    virtual ~BerserkerMonster();
+};
+
+class ShooterMonster: public Monster{
+private:
+public:
+    ShooterMonster(int x, int y);
+    virtual ~ShooterMonster();
+};
+
+class PhantomsMonster: public Monster{
+private:
+public:
+    PhantomsMonster(int x, int y);
+    virtual ~PhantomsMonster();
 };
 
 class Item{
@@ -211,13 +250,51 @@ private:
     Timer* duration;
     std::pair<int, int> position;
     char type;
+    List<Character*>* characters;
 
 public:
-    Item(int x, int y, char type);
+    Item(int x, int y, char type, List<Character*>* characters);
     virtual ~Item();
 
-    void print();
+    virtual void print();
+    virtual void effect() = 0;
     bool checkPlayerCollect(int x, int y);
+};
+
+class FastItem: public Item{
+private:
+public:
+    FastItem(int x, int y, List<Character*>* characters);
+    virtual ~FastItem();
+
+    void effect();
+};
+
+class SlowItem: public Item{
+private:
+public:
+    SlowItem(int x, int y, List<Character*>* characters);
+    virtual ~SlowItem();
+
+    void effect();
+};
+
+class BombItem: public Item{
+private:
+public:
+    BombItem(int x, int y, List<Character*>* characters);
+    virtual ~BombItem();
+
+    void effect();
+};
+
+class TurnItem: public Item{
+private:
+public:
+    TurnItem(int x, int y, List<Character*>* characters);
+    virtual ~TurnItem();
+
+    void effect();
 };
 
 class UserInterface{
@@ -324,7 +401,7 @@ void Game::run(){ // main loop
 
     randomSpot = getRandomSpace();
 
-    characters->insert(new Node<Character*>(new Monster(randomSpot.first, randomSpot.second, REGULAR)));
+    characters->insert(new Node<Character*>(new Monster(randomSpot.first, randomSpot.second, '1')));
 
     distance->setPlayer(reinterpret_cast<Player*>(characters->getFront()->data()));
     distance->calculate();
@@ -389,19 +466,19 @@ void Game::checkGenerateCharacter(){
 
         switch(rand() % SizeOfMonsterType + 1){
             case REGULAR:
-                characters->insert(new Node<Character*>(new Monster(position.first, position.second, REGULAR)));
+                characters->insert(new Node<Character*>(new Monster(position.first, position.second, '1')));
                 break;
 
             case BERSERKER:
-                characters->insert(new Node<Character*>(new Monster(position.first, position.second, BERSERKER)));
+                characters->insert(new Node<Character*>(new Monster(position.first, position.second, '2')));
                 break;
 
             case SHOOTER:
-                characters->insert(new Node<Character*>(new Monster(position.first, position.second, SHOOTER)));
+                characters->insert(new Node<Character*>(new Monster(position.first, position.second, '3')));
                 break;
 
             case PHANTOMS:
-                characters->insert(new Node<Character*>(new Monster(position.first, position.second, PHANTOMS)));
+                characters->insert(new Node<Character*>(new Monster(position.first, position.second, '4')));
                 break;
         }
 
@@ -416,19 +493,35 @@ void Game::checkGenerateItem(){
 
         switch(rand() % SizeOfItemType + 1){
             case FAST:
-                items->insert(new Node<Item*>(new Item(position.first, position.second, 'F')));
+                items->insert(new Node<Item*>(new FastItem(
+                                                  position.first,
+                                                  position.second,
+                                                  characters
+                                              )));
                 break;
 
             case SLOW:
-                items->insert(new Node<Item*>(new Item(position.first, position.second, 'S')));
+                items->insert(new Node<Item*>(new SlowItem(
+                                                  position.first,
+                                                  position.second,
+                                                  characters
+                                              )));
                 break;
 
             case BOMB:
-                items->insert(new Node<Item*>(new Item(position.first, position.second, 'B')));
+                items->insert(new Node<Item*>(new BombItem(
+                                                  position.first,
+                                                  position.second,
+                                                  characters
+                                              )));
                 break;
 
             case TURN:
-                items->insert(new Node<Item*>(new Item(position.first, position.second, 'T')));
+                items->insert(new Node<Item*>(new TurnItem(
+                                                  position.first,
+                                                  position.second,
+                                                  characters
+                                              )));
                 break;
         }
 
@@ -444,8 +537,7 @@ void Game::checkPlayerMoving(){
     switch(control->action()){
         case UP:
             if(distance->isInside(playerPosition.first, playerPosition.second - 1)){
-                if((field->getMatrix(playerPosition.first + 1, playerPosition.second) != '#') &&
-                   (field->getMatrix(playerPosition.first + 1, playerPosition.second) != '*')){
+                if(!player->checkCollide(playerPosition.first + 1, playerPosition.second, field)){
                     player->move(noChange, UP);
                     distance->calculate();
                 }
@@ -454,8 +546,7 @@ void Game::checkPlayerMoving(){
 
         case RIGHT:
             if(distance->isInside(playerPosition.first + 1, playerPosition.second)){
-                if((field->getMatrix(playerPosition.first + 2, playerPosition.second + 1) != '#') &&
-                   (field->getMatrix(playerPosition.first + 2, playerPosition.second + 1) != '*')){
+                if(!player->checkCollide(playerPosition.first + 2, playerPosition.second + 1, field)){
                     player->move(noChange, RIGHT);
                     distance->calculate();
                 }
@@ -464,8 +555,7 @@ void Game::checkPlayerMoving(){
 
         case DOWN:
             if(distance->isInside(playerPosition.first, playerPosition.second + 1)){
-                if((field->getMatrix(playerPosition.first + 1, playerPosition.second + 2) != '#') &&
-                   (field->getMatrix(playerPosition.first + 1, playerPosition.second + 2) != '*')){
+                if(!player->checkCollide(playerPosition.first + 1, playerPosition.second + 2, field)){
                     player->move(noChange, DOWN);
                     distance->calculate();
                 }
@@ -474,8 +564,7 @@ void Game::checkPlayerMoving(){
 
         case LEFT:
             if(distance->isInside(playerPosition.first - 1, playerPosition.second)){
-                if((field->getMatrix(playerPosition.first, playerPosition.second + 1) != '#') &&
-                   (field->getMatrix(playerPosition.first, playerPosition.second + 1) != '*')){
+                if(!player->checkCollide(playerPosition.first, playerPosition.second + 1, field)){
                     player->move(noChange, LEFT);
                     distance->calculate();
                 }
@@ -496,8 +585,7 @@ void Game::checkMonsterMoving(){
         int direction = -1;
 
         if(distance->isInside(monsterPosition.first, monsterPosition.second - 1)){ // up
-            if((field->getMatrix(monsterPosition.first + 1, monsterPosition.second) != '#') &&
-               (field->getMatrix(monsterPosition.first + 1, monsterPosition.second) != '*')){
+            if(!monster->checkCollide(monsterPosition.first + 1, monsterPosition.second, field)){
                 currDistance = distance->getDistance(monsterPosition.first, monsterPosition.second - 1);
 
                 if(currDistance < minDistance){
@@ -508,8 +596,7 @@ void Game::checkMonsterMoving(){
         }
 
         if(distance->isInside(monsterPosition.first + 1, monsterPosition.second)){ // right
-            if((field->getMatrix(monsterPosition.first + 2, monsterPosition.second + 1) != '#') &&
-               (field->getMatrix(monsterPosition.first + 2, monsterPosition.second + 1) != '*')){
+            if(!monster->checkCollide(monsterPosition.first + 2, monsterPosition.second + 1, field)){
                 currDistance = distance->getDistance(monsterPosition.first + 1, monsterPosition.second);
 
                 if(currDistance < minDistance){
@@ -520,8 +607,7 @@ void Game::checkMonsterMoving(){
         }
 
         if(distance->isInside(monsterPosition.first, monsterPosition.second + 1)){ // down
-            if((field->getMatrix(monsterPosition.first + 1, monsterPosition.second + 2) != '#') &&
-               (field->getMatrix(monsterPosition.first + 1, monsterPosition.second + 2) != '*')){
+            if(!monster->checkCollide(monsterPosition.first + 1, monsterPosition.second + 2, field)){
                 currDistance = distance->getDistance(monsterPosition.first, monsterPosition.second + 1);
 
                 if(currDistance < minDistance){
@@ -532,8 +618,7 @@ void Game::checkMonsterMoving(){
         }
 
         if(distance->isInside(monsterPosition.first - 1, monsterPosition.second)){ // left
-            if((field->getMatrix(monsterPosition.first, monsterPosition.second + 1) != '#') &&
-               (field->getMatrix(monsterPosition.first, monsterPosition.second + 1) != '*')){
+            if(!monster->checkCollide(monsterPosition.first, monsterPosition.second + 1, field)){
                 currDistance = distance->getDistance(monsterPosition.first - 1, monsterPosition.second);
 
                 if(currDistance < minDistance){
@@ -564,12 +649,6 @@ UserInterface::~UserInterface(){
 
 }
 int UserInterface::action(){
-    /*
-    while(kbhit()){
-        getch();
-    }
-    */
-
     if(kbhit())
     {
         int key = getch();
@@ -601,7 +680,8 @@ int UserInterface::action(){
     return -1;
 }
 
-Item::Item(int x, int y, char type): position({x, y}), type(type){
+Item::Item(int x, int y, char type, List<Character*>* characters)
+    : position({x, y}), type(type), characters(characters){
 
 }
 Item::~Item(){
@@ -616,7 +696,51 @@ bool Item::checkPlayerCollect(int x, int y){
     return (position.first == x && position.second == y);
 }
 
-Monster::Monster(int x, int y, int type): Character(x, y, (type + '0'), MONSTER_SPEED), type(type){
+FastItem::FastItem(int x, int y, List<Character*>* characters)
+    : Item(x, y, 'F', characters){
+
+}
+FastItem::~FastItem(){
+
+}
+void FastItem::effect(){
+
+}
+
+SlowItem::SlowItem(int x, int y, List<Character*>* characters)
+    : Item(x, y, 'S', characters){
+
+}
+SlowItem::~SlowItem(){
+
+}
+void SlowItem::effect(){
+
+}
+
+BombItem::BombItem(int x, int y, List<Character*>* characters)
+    : Item(x, y, 'B', characters){
+
+}
+BombItem::~BombItem(){
+
+}
+void BombItem::effect(){
+
+}
+
+TurnItem::TurnItem(int x, int y, List<Character*>* characters)
+    : Item(x, y, 'T', characters){
+
+}
+TurnItem::~TurnItem(){
+
+}
+void TurnItem::effect(){
+
+}
+
+Monster::Monster(int x, int y, char type): Character(x, y, type, MONSTER_SPEED), type(type){
 
 }
 Monster::~Monster(){
@@ -627,6 +751,34 @@ void Monster::action(int buff /* = -1 */){
 }
 bool Monster::checkCatchPlayer(int x, int y){
     return (position.first == x && position.second == y);
+}
+
+RegularMonster::RegularMonster(int x, int y): Monster(x, y, '1'){
+
+}
+RegularMonster::~RegularMonster(){
+
+}
+
+BerserkerMonster::BerserkerMonster(int x, int y): Monster(x, y, '2'){
+
+}
+BerserkerMonster::~BerserkerMonster(){
+
+}
+
+ShooterMonster::ShooterMonster(int x, int y): Monster(x, y, '3'){
+
+}
+ShooterMonster::~ShooterMonster(){
+
+}
+
+PhantomsMonster::PhantomsMonster(int x, int y): Monster(x, y, '4'){
+
+}
+PhantomsMonster::~PhantomsMonster(){
+
 }
 
 Player::Player(int x, int y): Character(x, y, 'P', PLAYER_SPEED){
@@ -920,6 +1072,13 @@ void Node<Type>::setPrev(Node<Type>* prev){
 template <typename Type>
 void Node<Type>::setNext(Node<Type>* next){
     _next_ = next;
+}
+template <typename Type>
+void Node<Type>::pop_self(){
+    _prev_->setNext(_next_);
+    _next_->setPrev(_prev_);
+
+    delete this;
 }
 template <typename Type>
 Type Node<Type>::data(){
