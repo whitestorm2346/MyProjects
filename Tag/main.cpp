@@ -3,7 +3,7 @@
 #include <ctime>
 #include <string>
 #include <utility>
-#include <queue>
+#include <queue> // only for BFS
 #include <conio.h>
 #include <windows.h>
 
@@ -334,7 +334,9 @@ public:
     void checkGenerateCharacter();
     void checkGenerateItem();
     void checkPlayerMoving();
+    void checkPlayerCollectItem(); // wait to be implemented
     void checkMonsterMoving();
+    void checkMonsterCaughtPlayer(); // wait to be implemented
     std::pair<int, int> getRandomSpace();
 };
 
@@ -576,6 +578,10 @@ void Game::checkPlayerMoving(){
         default: break;
     }
 }
+void Game::checkPlayerCollectItem(){
+    /**
+    */
+}
 void Game::checkMonsterMoving(){
     Node<Character*>* currMonsterNode = characters->getFront()->next();
 
@@ -632,6 +638,10 @@ void Game::checkMonsterMoving(){
 
         monster->move(noChange, direction);
     }
+}
+void Game::checkMonsterCaughtPlayer(){
+    /**
+    */
 }
 std::pair<int, int> Game::getRandomSpace(){
     int x = rand() % FIELD_WIDTH;
