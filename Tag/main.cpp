@@ -7,7 +7,7 @@
 #include <conio.h>
 #include <windows.h>
 
-#define DEFUALT -1
+#define DEFAULT -1
 
 #define GENERATE_CHARACTER_COUNT_DOWN 20.0
 #define GENERATE_ITEM_COUNT_DOWN 10.0
@@ -187,8 +187,8 @@ public:
     Character(int x, int y, char name, double speed);
     virtual ~Character();
 
-    virtual void action(int buff = DEFUALT) = 0;
-    virtual void move(bool& noChange, int direction = DEFUALT);
+    virtual void action(int buff = DEFAULT) = 0;
+    virtual void move(bool& noChange, int direction = DEFAULT);
     virtual void print();
     virtual bool checkCollide(int x, int y, Field* field);
     virtual std::pair<int, int> getPosition();
@@ -201,7 +201,7 @@ public:
     Player(int x, int y);
     virtual ~Player();
 
-    void action(int buff = DEFUALT);
+    void action(int buff = DEFAULT);
 };
 
 class Monster: public Character{
@@ -213,7 +213,7 @@ public:
     Monster(int x, int y, char type);
     virtual ~Monster();
 
-    void action(int buff = DEFUALT);
+    void action(int buff = DEFAULT);
     bool checkCatchPlayer(int x, int y);
 };
 
@@ -302,11 +302,12 @@ public:
     UserInterface();
     virtual ~UserInterface();
 
-    int action();
+    int action(bool& godMode);
 };
 
 class Game{
 private:
+    bool godMode; // for testing
     bool gameOver;
     bool noChange; // if the view is not changed, then the field does not need to be refresh
     int  score;
@@ -366,6 +367,7 @@ void hideCursor(){
 }
 
 Game::Game(){
+    godMode = false;
     gameOver = false;
     noChange = false;
     score = 0;
@@ -406,7 +408,7 @@ void Game::run(){ // main loop
     distance->setPlayer(reinterpret_cast<Player*>(characters->getFront()->data()));
     distance->calculate();
 
-    while(!gameOver){
+    while(godMode || !gameOver){
         if(!noChange){
             printField();
             printItems();
@@ -534,7 +536,7 @@ void Game::checkPlayerMoving(){
     Player* player = reinterpret_cast<Player*>(characters->getFront()->data());
     std::pair<int, int> playerPosition = player->getPosition();
 
-    switch(control->action()){
+    switch(control->action(godMode)){
         case UP:
             if(distance->isInside(playerPosition.first, playerPosition.second - 1)){
                 if(!player->checkCollide(playerPosition.first + 1, playerPosition.second, field)){
@@ -648,7 +650,7 @@ UserInterface::UserInterface(){
 UserInterface::~UserInterface(){
 
 }
-int UserInterface::action(){
+int UserInterface::action(bool& godMode){
     if(kbhit())
     {
         int key = getch();
@@ -659,6 +661,7 @@ int UserInterface::action(){
 
             switch(key)
             {
+                // for movement
                 case 72: return UP;
                 case 75: return LEFT;
                 case 80: return DOWN;
@@ -669,10 +672,16 @@ int UserInterface::action(){
         {
             switch(key)
             {
+                // for movements
                 case 'W': case 'w': return UP;
                 case 'A': case 'a': return LEFT;
                 case 'S': case 's': return DOWN;
                 case 'D': case 'd': return RIGHT;
+
+                // for functions
+                case 'T': case 't':
+                    godMode = !godMode;
+                    return DEFAULT;
             }
         }
     }
