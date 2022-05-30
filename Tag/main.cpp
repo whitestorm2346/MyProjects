@@ -100,7 +100,7 @@ private:
 
 public:
     List();
-    virtual ~List();
+    ~List();
 
     void insert(Node<Type>* newNode);
     void pop_front();
@@ -119,7 +119,7 @@ private:
 
 public:
     Obstacle(int x, int y, int width, int height);
-    virtual ~Obstacle();
+    ~Obstacle();
 
     void setSize(int width, int height);
     void setPosition(int x, int y);
@@ -134,7 +134,7 @@ private:
 
 public:
     Field();
-    virtual ~Field();
+    ~Field();
 
     void addObstacle();
     void generate();
@@ -150,7 +150,7 @@ private:
 
 public:
     Timer(double timeGap);
-    virtual ~Timer();
+    ~Timer();
 
     void resetTimer();
     void setTimeGap(double timeGap);
@@ -165,7 +165,7 @@ private:
 
 public:
     Distance(Player* player, Field* field);
-    virtual ~Distance();
+    ~Distance();
 
     int  getDistance(int x, int y);
     bool isInside(int x, int y);
@@ -185,7 +185,7 @@ protected:
 
 public:
     Character(int x, int y, char name, double speed);
-    virtual ~Character();
+    ~Character();
 
     virtual void action(int buff = DEFAULT) = 0;
     virtual void move(bool& noChange, int direction = DEFAULT);
@@ -199,7 +199,7 @@ private:
 
 public:
     Player(int x, int y);
-    virtual ~Player();
+    ~Player();
 
     void action(int buff = DEFAULT);
 };
@@ -211,7 +211,7 @@ private:
 
 public:
     Monster(int x, int y, char type);
-    virtual ~Monster();
+    ~Monster();
 
     void action(int buff = DEFAULT);
     bool checkCatchPlayer(int x, int y);
@@ -221,28 +221,28 @@ class RegularMonster: public Monster{
 private:
 public:
     RegularMonster(int x, int y);
-    virtual ~RegularMonster();
+    ~RegularMonster();
 };
 
 class BerserkerMonster: public Monster{
 private:
 public:
     BerserkerMonster(int x, int y);
-    virtual ~BerserkerMonster();
+    ~BerserkerMonster();
 };
 
 class ShooterMonster: public Monster{
 private:
 public:
     ShooterMonster(int x, int y);
-    virtual ~ShooterMonster();
+    ~ShooterMonster();
 };
 
 class PhantomsMonster: public Monster{
 private:
 public:
     PhantomsMonster(int x, int y);
-    virtual ~PhantomsMonster();
+    ~PhantomsMonster();
 };
 
 class Item{
@@ -254,7 +254,7 @@ private:
 
 public:
     Item(int x, int y, char type, List<Character*>* characters);
-    virtual ~Item();
+    ~Item();
 
     virtual void print();
     virtual void effect() = 0;
@@ -265,7 +265,7 @@ class FastItem: public Item{
 private:
 public:
     FastItem(int x, int y, List<Character*>* characters);
-    virtual ~FastItem();
+    ~FastItem();
 
     void effect();
 };
@@ -274,7 +274,7 @@ class SlowItem: public Item{
 private:
 public:
     SlowItem(int x, int y, List<Character*>* characters);
-    virtual ~SlowItem();
+    ~SlowItem();
 
     void effect();
 };
@@ -283,7 +283,7 @@ class BombItem: public Item{
 private:
 public:
     BombItem(int x, int y, List<Character*>* characters);
-    virtual ~BombItem();
+    ~BombItem();
 
     void effect();
 };
@@ -292,7 +292,7 @@ class TurnItem: public Item{
 private:
 public:
     TurnItem(int x, int y, List<Character*>* characters);
-    virtual ~TurnItem();
+    ~TurnItem();
 
     void effect();
 };
@@ -300,7 +300,7 @@ public:
 class UserInterface{
 public:
     UserInterface();
-    virtual ~UserInterface();
+    ~UserInterface();
 
     int action(bool& godMode);
 };
@@ -323,7 +323,7 @@ private:
 
 public:
     Game();
-    virtual ~Game();
+    ~Game();
 
     void run();
     void printField();
