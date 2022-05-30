@@ -105,11 +105,15 @@ public:
     void insert(Node<Type>* newNode);
     void pop_front();
     void pop_back();
+    void setFront(Node<Type>* front);
+    void setBack(Node<Type>* back);
     bool empty();
     int  size();
 
     Node<Type>* getFront();
     Node<Type>* getBack();
+
+    List<Type>& operator -- ();
 };
 
 class Obstacle{
@@ -259,6 +263,7 @@ public:
     virtual void print();
     virtual void effect() = 0;
     bool checkPlayerCollect(int x, int y);
+    std::pair<int, int> getPosition();
 };
 
 class FastItem: public Item{
@@ -334,7 +339,7 @@ public:
     void checkGenerateCharacter();
     void checkGenerateItem();
     void checkPlayerMoving();
-    void checkPlayerCollectItem(); // wait to be implemented
+    void checkPlayerCollectItem(); // have bug
     void checkMonsterMoving();
     void checkMonsterCaughtPlayer(); // wait to be implemented
     std::pair<int, int> getRandomSpace();
@@ -424,7 +429,10 @@ void Game::run(){ // main loop
         checkGenerateItem();
 
         checkPlayerMoving();
+        checkPlayerCollectItem();
+
         checkMonsterMoving();
+        checkMonsterCaughtPlayer();
 
         printInformation();
     }
@@ -578,9 +586,29 @@ void Game::checkPlayerMoving(){
         default: break;
     }
 }
-void Game::checkPlayerCollectItem(){
-    /**
-    */
+void Game::checkPlayerCollectItem(){ // have bug
+    if(items->empty()) return;
+
+    std::pair<int, int> playerPosition = characters->getFront()->data()->getPosition();
+    Node<Item*>* currItem = items->getFront();
+
+    for(int i = 0; i < items->size(); i++, currItem = currItem->next()){
+        if(currItem->data()->getPosition() == playerPosition){
+            currItem->data()->effect();
+            currItem->pop_self();
+
+            if(i == 0){
+                items->setFront(items->getBack()->next());
+            }
+            else if(i == items->size() - 1){
+                items->setBack(items->getFront()->prev());
+            }
+
+            --items;
+
+            break;
+        }
+    }
 }
 void Game::checkMonsterMoving(){
     Node<Character*>* currMonsterNode = characters->getFront()->next();
@@ -713,6 +741,9 @@ void Item::print(){
 }
 bool Item::checkPlayerCollect(int x, int y){
     return (position.first == x && position.second == y);
+}
+std::pair<int, int> Item::getPosition(){
+    return position;
 }
 
 FastItem::FastItem(int x, int y, List<Character*>* characters)
@@ -1182,6 +1213,14 @@ void List<Type>::pop_back(){
     delete temp;
 }
 template <typename Type>
+void List<Type>::setFront(Node<Type>* front){
+    this->front = front;
+}
+template <typename Type>
+void List<Type>::setBack(Node<Type>* back){
+    this->back = back;
+}
+template <typename Type>
 bool List<Type>::empty(){
     return (nodeCount == 0);
 }
@@ -1196,4 +1235,10 @@ Node<Type>* List<Type>::getFront(){
 template <typename Type>
 Node<Type>* List<Type>::getBack(){
     return back;
+}
+template <typename Type>
+List<Type>& List<Type>::operator -- (){
+    --nodeCount;
+
+    return (*this);
 }
