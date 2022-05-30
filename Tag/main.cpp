@@ -85,7 +85,6 @@ public:
 
     void setPrev(Node<Type>* prev);
     void setNext(Node<Type>* next);
-    void pop_self(); // use for killing monsters or collecting items
     Type data();
     Node<Type>* prev();
     Node<Type>* next();
@@ -593,18 +592,34 @@ void Game::checkPlayerCollectItem(){ // have bug
     Node<Item*>* currItem = items->getFront();
 
     for(int i = 0; i < items->size(); i++, currItem = currItem->next()){
-        if(currItem->data()->getPosition() == playerPosition){
-            currItem->data()->effect();
-            currItem->pop_self();
+        std::pair<int, int> itemPosition = currItem->data()->getPosition();
 
-            if(i == 0){
-                items->setFront(items->getBack()->next());
+        if(itemPosition.first == playerPosition.first &&
+           itemPosition.second == playerPosition.second){
+            currItem->data()->effect();
+
+            if(items->size() == 1){
+                items->setFront(nullptr);
+                items->setBack(nullptr);
             }
-            else if(i == items->size() - 1){
-                items->setBack(items->getFront()->prev());
+            else if(currItem == items->getFront()){
+                currItem->next()->setPrev(currItem->prev());
+                currItem->prev()->setNext(currItem->next());
+                items->setFront(currItem->next());
+            }
+            else if(currItem == items->getBack()){
+                currItem->next()->setPrev(currItem->prev());
+                currItem->prev()->setNext(currItem->next());
+                items->setBack(currItem->prev());
+            }
+            else{
+                currItem->next()->setPrev(currItem->prev());
+                currItem->prev()->setNext(currItem->next());
             }
 
             --items;
+
+            delete currItem;
 
             break;
         }
@@ -1122,13 +1137,6 @@ void Node<Type>::setPrev(Node<Type>* prev){
 template <typename Type>
 void Node<Type>::setNext(Node<Type>* next){
     _next_ = next;
-}
-template <typename Type>
-void Node<Type>::pop_self(){
-    _prev_->setNext(_next_);
-    _next_->setPrev(_prev_);
-
-    delete this;
 }
 template <typename Type>
 Type Node<Type>::data(){
