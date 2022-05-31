@@ -60,12 +60,14 @@ class UserInterface;
 
 // unfinished part
 class Monster;
+
 class RegularMonster;
 class BerserkerMonster;
 class ShooterMonster;
 class PhantomsMonster;
 
 class Item;
+
 class FastItem;
 class SlowItem;
 class BombItem;
@@ -85,6 +87,7 @@ public:
 
     void setPrev(Node<Type>* prev);
     void setNext(Node<Type>* next);
+    void pop_self(); // use for killing monsters or collecting items
     Type data();
     Node<Type>* prev();
     Node<Type>* next();
@@ -106,13 +109,12 @@ public:
     void pop_back();
     void setFront(Node<Type>* front);
     void setBack(Node<Type>* back);
+    void setSize(int size);
     bool empty();
     int  size();
 
     Node<Type>* getFront();
     Node<Type>* getBack();
-
-    List<Type>& operator -- ();
 };
 
 class Obstacle{
@@ -199,7 +201,6 @@ public:
 
 class Player: public Character{
 private:
-
 public:
     Player(int x, int y);
     ~Player();
@@ -240,7 +241,6 @@ public:
     ShooterMonster(int x, int y);
     ~ShooterMonster();
 };
-
 class PhantomsMonster: public Monster{
 private:
 public:
@@ -363,6 +363,7 @@ void gotoxy(int x, int y){
 }
 void hideCursor(){
     HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
+
     CONSOLE_CURSOR_INFO cursorInfo;
 
     GetConsoleCursorInfo(hOut, &cursorInfo);
@@ -412,6 +413,7 @@ void Game::run(){ // main loop
     characters->insert(new Node<Character*>(new Monster(randomSpot.first, randomSpot.second, '1')));
 
     distance->setPlayer(reinterpret_cast<Player*>(characters->getFront()->data()));
+
     distance->calculate();
 
     while(godMode || !gameOver){
@@ -460,7 +462,6 @@ void Game::printItems(){
 void Game::printInformation(){
     gotoxy(0, FIELD_HEIGHT + 4);
     hideCursor();
-
     std::cout<< "Score: " << score << '\n';
     std::cout<< "Time: " << duration << '\n';
 }
@@ -468,6 +469,7 @@ void Game::checkOverOneSecond(){
     if(overOneSecond->exceedTimeGap()){
         ++score;
         ++duration;
+
         overOneSecond->resetTimer();
     }
 }
@@ -592,34 +594,18 @@ void Game::checkPlayerCollectItem(){ // have bug
     Node<Item*>* currItem = items->getFront();
 
     for(int i = 0; i < items->size(); i++, currItem = currItem->next()){
-        std::pair<int, int> itemPosition = currItem->data()->getPosition();
-
-        if(itemPosition.first == playerPosition.first &&
-           itemPosition.second == playerPosition.second){
+        if(currItem->data()->getPosition() == playerPosition){
             currItem->data()->effect();
+            currItem->pop_self();
 
-            if(items->size() == 1){
-                items->setFront(nullptr);
-                items->setBack(nullptr);
+            if(i == 0){
+                items->setFront(items->getBack()->next());
             }
-            else if(currItem == items->getFront()){
-                currItem->next()->setPrev(currItem->prev());
-                currItem->prev()->setNext(currItem->next());
-                items->setFront(currItem->next());
-            }
-            else if(currItem == items->getBack()){
-                currItem->next()->setPrev(currItem->prev());
-                currItem->prev()->setNext(currItem->next());
-                items->setBack(currItem->prev());
-            }
-            else{
-                currItem->next()->setPrev(currItem->prev());
-                currItem->prev()->setNext(currItem->next());
+            else if(i == items->size() - 1){
+                items->setBack(items->getFront()->prev());
             }
 
-            --items;
-
-            delete currItem;
+            items->setSize(items->size() - 1);
 
             break;
         }
@@ -627,7 +613,6 @@ void Game::checkPlayerCollectItem(){ // have bug
 }
 void Game::checkMonsterMoving(){
     Node<Character*>* currMonsterNode = characters->getFront()->next();
-
     for(int i = 1; i < characters->size(); ++i, currMonsterNode = currMonsterNode->next()){
         Monster* monster = reinterpret_cast<Monster*>(currMonsterNode->data());
         std::pair<int, int> monsterPosition = monster->getPosition();
@@ -635,7 +620,8 @@ void Game::checkMonsterMoving(){
         int minDistance = FIELD_HEIGHT * FIELD_WIDTH;
         int direction = -1;
 
-        if(distance->isInside(monsterPosition.first, monsterPosition.second - 1)){ // up
+        // up
+        if(distance->isInside(monsterPosition.first, monsterPosition.second - 1)){
             if(!monster->checkCollide(monsterPosition.first + 1, monsterPosition.second, field)){
                 currDistance = distance->getDistance(monsterPosition.first, monsterPosition.second - 1);
 
@@ -646,7 +632,8 @@ void Game::checkMonsterMoving(){
             }
         }
 
-        if(distance->isInside(monsterPosition.first + 1, monsterPosition.second)){ // right
+        // right
+        if(distance->isInside(monsterPosition.first + 1, monsterPosition.second)){
             if(!monster->checkCollide(monsterPosition.first + 2, monsterPosition.second + 1, field)){
                 currDistance = distance->getDistance(monsterPosition.first + 1, monsterPosition.second);
 
@@ -657,7 +644,8 @@ void Game::checkMonsterMoving(){
             }
         }
 
-        if(distance->isInside(monsterPosition.first, monsterPosition.second + 1)){ // down
+        // down
+        if(distance->isInside(monsterPosition.first, monsterPosition.second + 1)){
             if(!monster->checkCollide(monsterPosition.first + 1, monsterPosition.second + 2, field)){
                 currDistance = distance->getDistance(monsterPosition.first, monsterPosition.second + 1);
 
@@ -668,7 +656,8 @@ void Game::checkMonsterMoving(){
             }
         }
 
-        if(distance->isInside(monsterPosition.first - 1, monsterPosition.second)){ // left
+        // left
+        if(distance->isInside(monsterPosition.first - 1, monsterPosition.second)){
             if(!monster->checkCollide(monsterPosition.first, monsterPosition.second + 1, field)){
                 currDistance = distance->getDistance(monsterPosition.first - 1, monsterPosition.second);
 
@@ -704,16 +693,13 @@ UserInterface::~UserInterface(){
 
 }
 int UserInterface::action(bool& godMode){
-    if(kbhit())
-    {
+    if(kbhit()){
         int key = getch();
 
-        if(key == 224)
-        {
+        if(key == 224){
             key = getch();
 
-            switch(key)
-            {
+            switch(key){
                 // for movement
                 case 72: return UP;
                 case 75: return LEFT;
@@ -721,10 +707,8 @@ int UserInterface::action(bool& godMode){
                 case 77: return RIGHT;
             }
         }
-        else
-        {
-            switch(key)
-            {
+        else{
+            switch(key){
                 // for movements
                 case 'W': case 'w': return UP;
                 case 'A': case 'a': return LEFT;
@@ -871,7 +855,6 @@ void Character::move(bool& noChange, int direction /* = -1 */){
     if(timer->exceedTimeGap()){
         canMove = true;
     }
-
     if(canMove){
         switch(direction){
             case UP:
@@ -896,11 +879,11 @@ void Character::move(bool& noChange, int direction /* = -1 */){
         if(direction != -1){
             canMove = false;
             noChange = false;
+
             timer->resetTimer();
         }
     }
 }
-
 void Character::print(){
     gotoxy(position.first + 1, position.second + 1);
     std::cout<< name;
@@ -945,6 +928,7 @@ void Distance::calculate(){ // BFS
     std::pair<int, int> playerPosition = player->getPosition();
 
     que.push(playerPosition);
+
     distance[playerPosition.second][playerPosition.first] = 0;
     check[playerPosition.second][playerPosition.first] = true;
 
@@ -1010,7 +994,6 @@ void Distance::calculate(){ // BFS
 }
 void Distance::print(){
     gotoxy(0, FIELD_HEIGHT + 7);
-
     std::cout<< "distance to player:\n";
 
     for(int i = 0 ; i < FIELD_HEIGHT; i++){
@@ -1139,6 +1122,12 @@ void Node<Type>::setNext(Node<Type>* next){
     _next_ = next;
 }
 template <typename Type>
+void Node<Type>::pop_self(){
+    _prev_->setNext(_next_);
+    _next_->setPrev(_prev_);
+    delete this;
+}
+template <typename Type>
 Type Node<Type>::data(){
     return _data_;
 }
@@ -1229,6 +1218,10 @@ void List<Type>::setBack(Node<Type>* back){
     this->back = back;
 }
 template <typename Type>
+void List<Type>::setSize(int size){
+    nodeCount = size;
+}
+template <typename Type>
 bool List<Type>::empty(){
     return (nodeCount == 0);
 }
@@ -1243,10 +1236,4 @@ Node<Type>* List<Type>::getFront(){
 template <typename Type>
 Node<Type>* List<Type>::getBack(){
     return back;
-}
-template <typename Type>
-List<Type>& List<Type>::operator -- (){
-    --nodeCount;
-
-    return (*this);
 }
