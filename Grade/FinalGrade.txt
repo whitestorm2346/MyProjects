@@ -1,0 +1,39 @@
+1. Show a student・s grades from the highest to the lowest and the associated avg
+2. Show the avg. for each student from the highest to the lowest
+3. Exit and output a final report
+Choose an option (1-3): 1
+
+Please type a name: Mary
+
+92;91;86;
+Avg: 90
+
+
+1. Show a student・s grades from the highest to the lowest and the associated avg
+2. Show the avg. for each student from the highest to the lowest
+3. Exit and output a final report
+Choose an option (1-3): 2
+
+Bob's avg: 94 (pass)
+Mary's avg: 90 (pass)
+John's avg: 79 (pass)
+Lisa's avg: 60 (pass)
+
+
+1. Show a student・s grades from the highest to the lowest and the associated avg
+2. Show the avg. for each student from the highest to the lowest
+3. Exit and output a final report
+Choose an option (1-3): 1
+
+Please type a name: testName
+
+No such student
+
+
+1. Show a student・s grades from the highest to the lowest and the associated avg
+2. Show the avg. for each student from the highest to the lowest
+3. Exit and output a final report
+Choose an option (1-3): 3
+
+
+
