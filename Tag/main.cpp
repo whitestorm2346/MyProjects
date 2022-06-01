@@ -341,7 +341,7 @@ public:
     void checkPlayerCollectItem(); // have bug
     void checkMonsterMoving();
     void checkMonsterCaughtPlayer(); // wait to be implemented
-    std::pair<int, int> getRandomSpace();
+    std::pair<int, int> getRandomSpot();
 };
 
 void gotoxy(int x, int y);
@@ -404,11 +404,11 @@ void Game::run(){ // main loop
 
     std::pair<int, int> randomSpot;
 
-    randomSpot = getRandomSpace();
+    randomSpot = getRandomSpot();
 
     characters->insert(new Node<Character*>(new Player(randomSpot.first, randomSpot.second)));
 
-    randomSpot = getRandomSpace();
+    randomSpot = getRandomSpot();
 
     characters->insert(new Node<Character*>(new Monster(randomSpot.first, randomSpot.second, '1')));
 
@@ -437,6 +437,12 @@ void Game::run(){ // main loop
 
         printInformation();
     }
+
+    printField();
+    printItems();
+    printCharacters();
+
+    gotoxy(0, FIELD_HEIGHT + 7);
 }
 void Game::printField(){
     gotoxy(0, 0);
@@ -475,7 +481,7 @@ void Game::checkOverOneSecond(){
 }
 void Game::checkGenerateCharacter(){
     if(generateCharacter->exceedTimeGap()){
-        std::pair<int, int> position = getRandomSpace();
+        std::pair<int, int> position = getRandomSpot();
 
         switch(rand() % SizeOfMonsterType + 1){
             case REGULAR:
@@ -502,7 +508,7 @@ void Game::checkGenerateCharacter(){
 }
 void Game::checkGenerateItem(){
     if(generateItem->exceedTimeGap()){
-        std::pair<int, int> position = getRandomSpace();
+        std::pair<int, int> position = getRandomSpot();
 
         switch(rand() % SizeOfItemType + 1){
             case FAST:
@@ -613,6 +619,7 @@ void Game::checkPlayerCollectItem(){ // have bug
 }
 void Game::checkMonsterMoving(){
     Node<Character*>* currMonsterNode = characters->getFront()->next();
+
     for(int i = 1; i < characters->size(); ++i, currMonsterNode = currMonsterNode->next()){
         Monster* monster = reinterpret_cast<Monster*>(currMonsterNode->data());
         std::pair<int, int> monsterPosition = monster->getPosition();
@@ -672,10 +679,21 @@ void Game::checkMonsterMoving(){
     }
 }
 void Game::checkMonsterCaughtPlayer(){
-    /**
-    */
+    Node<Character*>* currMonsterNode = characters->getFront()->next();
+    std::pair<int, int> playerPosition = characters->getFront()->data()->getPosition();
+
+    for(int i = 1; i < characters->size(); i++, currMonsterNode = currMonsterNode->next()){
+        std::pair<int, int> monsterPosition = currMonsterNode->data()->getPosition();
+
+        if(playerPosition.first == monsterPosition.first &&
+           playerPosition.second == monsterPosition.second){
+            gameOver = true;
+
+            break;
+        }
+    }
 }
-std::pair<int, int> Game::getRandomSpace(){
+std::pair<int, int> Game::getRandomSpot(){
     int x = rand() % FIELD_WIDTH;
     int y = rand() % FIELD_HEIGHT;
 
