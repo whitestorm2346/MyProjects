@@ -24,6 +24,11 @@
 #define OBSTACLE_SIZE_MIN 5
 #define OBSTACLE_SIZE_MAX 10
 
+#define FAST_DURATION 5.0
+#define SLOW_DURATION 5.0
+#define BOMB_DURATION 0.0
+#define TURN_DURATION 5.0
+
 #define SizeOfItemType 4
 enum ItemType{
     FAST = 1,
@@ -66,8 +71,8 @@ class BerserkerMonster;
 class ShooterMonster;
 class PhantomsMonster;
 
+// still have bugs
 class Item;
-
 class FastItem;
 class SlowItem;
 class BombItem;
@@ -193,10 +198,15 @@ public:
     ~Character();
 
     virtual void action(int buff = DEFAULT) = 0;
+    virtual void setDefaultSpeed() = 0;
+
     virtual void move(bool& noChange, int direction = DEFAULT);
     virtual void print();
     virtual bool checkCollide(int x, int y, Field* field);
     virtual std::pair<int, int> getPosition();
+
+    void setSpeed(double speed);
+    double getSpeed();
 };
 
 class Player: public Character{
@@ -206,10 +216,11 @@ public:
     ~Player();
 
     void action(int buff = DEFAULT);
+    void setDefaultSpeed();
 };
 
 class Monster: public Character{
-private:
+protected:
     int type;
     Timer* skillCountDown;
 
@@ -218,6 +229,7 @@ public:
     ~Monster();
 
     void action(int buff = DEFAULT);
+    void setDefaultSpeed();
     bool checkCatchPlayer(int x, int y);
 };
 
@@ -249,19 +261,21 @@ public:
 };
 
 class Item{
-private:
+protected:
     Timer* duration;
     std::pair<int, int> position;
+    bool _isCollected_;
     char type;
     List<Character*>* characters;
 
 public:
-    Item(int x, int y, char type, List<Character*>* characters);
-    ~Item();
+    Item(int x, int y, char type, double timeGap, List<Character*>* characters);
+    virtual ~Item();
 
     virtual void print();
     virtual void effect() = 0;
-    bool checkPlayerCollect(int x, int y);
+    bool isCollected();
+    bool buffTimeExpired();
     std::pair<int, int> getPosition();
 };
 
@@ -338,9 +352,10 @@ public:
     void checkGenerateCharacter();
     void checkGenerateItem();
     void checkPlayerMoving();
-    void checkPlayerCollectItem(); // have bug
+    void checkPlayerCollectItem();
     void checkMonsterMoving();
-    void checkMonsterCaughtPlayer(); // wait to be implemented
+    void checkMonsterCaughtPlayer();
+    void checkBuffExpired();
     std::pair<int, int> getRandomSpot();
 };
 
@@ -434,6 +449,8 @@ void Game::run(){ // main loop
 
         checkMonsterMoving();
         checkMonsterCaughtPlayer();
+
+        checkBuffExpired();
 
         printInformation();
     }
@@ -593,7 +610,7 @@ void Game::checkPlayerMoving(){
         default: break;
     }
 }
-void Game::checkPlayerCollectItem(){ // have bug
+void Game::checkPlayerCollectItem(){
     if(items->empty()) return;
 
     std::pair<int, int> playerPosition = characters->getFront()->data()->getPosition();
@@ -693,6 +710,46 @@ void Game::checkMonsterCaughtPlayer(){
         }
     }
 }
+void Game::checkBuffExpired(){
+    Node<Item*>* currItem = items->getFront();
+
+    if(currItem == nullptr) return;
+
+    for(; currItem != items->getBack(); currItem = currItem->next()){
+        if(currItem->data()->isCollected()){
+            if(currItem->data()->buffTimeExpired()){
+                if(currItem == items->getFront()){
+                    items->setFront(currItem->next());
+                    currItem->pop_self();
+                    items->getFront()->setPrev(items->getBack());
+                    items->getBack()->setNext(items->getFront());
+                    items->setSize(items->size() - 1);
+                }
+                else{
+                    currItem->pop_self();
+                    items->setSize(items->size() - 1);
+                }
+            }
+        }
+    }
+
+    if(items->getBack()->data()->isCollected()){
+        if(items->size() == 1){
+            items->getFront()->pop_self();
+            items->setFront(nullptr);
+            items->setBack(nullptr);
+            items->setSize(0);
+        }
+        else{
+            items->setBack(items->getBack()->prev());
+            items->getBack()->next()->pop_self();
+            items->getFront()->setPrev(items->getBack());
+            items->getBack()->setNext(items->getFront());
+            items->setSize(items->size() - 1);
+
+        }
+    }
+}
 std::pair<int, int> Game::getRandomSpot(){
     int x = rand() % FIELD_WIDTH;
     int y = rand() % FIELD_HEIGHT;
@@ -744,67 +801,101 @@ int UserInterface::action(bool& godMode){
     return -1;
 }
 
-Item::Item(int x, int y, char type, List<Character*>* characters)
-    : position({x, y}), type(type), characters(characters){
-
+Item::Item(int x, int y, char type, double timeGap, List<Character*>* characters)
+    : position({x, y}), type(type), characters(characters), _isCollected_(false){
+    duration = new Timer(timeGap);
 }
 Item::~Item(){
-
+    delete duration;
 }
 void Item::print(){
+    if(_isCollected_) return;
+
     gotoxy(position.first + 1, position.second + 1);
     hideCursor();
     std::cout<< type;
 }
-bool Item::checkPlayerCollect(int x, int y){
-    return (position.first == x && position.second == y);
+bool Item::isCollected(){
+    return _isCollected_;
+}
+bool Item::buffTimeExpired(){
+    return duration->exceedTimeGap();
 }
 std::pair<int, int> Item::getPosition(){
     return position;
 }
 
 FastItem::FastItem(int x, int y, List<Character*>* characters)
-    : Item(x, y, 'F', characters){
+    : Item(x, y, 'F', FAST_DURATION, characters){
 
 }
 FastItem::~FastItem(){
+    Player* player = reinterpret_cast<Player*>(characters->getFront()->data());
 
+    player->setDefaultSpeed();
 }
 void FastItem::effect(){
+    Player* player = reinterpret_cast<Player*>(characters->getFront()->data());
 
+    player->setSpeed(PLAYER_SPEED / 2);
+
+    _isCollected_ = true;
+    duration->resetTimer();
 }
 
 SlowItem::SlowItem(int x, int y, List<Character*>* characters)
-    : Item(x, y, 'S', characters){
+    : Item(x, y, 'S', SLOW_DURATION, characters){
 
 }
 SlowItem::~SlowItem(){
+    Node<Character*>* currMonster = characters->getFront()->next();
 
+    for(int i = 1; i < characters->size(); i++){
+        currMonster->data()->setDefaultSpeed();
+    }
 }
 void SlowItem::effect(){
+    Node<Character*>* currMonster = characters->getFront()->next();
 
+    for(int i = 1; i < characters->size(); i++){
+        currMonster->data()->setSpeed(MONSTER_SPEED * 2);
+    }
+
+    _isCollected_ = true;
+    duration->resetTimer();
 }
 
 BombItem::BombItem(int x, int y, List<Character*>* characters)
-    : Item(x, y, 'B', characters){
+    : Item(x, y, 'B', BOMB_DURATION, characters){
 
 }
 BombItem::~BombItem(){
 
 }
 void BombItem::effect(){
+    while(characters->size() != 1){
+        characters->getFront()->next()->pop_self();
+        characters->setSize(characters->size() - 1);
+    }
 
+    characters->setBack(characters->getFront());
+    characters->getFront()->setNext(characters->getBack());
+    characters->getFront()->setPrev(characters->getFront());
+
+    _isCollected_ = true;
+    duration->resetTimer();
 }
 
 TurnItem::TurnItem(int x, int y, List<Character*>* characters)
-    : Item(x, y, 'T', characters){
+    : Item(x, y, 'T', TURN_DURATION, characters){
 
 }
 TurnItem::~TurnItem(){
 
 }
 void TurnItem::effect(){
-
+    _isCollected_ = true;
+    duration->resetTimer();
 }
 
 Monster::Monster(int x, int y, char type): Character(x, y, type, MONSTER_SPEED), type(type){
@@ -815,6 +906,9 @@ Monster::~Monster(){
 }
 void Monster::action(int buff /* = -1 */){
 
+}
+void Monster::setDefaultSpeed(){
+    speed = MONSTER_SPEED;
 }
 bool Monster::checkCatchPlayer(int x, int y){
     return (position.first == x && position.second == y);
@@ -856,6 +950,9 @@ Player::~Player(){
 }
 void Player::action(int buff /* = -1 */){
 
+}
+void Player::setDefaultSpeed(){
+    speed = PLAYER_SPEED;
 }
 
 Character::Character(int x, int y, char name, double speed){
@@ -912,6 +1009,14 @@ bool Character::checkCollide(int x, int y, Field* field){
 }
 std::pair<int, int> Character::getPosition(){
     return position;
+}
+void Character::setSpeed(double speed){
+    this->speed = speed;
+
+    timer->setTimeGap(speed);
+}
+double Character::getSpeed(){
+    return speed;
 }
 
 Distance::Distance(Player* player, Field* field): player(player), field(field){
@@ -1143,6 +1248,7 @@ template <typename Type>
 void Node<Type>::pop_self(){
     _prev_->setNext(_next_);
     _next_->setPrev(_prev_);
+
     delete this;
 }
 template <typename Type>
