@@ -228,9 +228,9 @@ public:
     Monster(int x, int y, char type);
     ~Monster();
 
-    void action(int buff = DEFAULT);
-    void setDefaultSpeed();
-    bool checkCatchPlayer(int x, int y);
+    virtual void action(int buff = DEFAULT);
+    virtual void setDefaultSpeed();
+    virtual bool checkCatchPlayer(int x, int y);
 };
 
 class RegularMonster: public Monster{
@@ -274,6 +274,7 @@ public:
 
     virtual void print();
     virtual void effect() = 0;
+    virtual void buffLoseEffectiveness() = 0;
     bool isCollected();
     bool buffTimeExpired();
     std::pair<int, int> getPosition();
@@ -286,6 +287,7 @@ public:
     ~FastItem();
 
     void effect();
+    void buffLoseEffectiveness();
 };
 
 class SlowItem: public Item{
@@ -295,6 +297,7 @@ public:
     ~SlowItem();
 
     void effect();
+    void buffLoseEffectiveness();
 };
 
 class BombItem: public Item{
@@ -304,6 +307,7 @@ public:
     ~BombItem();
 
     void effect();
+    void buffLoseEffectiveness();
 };
 
 class TurnItem: public Item{
@@ -313,6 +317,7 @@ public:
     ~TurnItem();
 
     void effect();
+    void buffLoseEffectiveness();
 };
 
 class UserInterface{
@@ -720,12 +725,14 @@ void Game::checkBuffExpired(){
             if(currItem->data()->buffTimeExpired()){
                 if(currItem == items->getFront()){
                     items->setFront(currItem->next());
+                    currItem->data()->buffLoseEffectiveness();
                     currItem->pop_self();
                     items->getFront()->setPrev(items->getBack());
                     items->getBack()->setNext(items->getFront());
                     items->setSize(items->size() - 1);
                 }
                 else{
+                    currItem->data()->buffLoseEffectiveness();
                     currItem->pop_self();
                     items->setSize(items->size() - 1);
                 }
@@ -830,9 +837,7 @@ FastItem::FastItem(int x, int y, List<Character*>* characters)
 
 }
 FastItem::~FastItem(){
-    Player* player = reinterpret_cast<Player*>(characters->getFront()->data());
 
-    player->setDefaultSpeed();
 }
 void FastItem::effect(){
     Player* player = reinterpret_cast<Player*>(characters->getFront()->data());
@@ -841,6 +846,17 @@ void FastItem::effect(){
 
     _isCollected_ = true;
     duration->resetTimer();
+
+    gotoxy(0, FIELD_HEIGHT + 7);
+    std::cout<< _isCollected_ << '\n';
+    std::cout<< duration->exceedTimeGap() << '\n';
+
+    getch();
+}
+void FastItem::buffLoseEffectiveness(){
+    Player* player = reinterpret_cast<Player*>(characters->getFront()->data());
+
+    player->setDefaultSpeed();
 }
 
 SlowItem::SlowItem(int x, int y, List<Character*>* characters)
@@ -848,11 +864,7 @@ SlowItem::SlowItem(int x, int y, List<Character*>* characters)
 
 }
 SlowItem::~SlowItem(){
-    Node<Character*>* currMonster = characters->getFront()->next();
 
-    for(int i = 1; i < characters->size(); i++){
-        currMonster->data()->setDefaultSpeed();
-    }
 }
 void SlowItem::effect(){
     Node<Character*>* currMonster = characters->getFront()->next();
@@ -863,6 +875,19 @@ void SlowItem::effect(){
 
     _isCollected_ = true;
     duration->resetTimer();
+
+    gotoxy(0, FIELD_HEIGHT + 7);
+    std::cout<< _isCollected_ << '\n';
+    std::cout<< duration->exceedTimeGap() << '\n';
+
+    getch();
+}
+void SlowItem::buffLoseEffectiveness(){
+    Node<Character*>* currMonster = characters->getFront()->next();
+
+    for(int i = 1; i < characters->size(); i++){
+        currMonster->data()->setDefaultSpeed();
+    }
 }
 
 BombItem::BombItem(int x, int y, List<Character*>* characters)
@@ -884,6 +909,15 @@ void BombItem::effect(){
 
     _isCollected_ = true;
     duration->resetTimer();
+
+    gotoxy(0, FIELD_HEIGHT + 7);
+    std::cout<< _isCollected_ << '\n';
+    std::cout<< duration->exceedTimeGap() << '\n';
+
+    getch();
+}
+void BombItem::buffLoseEffectiveness(){
+
 }
 
 TurnItem::TurnItem(int x, int y, List<Character*>* characters)
@@ -896,6 +930,15 @@ TurnItem::~TurnItem(){
 void TurnItem::effect(){
     _isCollected_ = true;
     duration->resetTimer();
+
+    gotoxy(0, FIELD_HEIGHT + 7);
+    std::cout<< _isCollected_ << '\n';
+    std::cout<< duration->exceedTimeGap() << '\n';
+
+    getch();
+}
+void TurnItem::buffLoseEffectiveness(){
+
 }
 
 Monster::Monster(int x, int y, char type): Character(x, y, type, MONSTER_SPEED), type(type){
