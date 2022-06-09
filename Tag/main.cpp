@@ -188,13 +188,14 @@ public:
 class Character{
 protected:
     std::pair<int, int> position;
+    int* score;
     char name;
     bool canMove;
     double speed; // unit: seconds per step
     Timer* timer;
 
 public:
-    Character(int x, int y, char name, double speed);
+    Character(int x, int y, char name, double speed, int* score);
     ~Character();
 
     virtual void action(int buff = DEFAULT) = 0;
@@ -205,6 +206,7 @@ public:
     virtual bool checkCollide(int x, int y, Field* field);
     virtual std::pair<int, int> getPosition();
 
+    void addScore(int num);
     void setSpeed(double speed);
     double getSpeed();
 };
@@ -212,7 +214,7 @@ public:
 class Player: public Character{
 private:
 public:
-    Player(int x, int y);
+    Player(int x, int y, int* score);
     ~Player();
 
     void action(int buff = DEFAULT);
@@ -225,7 +227,7 @@ protected:
     Timer* skillCountDown;
 
 public:
-    Monster(int x, int y, char type);
+    Monster(int x, int y, char type, int* score);
     ~Monster();
 
     virtual void action(int buff = DEFAULT);
@@ -236,27 +238,27 @@ public:
 class RegularMonster: public Monster{
 private:
 public:
-    RegularMonster(int x, int y);
+    RegularMonster(int x, int y, int* score);
     ~RegularMonster();
 };
 
 class BerserkerMonster: public Monster{
 private:
 public:
-    BerserkerMonster(int x, int y);
+    BerserkerMonster(int x, int y, int* score);
     ~BerserkerMonster();
 };
 
 class ShooterMonster: public Monster{
 private:
 public:
-    ShooterMonster(int x, int y);
+    ShooterMonster(int x, int y, int* score);
     ~ShooterMonster();
 };
 class PhantomsMonster: public Monster{
 private:
 public:
-    PhantomsMonster(int x, int y);
+    PhantomsMonster(int x, int y, int* score);
     ~PhantomsMonster();
 };
 
@@ -277,6 +279,7 @@ public:
     virtual void buffLoseEffectiveness() = 0;
     bool isCollected();
     bool buffTimeExpired();
+    char getType();
     std::pair<int, int> getPosition();
 };
 
@@ -426,11 +429,11 @@ void Game::run(){ // main loop
 
     randomSpot = getRandomSpot();
 
-    characters->insert(new Node<Character*>(new Player(randomSpot.first, randomSpot.second)));
+    characters->insert(new Node<Character*>(new Player(randomSpot.first, randomSpot.second, &score)));
 
     randomSpot = getRandomSpot();
 
-    characters->insert(new Node<Character*>(new Monster(randomSpot.first, randomSpot.second, '1')));
+    characters->insert(new Node<Character*>(new Monster(randomSpot.first, randomSpot.second, '1', &score)));
 
     distance->setPlayer(reinterpret_cast<Player*>(characters->getFront()->data()));
 
@@ -507,19 +510,19 @@ void Game::checkGenerateCharacter(){
 
         switch(rand() % SizeOfMonsterType + 1){
             case REGULAR:
-                characters->insert(new Node<Character*>(new Monster(position.first, position.second, '1')));
+                characters->insert(new Node<Character*>(new Monster(position.first, position.second, '1', &score)));
                 break;
 
             case BERSERKER:
-                characters->insert(new Node<Character*>(new Monster(position.first, position.second, '2')));
+                characters->insert(new Node<Character*>(new Monster(position.first, position.second, '2', &score)));
                 break;
 
             case SHOOTER:
-                characters->insert(new Node<Character*>(new Monster(position.first, position.second, '3')));
+                characters->insert(new Node<Character*>(new Monster(position.first, position.second, '3', &score)));
                 break;
 
             case PHANTOMS:
-                characters->insert(new Node<Character*>(new Monster(position.first, position.second, '4')));
+                characters->insert(new Node<Character*>(new Monster(position.first, position.second, '4', &score)));
                 break;
         }
 
@@ -622,18 +625,11 @@ void Game::checkPlayerCollectItem(){
     Node<Item*>* currItem = items->getFront();
 
     for(int i = 0; i < items->size(); i++, currItem = currItem->next()){
-        if(currItem->data()->getPosition() == playerPosition){
+        std::pair<int, int> itemPosition = currItem->data()->getPosition();
+
+        if(itemPosition.first == playerPosition.first &&
+           itemPosition.second == playerPosition.second){
             currItem->data()->effect();
-            currItem->pop_self();
-
-            if(i == 0){
-                items->setFront(items->getBack()->next());
-            }
-            else if(i == items->size() - 1){
-                items->setBack(items->getFront()->prev());
-            }
-
-            items->setSize(items->size() - 1);
 
             break;
         }
@@ -723,9 +719,10 @@ void Game::checkBuffExpired(){
     for(; currItem != items->getBack(); currItem = currItem->next()){
         if(currItem->data()->isCollected()){
             if(currItem->data()->buffTimeExpired()){
+
                 if(currItem == items->getFront()){
-                    items->setFront(currItem->next());
                     currItem->data()->buffLoseEffectiveness();
+                    items->setFront(currItem->next());
                     currItem->pop_self();
                     items->getFront()->setPrev(items->getBack());
                     items->getBack()->setNext(items->getFront());
@@ -741,19 +738,23 @@ void Game::checkBuffExpired(){
     }
 
     if(items->getBack()->data()->isCollected()){
-        if(items->size() == 1){
-            items->getFront()->pop_self();
-            items->setFront(nullptr);
-            items->setBack(nullptr);
-            items->setSize(0);
-        }
-        else{
-            items->setBack(items->getBack()->prev());
-            items->getBack()->next()->pop_self();
-            items->getFront()->setPrev(items->getBack());
-            items->getBack()->setNext(items->getFront());
-            items->setSize(items->size() - 1);
+        if(currItem->data()->buffTimeExpired()){
+            if(items->size() == 1){
+                items->getFront()->data()->buffLoseEffectiveness();
+                items->getFront()->pop_self();
+                items->setFront(nullptr);
+                items->setBack(nullptr);
+                items->setSize(0);
+            }
+            else{
+                items->getBack()->data()->buffLoseEffectiveness();
+                items->setBack(items->getBack()->prev());
+                items->getBack()->next()->pop_self();
+                items->getFront()->setPrev(items->getBack());
+                items->getBack()->setNext(items->getFront());
+                items->setSize(items->size() - 1);
 
+            }
         }
     }
 }
@@ -809,8 +810,9 @@ int UserInterface::action(bool& godMode){
 }
 
 Item::Item(int x, int y, char type, double timeGap, List<Character*>* characters)
-    : position({x, y}), type(type), characters(characters), _isCollected_(false){
+    : position({x, y}), type(type), characters(characters){
     duration = new Timer(timeGap);
+    _isCollected_ = false;
 }
 Item::~Item(){
     delete duration;
@@ -827,6 +829,9 @@ bool Item::isCollected(){
 }
 bool Item::buffTimeExpired(){
     return duration->exceedTimeGap();
+}
+char Item::getType(){
+    return type;
 }
 std::pair<int, int> Item::getPosition(){
     return position;
@@ -846,12 +851,6 @@ void FastItem::effect(){
 
     _isCollected_ = true;
     duration->resetTimer();
-
-    gotoxy(0, FIELD_HEIGHT + 7);
-    std::cout<< _isCollected_ << '\n';
-    std::cout<< duration->exceedTimeGap() << '\n';
-
-    getch();
 }
 void FastItem::buffLoseEffectiveness(){
     Player* player = reinterpret_cast<Player*>(characters->getFront()->data());
@@ -869,23 +868,17 @@ SlowItem::~SlowItem(){
 void SlowItem::effect(){
     Node<Character*>* currMonster = characters->getFront()->next();
 
-    for(int i = 1; i < characters->size(); i++){
+    for(int i = 1; i < characters->size(); i++, currMonster = currMonster->next()){
         currMonster->data()->setSpeed(MONSTER_SPEED * 2);
     }
 
     _isCollected_ = true;
     duration->resetTimer();
-
-    gotoxy(0, FIELD_HEIGHT + 7);
-    std::cout<< _isCollected_ << '\n';
-    std::cout<< duration->exceedTimeGap() << '\n';
-
-    getch();
 }
 void SlowItem::buffLoseEffectiveness(){
     Node<Character*>* currMonster = characters->getFront()->next();
 
-    for(int i = 1; i < characters->size(); i++){
+    for(int i = 1; i < characters->size(); i++, currMonster = currMonster->next()){
         currMonster->data()->setDefaultSpeed();
     }
 }
@@ -909,12 +902,6 @@ void BombItem::effect(){
 
     _isCollected_ = true;
     duration->resetTimer();
-
-    gotoxy(0, FIELD_HEIGHT + 7);
-    std::cout<< _isCollected_ << '\n';
-    std::cout<< duration->exceedTimeGap() << '\n';
-
-    getch();
 }
 void BombItem::buffLoseEffectiveness(){
 
@@ -930,18 +917,13 @@ TurnItem::~TurnItem(){
 void TurnItem::effect(){
     _isCollected_ = true;
     duration->resetTimer();
-
-    gotoxy(0, FIELD_HEIGHT + 7);
-    std::cout<< _isCollected_ << '\n';
-    std::cout<< duration->exceedTimeGap() << '\n';
-
-    getch();
 }
 void TurnItem::buffLoseEffectiveness(){
 
 }
 
-Monster::Monster(int x, int y, char type): Character(x, y, type, MONSTER_SPEED), type(type){
+Monster::Monster(int x, int y, char type, int* score)
+    : Character(x, y, type, MONSTER_SPEED, score), type(type){
 
 }
 Monster::~Monster(){
@@ -951,41 +933,41 @@ void Monster::action(int buff /* = -1 */){
 
 }
 void Monster::setDefaultSpeed(){
-    speed = MONSTER_SPEED;
+    setSpeed(MONSTER_SPEED);
 }
 bool Monster::checkCatchPlayer(int x, int y){
     return (position.first == x && position.second == y);
 }
 
-RegularMonster::RegularMonster(int x, int y): Monster(x, y, '1'){
+RegularMonster::RegularMonster(int x, int y, int* score): Monster(x, y, '1', score){
 
 }
 RegularMonster::~RegularMonster(){
 
 }
 
-BerserkerMonster::BerserkerMonster(int x, int y): Monster(x, y, '2'){
+BerserkerMonster::BerserkerMonster(int x, int y, int* score): Monster(x, y, '2', score){
 
 }
 BerserkerMonster::~BerserkerMonster(){
 
 }
 
-ShooterMonster::ShooterMonster(int x, int y): Monster(x, y, '3'){
+ShooterMonster::ShooterMonster(int x, int y, int* score): Monster(x, y, '3', score){
 
 }
 ShooterMonster::~ShooterMonster(){
 
 }
 
-PhantomsMonster::PhantomsMonster(int x, int y): Monster(x, y, '4'){
+PhantomsMonster::PhantomsMonster(int x, int y, int* score): Monster(x, y, '4', score){
 
 }
 PhantomsMonster::~PhantomsMonster(){
 
 }
 
-Player::Player(int x, int y): Character(x, y, 'P', PLAYER_SPEED){
+Player::Player(int x, int y, int* score): Character(x, y, 'P', PLAYER_SPEED, score){
 
 }
 Player::~Player(){
@@ -995,12 +977,13 @@ void Player::action(int buff /* = -1 */){
 
 }
 void Player::setDefaultSpeed(){
-    speed = PLAYER_SPEED;
+    setSpeed(PLAYER_SPEED);
 }
 
-Character::Character(int x, int y, char name, double speed){
+Character::Character(int x, int y, char name, double speed, int* score){
     this->name = name;
     this->speed = speed;
+    this->score = score;
     position.first = x;
     position.second = y;
     canMove = true;
@@ -1052,6 +1035,9 @@ bool Character::checkCollide(int x, int y, Field* field){
 }
 std::pair<int, int> Character::getPosition(){
     return position;
+}
+void Character::addScore(int num){
+    *score += num;
 }
 void Character::setSpeed(double speed){
     this->speed = speed;
