@@ -9,6 +9,8 @@
 
 #define DEFAULT -1
 
+#define KILL_MONSTER 5
+
 #define GENERATE_CHARACTER_COUNT_DOWN 20.0
 #define GENERATE_ITEM_COUNT_DOWN 10.0
 
@@ -493,8 +495,9 @@ void Game::printItems(){
 void Game::printInformation(){
     gotoxy(0, FIELD_HEIGHT + 4);
     hideCursor();
+
+    printf("Time: %02d:%02d\n", duration / 60, duration % 60);
     std::cout<< "Score: " << score << '\n';
-    std::cout<< "Time: " << duration << '\n';
 }
 void Game::checkOverOneSecond(){
     if(overOneSecond->exceedTimeGap()){
@@ -894,6 +897,7 @@ void BombItem::effect(){
     while(characters->size() != 1){
         characters->getFront()->next()->pop_self();
         characters->setSize(characters->size() - 1);
+        characters->getFront()->data()->addScore(KILL_MONSTER);
     }
 
     characters->setBack(characters->getFront());
