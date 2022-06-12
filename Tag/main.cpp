@@ -91,6 +91,7 @@ private:
 
 public:
     Node(Type data);
+    ~Node();
 
     void setPrev(Node<Type>* prev);
     void setNext(Node<Type>* next);
@@ -199,7 +200,7 @@ protected:
 
 public:
     Character(int x, int y, char name, double speed, int* score);
-    ~Character();
+    virtual ~Character();
 
     virtual void action(int buff = DEFAULT) = 0;
     virtual void setDefaultSpeed() = 0;
@@ -235,7 +236,7 @@ protected:
 
 public:
     Monster(int x, int y, char type, int* score);
-    ~Monster();
+    virtual ~Monster();
 
     virtual void action(int buff = DEFAULT);
     virtual void setDefaultSpeed();
@@ -372,6 +373,7 @@ public:
     void checkPlayerCollectItem();
     void checkMonsterMoving();
     void checkMonsterCaughtPlayer();
+    void checkPlayerCaughtMonster(); // wait to be implemented
     void checkBuffExpired();
     std::pair<int, int> getRandomSpot();
 };
@@ -473,7 +475,9 @@ void Game::run(){ // main loop
         checkPlayerCollectItem();
 
         checkMonsterMoving();
-        checkMonsterCaughtPlayer();
+
+        if(characters->getFront()->data()->getMode()) checkPlayerCaughtMonster();
+        else checkMonsterCaughtPlayer();
 
         checkBuffExpired();
 
@@ -783,6 +787,45 @@ void Game::checkMonsterCaughtPlayer(){
 
             break;
         }
+    }
+}
+void Game::checkPlayerCaughtMonster(){ // have bugs
+    Node<Character*>* currMonsterNode = characters->getFront()->next();
+    std::pair<int, int> playerPosition = characters->getFront()->data()->getPosition();
+
+    while(currMonsterNode != characters->getBack()){
+        std::pair<int, int> monsterPosition = currMonsterNode->data()->getPosition();
+
+        if(playerPosition.first == monsterPosition.first &&
+           playerPosition.second == monsterPosition.second){
+            currMonsterNode->data()->addScore(KILL_MONSTER);
+
+            Node<Character*>* temp = currMonsterNode->next();
+
+            currMonsterNode->pop_self();
+            items->setSize(items->size() - 1);
+
+            currMonsterNode = temp;
+        }
+        else{
+            currMonsterNode = currMonsterNode->next();
+        }
+    }
+
+    if(currMonsterNode == characters->getFront()) return;
+
+    std::pair<int, int> monsterPosition = currMonsterNode->data()->getPosition();
+
+    if(playerPosition.first == monsterPosition.first &&
+       playerPosition.second == monsterPosition.second){
+        currMonsterNode->data()->addScore(KILL_MONSTER);
+
+        characters->setBack(currMonsterNode->prev());
+        characters->getBack()->setNext(characters->getFront());
+        characters->getFront()->setPrev(characters->getBack());
+
+        currMonsterNode->pop_self();
+        items->setSize(items->size() - 1);
     }
 }
 void Game::checkBuffExpired(){
@@ -1361,6 +1404,10 @@ Node<Type>::Node(Type data){
     this->_data_ = data;
     _prev_ = nullptr;
     _next_ = nullptr;
+}
+template <typename Type>
+Node<Type>::~Node(){
+    delete _data_;
 }
 template <typename Type>
 void Node<Type>::setPrev(Node<Type>* prev){
