@@ -189,6 +189,7 @@ public:
 
 class Character{
 protected:
+    static bool turnItemCollected;
     std::pair<int, int> position;
     int* score;
     char name;
@@ -210,8 +211,12 @@ public:
 
     void addScore(int num);
     void setSpeed(double speed);
+    void changeMode(bool status); // for turn item
+    bool getMode();
     double getSpeed();
 };
+
+bool Character::turnItemCollected = false;
 
 class Player: public Character{
 private:
@@ -353,6 +358,8 @@ public:
     Game();
     ~Game();
 
+    static void printStatus(std::string status);
+
     void run();
     void printField();
     void printCharacters();
@@ -422,6 +429,14 @@ Game::~Game(){
     delete characters;
     delete items;
 }
+void Game::printStatus(std::string status){
+    gotoxy(0, FIELD_HEIGHT + 7);
+
+    std::cout<< "                                                                                          \r";
+    std::cout<< ">>> " << status << '\n';
+
+    hideCursor();
+}
 void Game::run(){ // main loop
     srand(time(nullptr));
 
@@ -469,7 +484,9 @@ void Game::run(){ // main loop
     printItems();
     printCharacters();
 
-    gotoxy(0, FIELD_HEIGHT + 7);
+    printStatus("Game Over!!");
+
+    gotoxy(0, FIELD_HEIGHT + 9);
 }
 void Game::printField(){
     gotoxy(0, 0);
@@ -645,53 +662,107 @@ void Game::checkMonsterMoving(){
         Monster* monster = reinterpret_cast<Monster*>(currMonsterNode->data());
         std::pair<int, int> monsterPosition = monster->getPosition();
         int currDistance = 0;
-        int minDistance = FIELD_HEIGHT * FIELD_WIDTH;
         int direction = -1;
 
-        // up
-        if(distance->isInside(monsterPosition.first, monsterPosition.second - 1)){
-            if(!monster->checkCollide(monsterPosition.first + 1, monsterPosition.second, field)){
-                currDistance = distance->getDistance(monsterPosition.first, monsterPosition.second - 1);
+        if(monster->getMode()){
+            int maxDistance = -1;
 
-                if(currDistance < minDistance){
-                    minDistance = currDistance;
-                    direction = UP;
+            // up
+            if(distance->isInside(monsterPosition.first, monsterPosition.second - 1)){
+                if(!monster->checkCollide(monsterPosition.first + 1, monsterPosition.second, field)){
+                    currDistance = distance->getDistance(monsterPosition.first, monsterPosition.second - 1);
+
+                    if(currDistance > maxDistance){
+                        maxDistance = currDistance;
+                        direction = UP;
+                    }
+                }
+            }
+
+            // right
+            if(distance->isInside(monsterPosition.first + 1, monsterPosition.second)){
+                if(!monster->checkCollide(monsterPosition.first + 2, monsterPosition.second + 1, field)){
+                    currDistance = distance->getDistance(monsterPosition.first + 1, monsterPosition.second);
+
+                    if(currDistance > maxDistance){
+                        maxDistance = currDistance;
+                        direction = RIGHT;
+                    }
+                }
+            }
+
+            // down
+            if(distance->isInside(monsterPosition.first, monsterPosition.second + 1)){
+                if(!monster->checkCollide(monsterPosition.first + 1, monsterPosition.second + 2, field)){
+                    currDistance = distance->getDistance(monsterPosition.first, monsterPosition.second + 1);
+
+                    if(currDistance > maxDistance){
+                        maxDistance = currDistance;
+                        direction = DOWN;
+                    }
+                }
+            }
+
+            // left
+            if(distance->isInside(monsterPosition.first - 1, monsterPosition.second)){
+                if(!monster->checkCollide(monsterPosition.first, monsterPosition.second + 1, field)){
+                    currDistance = distance->getDistance(monsterPosition.first - 1, monsterPosition.second);
+
+                    if(currDistance > maxDistance){
+                        maxDistance = currDistance;
+                        direction = LEFT;
+                    }
                 }
             }
         }
+        else{
+            int minDistance = FIELD_HEIGHT * FIELD_WIDTH;
 
-        // right
-        if(distance->isInside(monsterPosition.first + 1, monsterPosition.second)){
-            if(!monster->checkCollide(monsterPosition.first + 2, monsterPosition.second + 1, field)){
-                currDistance = distance->getDistance(monsterPosition.first + 1, monsterPosition.second);
+            // up
+            if(distance->isInside(monsterPosition.first, monsterPosition.second - 1)){
+                if(!monster->checkCollide(monsterPosition.first + 1, monsterPosition.second, field)){
+                    currDistance = distance->getDistance(monsterPosition.first, monsterPosition.second - 1);
 
-                if(currDistance < minDistance){
-                    minDistance = currDistance;
-                    direction = RIGHT;
+                    if(currDistance < minDistance){
+                        minDistance = currDistance;
+                        direction = UP;
+                    }
                 }
             }
-        }
 
-        // down
-        if(distance->isInside(monsterPosition.first, monsterPosition.second + 1)){
-            if(!monster->checkCollide(monsterPosition.first + 1, monsterPosition.second + 2, field)){
-                currDistance = distance->getDistance(monsterPosition.first, monsterPosition.second + 1);
+            // right
+            if(distance->isInside(monsterPosition.first + 1, monsterPosition.second)){
+                if(!monster->checkCollide(monsterPosition.first + 2, monsterPosition.second + 1, field)){
+                    currDistance = distance->getDistance(monsterPosition.first + 1, monsterPosition.second);
 
-                if(currDistance < minDistance){
-                    minDistance = currDistance;
-                    direction = DOWN;
+                    if(currDistance < minDistance){
+                        minDistance = currDistance;
+                        direction = RIGHT;
+                    }
                 }
             }
-        }
 
-        // left
-        if(distance->isInside(monsterPosition.first - 1, monsterPosition.second)){
-            if(!monster->checkCollide(monsterPosition.first, monsterPosition.second + 1, field)){
-                currDistance = distance->getDistance(monsterPosition.first - 1, monsterPosition.second);
+            // down
+            if(distance->isInside(monsterPosition.first, monsterPosition.second + 1)){
+                if(!monster->checkCollide(monsterPosition.first + 1, monsterPosition.second + 2, field)){
+                    currDistance = distance->getDistance(monsterPosition.first, monsterPosition.second + 1);
 
-                if(currDistance < minDistance){
-                    minDistance = currDistance;
-                    direction = LEFT;
+                    if(currDistance < minDistance){
+                        minDistance = currDistance;
+                        direction = DOWN;
+                    }
+                }
+            }
+
+            // left
+            if(distance->isInside(monsterPosition.first - 1, monsterPosition.second)){
+                if(!monster->checkCollide(monsterPosition.first, monsterPosition.second + 1, field)){
+                    currDistance = distance->getDistance(monsterPosition.first - 1, monsterPosition.second);
+
+                    if(currDistance < minDistance){
+                        minDistance = currDistance;
+                        direction = LEFT;
+                    }
                 }
             }
         }
@@ -854,11 +925,15 @@ void FastItem::effect(){
 
     _isCollected_ = true;
     duration->resetTimer();
+
+    Game::printStatus("Player collected a FastItem");
 }
 void FastItem::buffLoseEffectiveness(){
     Player* player = reinterpret_cast<Player*>(characters->getFront()->data());
 
     player->setDefaultSpeed();
+
+    Game::printStatus("FastItem lose effectiveness");
 }
 
 SlowItem::SlowItem(int x, int y, List<Character*>* characters)
@@ -877,6 +952,8 @@ void SlowItem::effect(){
 
     _isCollected_ = true;
     duration->resetTimer();
+
+    Game::printStatus("Player collected a SlowItem");
 }
 void SlowItem::buffLoseEffectiveness(){
     Node<Character*>* currMonster = characters->getFront()->next();
@@ -884,6 +961,8 @@ void SlowItem::buffLoseEffectiveness(){
     for(int i = 1; i < characters->size(); i++, currMonster = currMonster->next()){
         currMonster->data()->setDefaultSpeed();
     }
+
+    Game::printStatus("SlowItem lose effectiveness");
 }
 
 BombItem::BombItem(int x, int y, List<Character*>* characters)
@@ -906,6 +985,8 @@ void BombItem::effect(){
 
     _isCollected_ = true;
     duration->resetTimer();
+
+    Game::printStatus("Player collected a BombItem");
 }
 void BombItem::buffLoseEffectiveness(){
 
@@ -919,11 +1000,17 @@ TurnItem::~TurnItem(){
 
 }
 void TurnItem::effect(){
+    characters->getFront()->data()->changeMode(true);
+
     _isCollected_ = true;
     duration->resetTimer();
+
+    Game::printStatus("Player collected a TurnItem");
 }
 void TurnItem::buffLoseEffectiveness(){
+    characters->getFront()->data()->changeMode(false);
 
+    Game::printStatus("TurnItem lose effectiveness");
 }
 
 Monster::Monster(int x, int y, char type, int* score)
@@ -1047,6 +1134,12 @@ void Character::setSpeed(double speed){
     this->speed = speed;
 
     timer->setTimeGap(speed);
+}
+void Character::changeMode(bool status){
+    turnItemCollected = status;
+}
+bool Character::getMode(){
+    return turnItemCollected;
 }
 double Character::getSpeed(){
     return speed;
