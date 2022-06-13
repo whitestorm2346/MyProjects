@@ -63,21 +63,20 @@ class Timer;
 class Distance;
 class Character;
 class Player;
+class Monster;
+class Item;
+class FastItem;
+class SlowItem;
+class BombItem;
 class UserInterface;
 
 // unfinished part
-class Monster;
-
 class RegularMonster;
 class BerserkerMonster;
 class ShooterMonster;
 class PhantomsMonster;
 
 // still have bugs
-class Item;
-class FastItem;
-class SlowItem;
-class BombItem;
 class TurnItem;
 
 class Game;
@@ -373,7 +372,7 @@ public:
     void checkPlayerCollectItem();
     void checkMonsterMoving();
     void checkMonsterCaughtPlayer();
-    void checkPlayerCaughtMonster(); // wait to be implemented
+    void checkPlayerCaughtMonster();
     void checkBuffExpired();
     std::pair<int, int> getRandomSpot();
 };
@@ -649,6 +648,8 @@ void Game::checkPlayerCollectItem(){
     Node<Item*>* currItem = items->getFront();
 
     for(int i = 0; i < items->size(); i++, currItem = currItem->next()){
+        if(currItem->data()->isCollected()) continue;
+
         std::pair<int, int> itemPosition = currItem->data()->getPosition();
 
         if(itemPosition.first == playerPosition.first &&
@@ -789,7 +790,7 @@ void Game::checkMonsterCaughtPlayer(){
         }
     }
 }
-void Game::checkPlayerCaughtMonster(){ // have bugs
+void Game::checkPlayerCaughtMonster(){
     Node<Character*>* currMonsterNode = characters->getFront()->next();
     std::pair<int, int> playerPosition = characters->getFront()->data()->getPosition();
 
@@ -803,9 +804,10 @@ void Game::checkPlayerCaughtMonster(){ // have bugs
             Node<Character*>* temp = currMonsterNode->next();
 
             currMonsterNode->pop_self();
-            items->setSize(items->size() - 1);
+            characters->setSize(characters->size() - 1);
 
             currMonsterNode = temp;
+            noChange = false;
         }
         else{
             currMonsterNode = currMonsterNode->next();
@@ -825,7 +827,9 @@ void Game::checkPlayerCaughtMonster(){ // have bugs
         characters->getFront()->setPrev(characters->getBack());
 
         currMonsterNode->pop_self();
-        items->setSize(items->size() - 1);
+        characters->setSize(characters->size() - 1);
+
+        noChange = false;
     }
 }
 void Game::checkBuffExpired(){
@@ -917,7 +921,16 @@ int UserInterface::action(bool& godMode){
 
                 // for functions
                 case 'T': case 't':
-                    godMode = !godMode;
+                    if(godMode){
+                        godMode = false;
+
+                        Game::printStatus("God mode off");
+                    }
+                    else{
+                        godMode = true;
+
+                        Game::printStatus("God mode on");
+                    }
                     return DEFAULT;
             }
         }
