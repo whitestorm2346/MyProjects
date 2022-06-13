@@ -85,11 +85,12 @@ template <typename Type>
 class Node{ // doubly node
 private:
     Type _data_;
+    bool isDynamicAllocated;
     Node<Type>* _prev_;
     Node<Type>* _next_;
 
 public:
-    Node(Type data);
+    Node(Type data, bool isDynamicAllocated = true);
     ~Node();
 
     void setPrev(Node<Type>* prev);
@@ -381,9 +382,30 @@ void gotoxy(int x, int y);
 void hideCursor();
 
 int main(){
-    Game game;
+    char kbInput;
 
-    game.run();
+    do{
+        system("cls");
+        gotoxy(0, 0);
+
+        std::cout<< "###############################\n";
+        std::cout<< "#                             #\n";
+        std::cout<< "#        Tag Game 2022        #\n";
+        std::cout<< "#                             #\n";
+        std::cout<< "###############################\n";
+        std::cout<< "\n>>> press any key to start!";
+
+        getch();
+
+        Game* game = new Game();
+
+        game->run();
+
+        delete game;
+
+        kbInput = getch();
+    }
+    while(kbInput == 'R' || kbInput == 'r');
 
     return 0;
 }
@@ -487,7 +509,7 @@ void Game::run(){ // main loop
     printItems();
     printCharacters();
 
-    printStatus("Game Over!!");
+    printStatus("Game Over!! Press R to play again.");
 
     gotoxy(0, FIELD_HEIGHT + 9);
 }
@@ -533,19 +555,19 @@ void Game::checkGenerateCharacter(){
 
         switch(rand() % SizeOfMonsterType + 1){
             case REGULAR:
-                characters->insert(new Node<Character*>(new Monster(position.first, position.second, '1', &score)));
+                characters->insert(new Node<Character*>(new RegularMonster(position.first, position.second, &score)));
                 break;
 
             case BERSERKER:
-                characters->insert(new Node<Character*>(new Monster(position.first, position.second, '2', &score)));
+                characters->insert(new Node<Character*>(new BerserkerMonster(position.first, position.second, &score)));
                 break;
 
             case SHOOTER:
-                characters->insert(new Node<Character*>(new Monster(position.first, position.second, '3', &score)));
+                characters->insert(new Node<Character*>(new ShooterMonster(position.first, position.second, &score)));
                 break;
 
             case PHANTOMS:
-                characters->insert(new Node<Character*>(new Monster(position.first, position.second, '4', &score)));
+                characters->insert(new Node<Character*>(new PhantomsMonster(position.first, position.second, &score)));
                 break;
         }
 
@@ -1413,14 +1435,15 @@ std::pair<int, int> Obstacle::getPosition(){
 }
 
 template <typename Type>
-Node<Type>::Node(Type data){
+Node<Type>::Node(Type data, bool isDynamicAllocated /* = true */){
     this->_data_ = data;
+    this->isDynamicAllocated = isDynamicAllocated;
     _prev_ = nullptr;
     _next_ = nullptr;
 }
 template <typename Type>
 Node<Type>::~Node(){
-    delete _data_;
+    if(isDynamicAllocated) delete _data_;
 }
 template <typename Type>
 void Node<Type>::setPrev(Node<Type>* prev){
