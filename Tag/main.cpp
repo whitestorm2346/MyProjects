@@ -31,6 +31,16 @@
 #define BOMB_DURATION 0.0
 #define TURN_DURATION 5.0
 
+#define REGULAR_COUNT_DOWN 0.0
+#define BERSERKER_COUNT_DOWN 20.0
+#define SHOOTER_COUNT_DOWN 20.0
+#define PHANTOMS_COUNT_DOWN 20.0
+
+#define REGULAR_DURATION 0.0
+#define BERSERKER_DURATION 5.0
+#define SHOOTER_DURATION 0.0
+#define PHANTOMS_DURATION 5.0
+
 #define SizeOfItemType 4
 enum ItemType{
     FAST = 1,
@@ -71,6 +81,7 @@ class BombItem;
 class UserInterface;
 
 // unfinished part
+class Skill;
 class RegularMonster;
 class BerserkerMonster;
 class ShooterMonster;
@@ -188,6 +199,21 @@ public:
     void print(); // for testing
 };
 
+class Skill{
+private:
+    Timer* countDown;
+    Timer* duration;
+
+public:
+    Skill(double countDown, double duration);
+    ~Skill();
+
+    void resetCountDown();
+    void resetDuration();
+    bool countDownExpired();
+    bool durationExpired();
+};
+
 class Character{
 protected:
     static bool turnItemCollected;
@@ -195,14 +221,16 @@ protected:
     int* score;
     char name;
     bool canMove;
+    bool usingSkill;
     double speed; // unit: seconds per step
-    Timer* timer;
+    Timer* timer; // timer for movement
+    Skill* skill; // timer for skill
 
 public:
     Character(int x, int y, char name, double speed, int* score);
     virtual ~Character();
 
-    virtual void action(int buff = DEFAULT) = 0;
+    virtual void action() = 0;
     virtual void setDefaultSpeed() = 0;
 
     virtual void move(bool& noChange, int direction = DEFAULT);
@@ -213,7 +241,13 @@ public:
     void addScore(int num);
     void setSpeed(double speed);
     void changeMode(bool status); // for turn item
+    void changeUsingSkill(bool status);
+    void resetSkillCountDown();
+    void resetSkillDuration();
     bool getMode();
+    bool isUsingSkill();
+    bool skillCountDownExpired(); // have bug
+    bool skillDurationExpired();
     double getSpeed();
 };
 
@@ -225,7 +259,7 @@ public:
     Player(int x, int y, int* score);
     ~Player();
 
-    void action(int buff = DEFAULT);
+    void action();
     void setDefaultSpeed();
 };
 
@@ -238,7 +272,7 @@ public:
     Monster(int x, int y, char type, int* score);
     virtual ~Monster();
 
-    virtual void action(int buff = DEFAULT);
+    virtual void action();
     virtual void setDefaultSpeed();
     virtual bool checkCatchPlayer(int x, int y);
 };
@@ -248,6 +282,8 @@ private:
 public:
     RegularMonster(int x, int y, int* score);
     ~RegularMonster();
+
+    void action();
 };
 
 class BerserkerMonster: public Monster{
@@ -255,6 +291,8 @@ private:
 public:
     BerserkerMonster(int x, int y, int* score);
     ~BerserkerMonster();
+
+    void action();
 };
 
 class ShooterMonster: public Monster{
@@ -262,12 +300,16 @@ private:
 public:
     ShooterMonster(int x, int y, int* score);
     ~ShooterMonster();
+
+    void action();
 };
 class PhantomsMonster: public Monster{
 private:
 public:
     PhantomsMonster(int x, int y, int* score);
     ~PhantomsMonster();
+
+    void action();
 };
 
 class Item{
@@ -371,7 +413,7 @@ public:
     void checkGenerateItem();
     void checkPlayerMoving();
     void checkPlayerCollectItem();
-    void checkMonsterMoving();
+    void checkMonsterMovingAndAction();
     void checkMonsterCaughtPlayer();
     void checkPlayerCaughtMonster();
     void checkBuffExpired();
@@ -387,6 +429,7 @@ int main(){
     do{
         system("cls");
         gotoxy(0, 0);
+        hideCursor();
 
         std::cout<< "###############################\n";
         std::cout<< "#                             #\n";
@@ -495,7 +538,7 @@ void Game::run(){ // main loop
         checkPlayerMoving();
         checkPlayerCollectItem();
 
-        checkMonsterMoving();
+        checkMonsterMovingAndAction();
 
         if(characters->getFront()->data()->getMode()) checkPlayerCaughtMonster();
         else checkMonsterCaughtPlayer();
@@ -682,7 +725,7 @@ void Game::checkPlayerCollectItem(){
         }
     }
 }
-void Game::checkMonsterMoving(){
+void Game::checkMonsterMovingAndAction(){
     Node<Character*>* currMonsterNode = characters->getFront()->next();
 
     for(int i = 1; i < characters->size(); ++i, currMonsterNode = currMonsterNode->next()){
@@ -795,6 +838,23 @@ void Game::checkMonsterMoving(){
         }
 
         monster->move(noChange, direction);
+
+        if(monster->isUsingSkill()){
+            if(monster->skillDurationExpired()){
+                monster->resetSkillCountDown();
+                monster->changeUsingSkill(false);
+            }
+        }
+        else{
+
+            if(monster->skillCountDownExpired()){
+            Game::printStatus("test");
+                monster->action();
+                monster->resetSkillDuration();
+                monster->changeUsingSkill(true);
+            }
+
+        }
     }
 }
 void Game::checkMonsterCaughtPlayer(){
@@ -1098,8 +1158,8 @@ Monster::Monster(int x, int y, char type, int* score)
 Monster::~Monster(){
 
 }
-void Monster::action(int buff /* = -1 */){
-
+void Monster::action(){
+    // no skill
 }
 void Monster::setDefaultSpeed(){
     setSpeed(MONSTER_SPEED);
@@ -1109,41 +1169,63 @@ bool Monster::checkCatchPlayer(int x, int y){
 }
 
 RegularMonster::RegularMonster(int x, int y, int* score): Monster(x, y, '1', score){
-
+    skill = new Skill(REGULAR_COUNT_DOWN, REGULAR_DURATION);
 }
 RegularMonster::~RegularMonster(){
-
+    delete timer;
+    delete skill;
+}
+void RegularMonster::action(){
+    // no skill
 }
 
 BerserkerMonster::BerserkerMonster(int x, int y, int* score): Monster(x, y, '2', score){
-
+    skill = new Skill(BERSERKER_COUNT_DOWN, BERSERKER_DURATION);
 }
 BerserkerMonster::~BerserkerMonster(){
-
+    delete timer;
+    delete skill;
+}
+void BerserkerMonster::action(){
+    /**
+        wait to be implemented
+    */
 }
 
 ShooterMonster::ShooterMonster(int x, int y, int* score): Monster(x, y, '3', score){
-
+    skill = new Skill(SHOOTER_COUNT_DOWN, SHOOTER_DURATION);
 }
 ShooterMonster::~ShooterMonster(){
-
+    delete timer;
+    delete skill;
+}
+void ShooterMonster::action(){
+    /**
+        wait to be implemented
+    */
 }
 
 PhantomsMonster::PhantomsMonster(int x, int y, int* score): Monster(x, y, '4', score){
-
+    skill = new Skill(PHANTOMS_COUNT_DOWN, PHANTOMS_DURATION);
 }
 PhantomsMonster::~PhantomsMonster(){
-
+    delete timer;
+    delete skill;
+}
+void PhantomsMonster::action(){
+    /**
+        wait to be implemented
+    */
 }
 
 Player::Player(int x, int y, int* score): Character(x, y, 'P', PLAYER_SPEED, score){
 
 }
 Player::~Player(){
-
+    delete timer;
 }
-void Player::action(int buff /* = -1 */){
-
+void Player::action(){
+    // no skill
 }
 void Player::setDefaultSpeed(){
     setSpeed(PLAYER_SPEED);
@@ -1156,7 +1238,9 @@ Character::Character(int x, int y, char name, double speed, int* score){
     position.first = x;
     position.second = y;
     canMove = true;
+    usingSkill = false;
     timer = new Timer(speed);
+    skill = nullptr;
 }
 Character::~Character(){
     delete timer;
@@ -1213,14 +1297,53 @@ void Character::setSpeed(double speed){
 
     timer->setTimeGap(speed);
 }
+void Character::resetSkillCountDown(){
+    skill->resetCountDown();
+}
+void Character::resetSkillDuration(){
+    skill->resetDuration();
+}
 void Character::changeMode(bool status){
     turnItemCollected = status;
+}
+void Character::changeUsingSkill(bool status){
+    usingSkill = status;
 }
 bool Character::getMode(){
     return turnItemCollected;
 }
+bool Character::isUsingSkill(){
+    return usingSkill;
+}
+bool Character::skillCountDownExpired(){
+    return skill->countDownExpired();
+}
+bool Character::skillDurationExpired(){
+    return skill->durationExpired();
+}
 double Character::getSpeed(){
     return speed;
+}
+
+Skill::Skill(double countDown, double duration){
+    this->countDown = new Timer(countDown);
+    this->duration = new Timer(duration);
+}
+Skill::~Skill(){
+    delete countDown;
+    delete duration;
+}
+void Skill::resetCountDown(){
+    countDown->resetTimer();
+}
+void Skill::resetDuration(){
+    duration->resetTimer();
+}
+bool Skill::countDownExpired(){
+    return countDown->exceedTimeGap();
+}
+bool Skill::durationExpired(){
+    return duration->exceedTimeGap();
 }
 
 Distance::Distance(Player* player, Field* field): player(player), field(field){
