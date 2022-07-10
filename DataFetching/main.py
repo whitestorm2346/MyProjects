@@ -36,8 +36,26 @@ with req.urlopen(request) as response:
     travel_agency = root.find_all("div", class_="travel_item")
     travel_agency_list = list()
 
-print(travel_agency[0].dd.string)
+    for ta in travel_agency:
+        travel_data = ta.find("div", class_="travel_data")
+        travel_data_list = travel_data.find_all("dd")
 
+        travel_agency_list.append(TravelAgencyInfo(
+            title=ta.h4.string,
+            class_=travel_data_list[0].string,
+            phone=travel_data_list[1].string,
+            address=travel_data_list[2].string,
+            member=travel_data_list[3].string,
+            insurance_info=travel_data_list[4].string
+        ))
+
+for ta in travel_agency_list:
+    print('title: {0}'.format(ta.title))
+    print('class: {0}'.format(ta.class_))
+    print('phone: {0}'.format(ta.phone))
+    print('address: {0}'.format(ta.address))
+    print('member: {0}'.format(ta.member))
+    print('insurance info: {0}'.format(ta.insurance_info), end='\n\n')
 
 wb.save('綜合旅行社.xlsx')
 
