@@ -21,6 +21,12 @@ travel_agency_class = {
     '綜合': '%e7%b6%9c%e5%90%88'
 }
 
+travel_agency_index = {
+    '甲種': 0,
+    '乙種': 1,
+    '綜合': 2
+}
+
 try:
     with open('旅行社資料.xlsx', 'r'):
         pass
@@ -40,7 +46,8 @@ for ta_class in travel_agency_class:
     page_count = 1
     print(f'開始抓取{ta_class}旅行社的資料')
 
-    wb.create_sheet(title=ta_class + '旅行社')
+    wb.create_sheet(title=ta_class + '旅行社', index=travel_agency_index[ta_class])
+    wb.active = travel_agency_index[ta_class]
     ws = wb.active
 
     ws.append([
@@ -53,7 +60,7 @@ for ta_class in travel_agency_class:
         '保險資料'
     ])
 
-    for col in range(1, 7):
+    for col in range(1, 8):
         ws[get_column_letter(col) + '1'].font = Font(bold=True)
 
     while True:
