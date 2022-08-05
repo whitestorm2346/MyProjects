@@ -1,8 +1,15 @@
 '''
-Step 1. Input student number
-Step 2. Input password
-Step 3. Input confirm code
-Step 4. Input class id
+淡江大學自動選課程式
+
+使用方式：
+    。 將預加選之課程的"開課序號"逐一列在 classID.txt 裡
+    。 執行 AutoClassChoosing.exe
+    。 根據程式的指示輸入正確的學號及密碼
+    。 等待程式於指定時間自動登入進行選課
+    。 程式執行完畢後，將會把選課資訊整理(成功或失敗)在 result.txt 裡
+
+設計者： 資工二A 游昃勛
+專案完成日期： 2022/08/05
 '''
 
 from pip import main
@@ -113,7 +120,7 @@ class AutoClassChoosing:
             By.XPATH, '//*[@id="bn_new_confirm"]')
         new_confirm_code_btn.click()
 
-        # detecting the code
+        # scan the image
 
         return confirm_code
 
