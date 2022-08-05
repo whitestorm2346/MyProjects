@@ -12,15 +12,26 @@
 專案完成日期： 2022/08/05
 '''
 
-from pip import main
+from time import sleep
 from selenium import webdriver  # for operating the website
 from selenium.webdriver.common.by import By
+import ddddocr
+import base64
 
 LOGIN_URL = 'https://www.ais.tku.edu.tw/EleCos/login.aspx'
 TARGET_URL = 'https://www.ais.tku.edu.tw/EleCos/action.aspx'
 
 RESULT_FILE = 'result.txt'
 CLASS_ID_FILE = 'classID.txt'
+
+MY_STUDENT_NUM = '410411218'
+MY_PASSWORD = 'Whitestorm2346'
+
+LOGIN_FAIL = "E999 淡江大學個人化入口網帳密驗證失敗或驗證伺服器忙碌中, 請重新輸入或請參考密碼說明..."
+CONFIRM_FAIL = "請輸入學號、密碼及驗證碼...(「淡江大學單一登入(SSO)」單一帳密驗證密碼)\n" \
+               "※105學年度入學新生(含轉學生)起，預設為西元生日(西元年/月/日)後6碼，" \
+               "例如西元生日為1997/01/05，則後6碼為970105※\nE903 驗證碼輸入錯誤,請重新輸入 !!!"
+WRONG_TIME = "E999 登入失敗(非帳號密碼錯誤) ???\nE051 目前不是您的選課開放時間"
 
 
 class AutoClassChoosing:
@@ -31,8 +42,10 @@ class AutoClassChoosing:
 
     def run(self) -> int:
         # get user's student number and password
-        self.student_num = input('請輸入學號：')
-        self.password = input('請輸入密碼：')
+        self.student_num = MY_STUDENT_NUM
+        self.password = MY_PASSWORD
+        # self.student_num = input('請輸入學號：')
+        # self.password = input('請輸入密碼：')
 
         while True:
             login_status = self.login()
@@ -40,10 +53,14 @@ class AutoClassChoosing:
             if login_status == 0:  # login success
                 print('登入成功!!')
                 break
-            elif login_status == 1:  # wrong password
-                self.password = input('密碼錯誤，請重新輸入密碼： ')
-            elif login_status == 2:  # student id problems
-                self.student_num = input('學號格式有誤或不存在，請重新輸入學號： ')
+            elif login_status == 1:  # wrong password or wrong student number
+                print('學號或密碼錯誤!')
+                self.student_num = input('請輸入學號： ')
+                self.password = input('請輸入密碼： ')
+            elif login_status == 2:  # wrong confirm code
+                print('驗證碼錯誤，程式將重新判讀一次')
+            elif login_status == 3:  # wrong login time
+                print('非登入時間，程式將重新嘗試一次')
             else:  # other situations
                 print('登入錯誤，程式將中斷執行')
                 exit(1)
@@ -59,6 +76,7 @@ class AutoClassChoosing:
 
     def login(self) -> int:
         self.driver.get(LOGIN_URL)
+        self.driver.maximize_window()
 
         # student number input
         student_num_input = self.driver.find_element(
@@ -79,10 +97,23 @@ class AutoClassChoosing:
         confirm_code_input.clear()
         confirm_code_input.send_keys(self.auto_detect_confirm_code())
 
+        login_btn = self.driver.find_element(By.XPATH, '//*[@id="btnLogin"]')
+        login_btn.click()
+
         if self.driver.current_url == TARGET_URL:
             return 0
         else:
-            return 3
+            msg = self.driver.find_element(
+                By.XPATH, '//*[@id="form1"]/div[3]/table/tbody/tr[6]/td[2]')
+
+            if msg.text == LOGIN_FAIL:
+                return 1
+            elif msg.text == CONFIRM_FAIL:
+                return 2
+            elif WRONG_TIME in msg.text:
+                return 3
+            else:
+                return 4
 
     def choose_classes(self) -> int:
         with open('result.txt', 'w') as result_file:
@@ -104,23 +135,38 @@ class AutoClassChoosing:
                     msg = self.driver.find_element(
                         By.XPATH, '//*[@id="form1"]/div[3]/table/tbody/tr[2]/td[3]/font')
 
-                    line += msg
+                    line += msg.text
+                    print(msg.text)
 
-                    if msg:  # if the program failed to choose class
-                        pass
+                    # if msg:  # if the program failed to choose class
+                    # pass
 
                     result_file.write(line + '\n')
 
         return 0
 
     def auto_detect_confirm_code(self) -> str:
-        confirm_code = ''
+        # get the image(base64) using javascript
+        captchaBase64 = self.driver.execute_async_script(
+            """
+            let canvas = document.createElement('canvas');
+            let context = canvas.getContext('2d');
+            let img = document.querySelector('#imgCONFM');
 
-        new_confirm_code_btn = self.driver.find_element(
-            By.XPATH, '//*[@id="bn_new_confirm"]')
-        new_confirm_code_btn.click()
+            canvas.height = img.naturalHeight;
+            canvas.width = img.naturalWidth;
 
-        # scan the image
+            context.drawImage(img, 0, 0);
+
+            callback = arguments[arguments.length - 1];
+            callback(canvas.toDataURL());
+            """
+        )
+
+        # decode image(base64) to confirm code
+        img = base64.b64decode(captchaBase64.split(',')[1])
+        ocr = ddddocr.DdddOcr()
+        confirm_code = ocr.classification(img)
 
         return confirm_code
 
