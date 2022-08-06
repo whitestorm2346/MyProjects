@@ -50,10 +50,14 @@ class AutoClassChoosing:
         # get user's student number and password
         self.student_num = MY_STUDENT_NUM
         self.password = MY_PASSWORD
-        self.starting_time = '2022/08/04 12:30'
-        self.expiry_time = '2022/08/05 11:30'
         # self.student_num = input('請輸入學號：')
         # self.password = input('請輸入密碼：')
+        self.starting_time = input('請輸入選課起始時間(例如： 2022/08/07 12:30): ')
+
+        self.starting_time = datetime.strptime(
+            self.starting_time, '%Y/%m/%d %H:%M')
+
+        print('基本設定完成，將於指定時間自動登入選課')
 
         while not self.clock_on_time():
             sleep(1)
@@ -71,7 +75,8 @@ class AutoClassChoosing:
             elif login_status == 2:  # wrong confirm code
                 print('驗證碼錯誤，程式將重新判讀一次')
             elif login_status == 3:  # wrong login time
-                print('非登入時間，程式將重新嘗試一次')
+                self.starting_time = input(
+                    '非登入時間，請輸入正確的選課起始時間(例如： 2022/08/07 12:30): ')
             else:  # other situations
                 print('登入錯誤，程式將中斷執行')
                 exit(1)
@@ -87,9 +92,8 @@ class AutoClassChoosing:
         return 0
 
     def clock_on_time(self) -> bool:
-        is_expired = True
-
-        # datetime check expire
+        curr_time = datetime.now()
+        is_expired = curr_time >= self.starting_time
 
         return is_expired
 
