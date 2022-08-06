@@ -12,6 +12,7 @@
 專案完成日期： 2022/08/05
 '''
 
+from datetime import datetime
 from time import sleep
 from selenium import webdriver  # for operating the website
 from selenium.webdriver.common.by import By
@@ -33,19 +34,29 @@ CONFIRM_FAIL = "請輸入學號、密碼及驗證碼...(「淡江大學單一登
                "例如西元生日為1997/01/05，則後6碼為970105※\nE903 驗證碼輸入錯誤,請重新輸入 !!!"
 WRONG_TIME = "E999 登入失敗(非帳號密碼錯誤) ???\nE051 目前不是您的選課開放時間"
 
+ADD_SUCCESS = " I000 加選成功!!!"
+ADD_FAIL = " E999 加選失敗???"
+
 
 class AutoClassChoosing:
     def __init__(self) -> None:
         self.student_num = ''
         self.password = ''
+        self.starting_time = ''
+        self.expiry_time = ''
         self.driver = webdriver.Edge(executable_path='msedgedriver.exe')
 
     def run(self) -> int:
         # get user's student number and password
         self.student_num = MY_STUDENT_NUM
         self.password = MY_PASSWORD
+        self.starting_time = '2022/08/04 12:30'
+        self.expiry_time = '2022/08/05 11:30'
         # self.student_num = input('請輸入學號：')
         # self.password = input('請輸入密碼：')
+
+        while not self.clock_on_time():
+            sleep(1)
 
         while True:
             login_status = self.login()
@@ -68,11 +79,19 @@ class AutoClassChoosing:
         class_choosing_status = self.choose_classes()
 
         if class_choosing_status == 0:  # class choosing successfully
-            pass
+            print('完成自動選課，詳細結果紀錄於 result.txt')
         else:
-            pass
+            print('選課錯誤，程式將中斷執行')
+            exit(1)
 
         return 0
+
+    def clock_on_time(self) -> bool:
+        is_expired = True
+
+        # datetime check expire
+
+        return is_expired
 
     def login(self) -> int:
         self.driver.get(LOGIN_URL)
@@ -115,36 +134,6 @@ class AutoClassChoosing:
             else:
                 return 4
 
-    def choose_classes(self) -> int:
-        with open('result.txt', 'w') as result_file:
-            with open('classID.txt', 'r') as class_id_file:
-                for id in class_id_file:
-                    line = '開課序號：' + id + ' '
-
-                    # class id input
-                    class_id_input = self.driver.find_element(
-                        By.XPATH, '//*[@id="txtCosEleSeq"]')
-                    class_id_input.clear()
-                    class_id_input.send_keys(id)
-
-                    # add button click
-                    add_btn = self.driver.find_element(
-                        By.XPATH, '//*[@id="btnAdd"]')
-                    add_btn.click()
-
-                    msg = self.driver.find_element(
-                        By.XPATH, '//*[@id="form1"]/div[3]/table/tbody/tr[2]/td[3]/font')
-
-                    line += msg.text
-                    print(msg.text)
-
-                    # if msg:  # if the program failed to choose class
-                    # pass
-
-                    result_file.write(line + '\n')
-
-        return 0
-
     def auto_detect_confirm_code(self) -> str:
         # get the image(base64) using javascript
         captchaBase64 = self.driver.execute_async_script(
@@ -169,6 +158,42 @@ class AutoClassChoosing:
         confirm_code = ocr.classification(img)
 
         return confirm_code
+
+    def choose_classes(self) -> int:
+        with open('result.txt', 'w') as result_file:
+            with open('classID.txt', 'r') as class_id_file:
+                for id in class_id_file:
+                    line = '開課序號：' + id + ' '
+
+                    # class id input
+                    class_id_input = self.driver.find_element(
+                        By.XPATH, '//*[@id="txtCosEleSeq"]')
+                    class_id_input.clear()
+                    class_id_input.send_keys(id)
+
+                    # add button click
+                    add_btn = self.driver.find_element(
+                        By.XPATH, '//*[@id="btnAdd"]')
+                    add_btn.click()
+
+                    msg = self.driver.find_element(
+                        By.XPATH, '//*[@id="form1"]/div[3]/table/tbody/tr[2]/td[3]/font')
+
+                    msg_in_line = msg.text.split('\n')
+
+                    print(msg.text)
+
+                    if msg_in_line[0] == ADD_SUCCESS:
+                        line += msg_in_line[0].split(' ')[1]
+                    elif msg_in_line[0] == ADD_FAIL:
+                        line += msg_in_line[0].split(' ')[1]
+                        line += msg_in_line[1]
+                    else:
+                        return 1
+
+                    result_file.write(line + '\n')
+
+        return 0
 
 
 if __name__ == '__main__':
