@@ -4,29 +4,29 @@
 使用方式：
     。 將預加選之課程的"開課序號"逐一列在 classID.txt 裡
     。 執行 AutoClassChoosing.exe
-    。 根據程式的指示輸入正確的學號及密碼
+    。 根據程式的指示輸入正確的學號、密碼以及選課的起始時間
     。 等待程式於指定時間自動登入進行選課
     。 程式執行完畢後，將會把選課資訊整理(成功或失敗)在 result.txt 裡
 
 設計者： 資工二A 游昃勛
-專案完成日期： 2022/08/05
+專案版本： 1.0
+專案完成日期： 2022/08/07
+
+
 '''
 
 from datetime import datetime
 from time import sleep
 from selenium import webdriver  # for operating the website
 from selenium.webdriver.common.by import By
-import ddddocr
-import base64
+import ddddocr  # for detecting the confirm code
+import base64   # for reading the image present in base 64
 
 LOGIN_URL = 'https://www.ais.tku.edu.tw/EleCos/login.aspx'
 TARGET_URL = 'https://www.ais.tku.edu.tw/EleCos/action.aspx'
 
 RESULT_FILE = 'result.txt'
 CLASS_ID_FILE = 'classID.txt'
-
-MY_STUDENT_NUM = '410411218'
-MY_PASSWORD = 'Whitestorm2346'
 
 LOGIN_FAIL = "E999 淡江大學個人化入口網帳密驗證失敗或驗證伺服器忙碌中, 請重新輸入或請參考密碼說明..."
 CONFIRM_FAIL = "請輸入學號、密碼及驗證碼...(「淡江大學單一登入(SSO)」單一帳密驗證密碼)\n" \
@@ -44,14 +44,12 @@ class AutoClassChoosing:
         self.password = ''
         self.starting_time = ''
         self.expiry_time = ''
-        self.driver = webdriver.Edge(executable_path='msedgedriver.exe')
+        self.driver = None
 
     def run(self) -> int:
         # get user's student number and password
-        self.student_num = MY_STUDENT_NUM
-        self.password = MY_PASSWORD
-        # self.student_num = input('請輸入學號：')
-        # self.password = input('請輸入密碼：')
+        self.student_num = input('請輸入學號：')
+        self.password = input('請輸入密碼：')
         self.starting_time = input('請輸入選課起始時間(例如： 2022/08/07 12:30): ')
 
         self.starting_time = datetime.strptime(
@@ -61,6 +59,15 @@ class AutoClassChoosing:
 
         while not self.clock_on_time():
             sleep(1)
+
+        edge_options = webdriver.EdgeOptions()
+        edge_options.add_argument('--log-level=3')
+
+        self.driver = webdriver.Edge(
+            options=edge_options,
+            executable_path='msedgedriver.exe',
+            service_log_path='NUL'
+        )
 
         while True:
             login_status = self.login()
@@ -99,7 +106,6 @@ class AutoClassChoosing:
 
     def login(self) -> int:
         self.driver.get(LOGIN_URL)
-        self.driver.maximize_window()
 
         # student number input
         student_num_input = self.driver.find_element(
