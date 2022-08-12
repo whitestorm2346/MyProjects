@@ -107,21 +107,26 @@ class AutoClassChoosing:
     def login(self) -> int:
         self.driver.get(LOGIN_URL)
 
-        # student number input
-        student_num_input = self.driver.find_element(
-            By.XPATH, '//*[@id="txtStuNo"]')
-        student_num_input.clear()
-        student_num_input.send_keys(self.student_num)
+        try:
+            # student number input
+            student_num_input = self.driver.find_element(
+                By.XPATH, '//*[@id="txtStuNo"]')
+            student_num_input.clear()
+            student_num_input.send_keys(self.student_num)
 
-        # password input
-        password_input = self.driver.find_element(
-            By.XPATH, '//*[@id="txtPSWD"]')
-        password_input.clear()
-        password_input.send_keys(self.password)
+            # password input
+            password_input = self.driver.find_element(
+                By.XPATH, '//*[@id="txtPSWD"]')
+            password_input.clear()
+            password_input.send_keys(self.password)
 
-        # confirm code input
-        confirm_code_input = self.driver.find_element(
-            By.XPATH, '//*[@id="txtCONFM"]')
+            # confirm code input
+            confirm_code_input = self.driver.find_element(
+                By.XPATH, '//*[@id="txtCONFM"]')
+        except Exception as e:
+            print('網頁HTML錯誤')
+
+            return 4
 
         confirm_code_input.clear()
         confirm_code_input.send_keys(self.auto_detect_confirm_code())
