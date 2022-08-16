@@ -16,7 +16,11 @@
 '''
 
 from datetime import datetime
+from functools import reduce
+from logging import root
 from time import sleep
+from tkinter import *
+from turtle import title
 from selenium import webdriver  # for operating the website
 from selenium.webdriver.common.by import By
 import ddddocr  # for detecting the confirm code
@@ -39,7 +43,7 @@ ADD_FAIL = " E999 加選失敗???"
 
 
 class AutoClassChoosing:
-    def __init__(self) -> None:
+    def __init__(self, student_num='', password='', starting_time='', expiry_time='', driver=None) -> None:
         self.student_num = ''
         self.password = ''
         self.starting_time = ''
@@ -211,6 +215,60 @@ class AutoClassChoosing:
         return 0
 
 
-if __name__ == '__main__':
-    auto_class_choosing = AutoClassChoosing()
-    exe_code = auto_class_choosing.run()
+def refresh_window() -> None:
+    student_num_label.grid(row=0, column=0, pady=10)
+    student_num_entry.grid(row=0, column=1)
+    password_label.grid(row=1, column=0, pady=10)
+    password_entry.grid(row=1, column=1)
+    class_id_label.grid(row=3, column=0)
+
+    for entry in class_id_entries:
+        entry.grid(row=4 + class_id_entries.index(entry),
+                   column=0, padx=5, pady=1)
+
+    add_entry_btn.grid(row=2, column=1)
+    reduce_entry_btn.grid(row=2, column=2)
+
+
+def add_entry() -> None:
+    global class_id_entries, root_window
+
+    print('+ clicked')
+    class_id_entries.append(Entry(root_window, bg='lightyellow', font=20))
+    refresh_window()
+
+
+def reduce_entry() -> None:
+    global class_id_entries
+
+    print('- clicked')
+
+    if len(class_id_entries) > 1:
+        class_id_entries[-1].destroy()
+
+        class_id_entries.pop()
+        refresh_window()
+
+
+root_window = Tk()
+
+root_window.title('AutoClassChoosing')
+root_window.geometry('400x400')
+
+student_num_label = Label(root_window, text='學號：', font=20)
+password_label = Label(root_window, text='密碼：', font=20)
+class_id_label = Label(root_window, text='欲加選之開課序號：', font=20)
+
+student_num_entry = Entry(root_window, bg='lightyellow', font=20)
+password_entry = Entry(root_window, bg='lightyellow', font=20)
+class_id_entries = [Entry(root_window, bg='lightyellow', font=20)]
+
+add_entry_btn = Button(root_window, text='+', command=add_entry)
+reduce_entry_btn = Button(root_window, text='-', command=reduce_entry)
+
+refresh_window()
+
+root_window.mainloop()
+
+auto_class_choosing = AutoClassChoosing()
+# exe_code = auto_class_choosing.run()
