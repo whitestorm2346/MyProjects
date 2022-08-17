@@ -44,11 +44,11 @@ ADD_FAIL = " E999 加選失敗???"
 
 class AutoClassChoosing:
     def __init__(self, student_num='', password='', starting_time='', expiry_time='', driver=None) -> None:
-        self.student_num = ''
-        self.password = ''
-        self.starting_time = ''
-        self.expiry_time = ''
-        self.driver = None
+        self.student_num = student_num
+        self.password = password
+        self.starting_time = starting_time
+        self.expiry_time = expiry_time
+        self.driver = driver
 
     def run(self) -> int:
         # get user's student number and password
@@ -233,7 +233,6 @@ def refresh_window() -> None:
 def add_entry() -> None:
     global class_id_entries, root_window
 
-    print('+ clicked')
     class_id_entries.append(Entry(root_window, bg='lightyellow', font=20))
     refresh_window()
 
@@ -241,33 +240,54 @@ def add_entry() -> None:
 def reduce_entry() -> None:
     global class_id_entries
 
-    print('- clicked')
-
     if len(class_id_entries) > 1:
         class_id_entries[-1].destroy()
-
         class_id_entries.pop()
         refresh_window()
 
 
+# root window create
 root_window = Tk()
-
 root_window.title('AutoClassChoosing')
-root_window.geometry('400x400')
+root_window.geometry('600x400')
+root_window.resizable(0, 0)
 
-student_num_label = Label(root_window, text='學號：', font=20)
-password_label = Label(root_window, text='密碼：', font=20)
-class_id_label = Label(root_window, text='欲加選之開課序號：', font=20)
 
+# header part
+title_ = Label(root_window, text='Auto Class Choosing', font=24)
+subtitle = Label(root_window, text='自動選課應用程式', font=12)
+
+
+# account entries part
+student_num_label = Label(root_window, text='學號：', font=13)
 student_num_entry = Entry(root_window, bg='lightyellow', font=20)
+
+password_label = Label(root_window, text='密碼：', font=13)
 password_entry = Entry(root_window, bg='lightyellow', font=20)
-class_id_entries = [Entry(root_window, bg='lightyellow', font=20)]
+
+
+# datetime setting part
+datetime_label = Label(root_window, text='Starting Time Setting', font=20)
+datetime_sub_label = Label(root_window, text='起始時間設定', font=13)
+
+# class ID list part
+class_id_label = Label(root_window, text='Class ID List', font=20)
+class_id_sub_label = Label(root_window, text='開課序號列表', font=12)
+
+entries_frame = Frame(root_window)
 
 add_entry_btn = Button(root_window, text='+', command=add_entry)
 reduce_entry_btn = Button(root_window, text='-', command=reduce_entry)
+class_id_entries = [Entry(entries_frame, bg='lightyellow', font=20)]
+
+
+# footer part
+start_btn = Button(root_window, text='start', font=20)
+exit_btn = Button(root_window, text='exit', font=20,
+                  command=root_window.destroy)
+
 
 refresh_window()
-
 root_window.mainloop()
 
 auto_class_choosing = AutoClassChoosing()
