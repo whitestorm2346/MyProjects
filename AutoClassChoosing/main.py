@@ -223,7 +223,12 @@ def refresh_window() -> None:
 def add_entry() -> None:
     global class_id_entries, root_window
 
-    class_id_entries.append(Entry(entries_frame, bg='lightyellow', font=20))
+    class_id_entries.append(Entry(
+        entries_frame,
+        bg='lightyellow',
+        font=('TimeNewRomans', 15, 'bold')
+    ))
+
     refresh_window()
 
 
@@ -271,9 +276,9 @@ student_num_label.place(x=87, y=150)
 student_num_entry = Entry(
     root_window,
     bg='lightyellow',
-    font=20
+    font=('TimeNewRomans', 15, 'bold')
 )
-student_num_entry.place(x=153, y=153)
+student_num_entry.place(x=153, y=150)
 
 password_label = Label(
     root_window,
@@ -285,9 +290,9 @@ password_label.place(x=87, y=190)
 password_entry = Entry(
     root_window,
     bg='lightyellow',
-    font=20
+    font=('TimeNewRomans', 15, 'bold')
 )
-password_entry.place(x=153, y=193)
+password_entry.place(x=153, y=190)
 
 
 # datetime setting part
@@ -306,6 +311,14 @@ datetime_sub_label = Label(
 )
 datetime_sub_label.place(x=87, y=310)
 
+datetime_bg = Canvas(
+    root_window,
+    bg='#868686',
+    width=300,
+    height=200
+)
+datetime_bg.place(x=85, y=360)
+
 
 # class ID list part
 class_id_label = Label(
@@ -323,10 +336,19 @@ class_id_sub_label = Label(
 )
 class_id_sub_label.place(x=498, y=95)
 
+frame_bg = Canvas(
+    root_window,
+    bg='#868686',
+    width=300,
+    height=270
+)
+frame_bg.place(x=493, y=160)
+
 entries_frame = Frame(
     root_window,
     width=140,
-    height=200
+    height=200,
+    bg='gray'
 )
 entries_frame.place(x=498, y=200)
 
@@ -353,7 +375,7 @@ reduce_entry_btn.place(x=538, y=165)
 class_id_entries = [Entry(
     entries_frame,
     bg='lightyellow',
-    font=20
+    font=('TimeNewRomans', 15, 'bold')
 )]
 
 
@@ -364,7 +386,7 @@ start_btn = Button(
     font=('TimeNewRomans', 18, 'bold'),
     bg='lightyellow'
 )
-start_btn.place(x=510, y=450)
+start_btn.place(x=540, y=480)
 
 exit_btn = Button(
     root_window,
@@ -373,7 +395,7 @@ exit_btn = Button(
     bg='lightyellow',
     command=root_window.destroy
 )
-exit_btn.place(x=650, y=450)
+exit_btn.place(x=680, y=480)
 
 
 refresh_window()
