@@ -216,24 +216,14 @@ class AutoClassChoosing:
 
 
 def refresh_window() -> None:
-    student_num_label.grid(row=0, column=0, pady=10)
-    student_num_entry.grid(row=0, column=1)
-    password_label.grid(row=1, column=0, pady=10)
-    password_entry.grid(row=1, column=1)
-    class_id_label.grid(row=3, column=0)
-
     for entry in class_id_entries:
-        entry.grid(row=4 + class_id_entries.index(entry),
-                   column=0, padx=5, pady=1)
-
-    add_entry_btn.grid(row=2, column=1)
-    reduce_entry_btn.grid(row=2, column=2)
+        entry.pack()
 
 
 def add_entry() -> None:
     global class_id_entries, root_window
 
-    class_id_entries.append(Entry(root_window, bg='lightyellow', font=20))
+    class_id_entries.append(Entry(entries_frame, bg='lightyellow', font=20))
     refresh_window()
 
 
@@ -249,42 +239,141 @@ def reduce_entry() -> None:
 # root window create
 root_window = Tk()
 root_window.title('AutoClassChoosing')
-root_window.geometry('600x400')
+root_window.geometry('900x600')
 root_window.resizable(0, 0)
 
 
 # header part
-title_ = Label(root_window, text='Auto Class Choosing', font=24)
-subtitle = Label(root_window, text='自動選課應用程式', font=12)
+title_ = Label(
+    root_window,
+    text='Auto Class Choosing',
+    font=('TimeNewRomans', 24, 'bold')
+)
+title_.place(x=69, y=51)
+
+subtitle = Label(
+    root_window,
+    text='自動選課應用程式',
+    font=('微軟正黑體', 12),
+    fg='#868686'
+)
+subtitle.place(x=87, y=92)
 
 
 # account entries part
-student_num_label = Label(root_window, text='學號：', font=13)
-student_num_entry = Entry(root_window, bg='lightyellow', font=20)
+student_num_label = Label(
+    root_window,
+    text='學號：',
+    font=('微軟正黑體', 13)
+)
+student_num_label.place(x=87, y=150)
 
-password_label = Label(root_window, text='密碼：', font=13)
-password_entry = Entry(root_window, bg='lightyellow', font=20)
+student_num_entry = Entry(
+    root_window,
+    bg='lightyellow',
+    font=20
+)
+student_num_entry.place(x=153, y=153)
+
+password_label = Label(
+    root_window,
+    text='密碼：',
+    font=13
+)
+password_label.place(x=87, y=190)
+
+password_entry = Entry(
+    root_window,
+    bg='lightyellow',
+    font=20
+)
+password_entry.place(x=153, y=193)
 
 
 # datetime setting part
-datetime_label = Label(root_window, text='Starting Time Setting', font=20)
-datetime_sub_label = Label(root_window, text='起始時間設定', font=13)
+datetime_label = Label(
+    root_window,
+    text='Starting Time Setting',
+    font=('TimeNewRomans', 20, 'bold')
+)
+datetime_label.place(x=69, y=270)
+
+datetime_sub_label = Label(
+    root_window,
+    text='起始時間設定',
+    font=('微軟正黑體', 12),
+    fg='#868686'
+)
+datetime_sub_label.place(x=87, y=310)
+
 
 # class ID list part
-class_id_label = Label(root_window, text='Class ID List', font=20)
-class_id_sub_label = Label(root_window, text='開課序號列表', font=12)
+class_id_label = Label(
+    root_window,
+    text='Class ID List',
+    font=('TimeNewRomans', 20, 'bold')
+)
+class_id_label.place(x=480, y=55)
 
-entries_frame = Frame(root_window)
+class_id_sub_label = Label(
+    root_window,
+    text='開課序號列表',
+    font=('微軟正黑體', 12),
+    fg='#868686'
+)
+class_id_sub_label.place(x=498, y=95)
 
-add_entry_btn = Button(root_window, text='+', command=add_entry)
-reduce_entry_btn = Button(root_window, text='-', command=reduce_entry)
-class_id_entries = [Entry(entries_frame, bg='lightyellow', font=20)]
+entries_frame = Frame(
+    root_window,
+    width=140,
+    height=200
+)
+entries_frame.place(x=498, y=200)
+
+add_entry_btn = Button(
+    root_window,
+    text='+',
+    font=('TimeNewRomans', 12, 'bold'),
+    width=3,
+    height=1,
+    command=add_entry
+)
+add_entry_btn.place(x=498, y=165)
+
+reduce_entry_btn = Button(
+    root_window,
+    text='-',
+    font=('TimeNewRomans', 12, 'bold'),
+    width=3,
+    height=1,
+    command=reduce_entry
+)
+reduce_entry_btn.place(x=538, y=165)
+
+class_id_entries = [Entry(
+    entries_frame,
+    bg='lightyellow',
+    font=20
+)]
 
 
 # footer part
-start_btn = Button(root_window, text='start', font=20)
-exit_btn = Button(root_window, text='exit', font=20,
-                  command=root_window.destroy)
+start_btn = Button(
+    root_window,
+    text='start',
+    font=('TimeNewRomans', 18, 'bold'),
+    bg='lightyellow'
+)
+start_btn.place(x=510, y=450)
+
+exit_btn = Button(
+    root_window,
+    text='exit',
+    font=('TimeNewRomans', 18, 'bold'),
+    bg='lightyellow',
+    command=root_window.destroy
+)
+exit_btn.place(x=650, y=450)
 
 
 refresh_window()
