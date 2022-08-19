@@ -215,29 +215,62 @@ class AutoClassChoosing:
         return 0
 
 
+class ClassID:
+    def __init__(self, frame) -> None:
+        self.label = Label(frame)
+        self.entry = Entry(frame)
+        self.text = StringVar()
+
+    def set_label(self, index) -> None:
+        num = str(index)
+
+        if index < 10:
+            num = '0' + num
+
+        self.label.config(
+            text='開課序號 ' + num,
+            font=('微軟正黑體', 12)
+        )
+
+    def set_entry(self) -> None:
+        self.entry.config(
+            textvariable=self.text,
+            bg='lightyellow',
+            font=('TimeNewRomans', 15, 'bold'),
+            width=20
+        )
+
+
 def refresh_window() -> None:
-    for entry in class_id_entries:
-        entry.pack()
+    entries_frame.configure(height=frame_height)
+
+    for i in range(0, len(class_id_entries)):
+        class_id_entries[i].label.grid(row=i, column=0)
+        class_id_entries[i].entry.grid(row=i, column=1)
 
 
 def add_entry() -> None:
-    global class_id_entries, root_window
+    global class_id_entries, entries_frame, frame_height
 
-    class_id_entries.append(Entry(
-        entries_frame,
-        bg='lightyellow',
-        font=('TimeNewRomans', 15, 'bold')
-    ))
+    class_id_entries.append(ClassID(frame=entries_frame))
+    class_id_entries[-1].set_label(len(class_id_entries))
+    class_id_entries[-1].set_entry()
+
+    frame_height += 30
 
     refresh_window()
 
 
 def reduce_entry() -> None:
-    global class_id_entries
+    global class_id_entries, frame_height
 
     if len(class_id_entries) > 1:
-        class_id_entries[-1].destroy()
+        class_id_entries[-1].label.destroy()
+        class_id_entries[-1].entry.destroy()
         class_id_entries.pop()
+
+        frame_height -= 30
+
         refresh_window()
 
 
@@ -336,21 +369,12 @@ class_id_sub_label = Label(
 )
 class_id_sub_label.place(x=498, y=95)
 
-frame_bg = Canvas(
+class_id_border = LabelFrame(
     root_window,
-    bg='#868686',
-    width=300,
-    height=270
+    width=350,
+    height=275
 )
-frame_bg.place(x=493, y=160)
-
-entries_frame = Frame(
-    root_window,
-    width=140,
-    height=200,
-    bg='gray'
-)
-entries_frame.place(x=498, y=200)
+class_id_border.place(x=493, y=195)
 
 add_entry_btn = Button(
     root_window,
@@ -360,7 +384,7 @@ add_entry_btn = Button(
     height=1,
     command=add_entry
 )
-add_entry_btn.place(x=498, y=165)
+add_entry_btn.place(x=498, y=155)
 
 reduce_entry_btn = Button(
     root_window,
@@ -370,13 +394,47 @@ reduce_entry_btn = Button(
     height=1,
     command=reduce_entry
 )
-reduce_entry_btn.place(x=538, y=165)
+reduce_entry_btn.place(x=543, y=155)
 
-class_id_entries = [Entry(
-    entries_frame,
-    bg='lightyellow',
-    font=('TimeNewRomans', 15, 'bold')
-)]
+entries_bg = Canvas(
+    class_id_border,
+    width=345,
+    height=265
+)
+entries_bg.place(x=0, y=0)
+
+frame_scrollbar = Scrollbar(
+    class_id_border,
+    orient='vertical',
+    command=entries_bg.yview
+)
+frame_scrollbar.place(x=330, y=0, height=270)
+
+entries_bg.configure(yscrollcommand=frame_scrollbar.set)
+entries_bg.bind('<Configure>', lambda e: entries_bg.configure(
+    scrollregion=entries_bg.bbox('all')))
+
+
+def _on_mouse_wheel(event):
+    entries_bg.yview_scroll(-1 * int((event.delta / 120)), "units")
+
+
+entries_bg.bind_all("<MouseWheel>", _on_mouse_wheel)
+
+entries_frame = Frame(
+    entries_bg,
+    width=345,
+    height=265
+)
+entries_frame.place(x=0, y=0)
+
+entries_bg.create_window((0, 0), window=entries_frame, anchor='nw')
+
+class_id_entries = [ClassID(frame=entries_frame)]
+frame_height = 30
+
+class_id_entries[0].set_label(1)
+class_id_entries[0].set_entry()
 
 
 # footer part
