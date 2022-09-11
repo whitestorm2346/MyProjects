@@ -47,11 +47,6 @@ class AutoClassChoosing:
         self.driver = driver
 
     def run(self) -> int:
-        # get user's student number and password
-        self.student_num = input('請輸入學號：')
-        self.password = input('請輸入密碼：')
-        self.starting_time = input('請輸入選課起始時間(例如： 2022/08/07 12:30): ')
-
         self.starting_time = datetime.strptime(
             self.starting_time, '%Y/%m/%d %H:%M')
 
