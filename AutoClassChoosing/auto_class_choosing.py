@@ -197,9 +197,9 @@ class AutoClassChoosing:
 
                     print(msg.text)
 
-                    if ADD_SUCCESS in msg:
+                    if ADD_SUCCESS in msg.text:
                         line += msg_in_line[0].split(' ')[1]
-                    elif ADD_FAIL in msg:
+                    elif ADD_FAIL in msg.text:
                         line += msg_in_line[0].split(' ')[1]
                         line += msg_in_line[1]
                     else:
