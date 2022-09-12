@@ -191,16 +191,16 @@ class AutoClassChoosing:
                     add_btn.click()
 
                     msg = self.driver.find_element(
-                        By.XPATH, '//*[@id="form1"]/div[3]/table/tbody/tr[2]/td[3]/font')
+                        By.XPATH, '//*[@id="form1"]/div[3]/table/tbody/tr[2]/td[3]')
 
                     msg_in_line = msg.text.split('\n')
 
-                    print(msg.text)
+                    print(msg_in_line)
 
                     if ADD_SUCCESS in msg.text:
-                        line += msg_in_line[0].split(' ')[1]
+                        line += ADD_SUCCESS
                     elif ADD_FAIL in msg.text:
-                        line += msg_in_line[0].split(' ')[1]
+                        line += (ADD_FAIL + " ")
                         line += msg_in_line[1]
                     else:
                         return 1
