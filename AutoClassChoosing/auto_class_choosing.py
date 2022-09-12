@@ -10,9 +10,7 @@
 
 設計者： 資工二A 游昃勛
 專案版本： 1.0
-專案完成日期： 2022/08/07
-
-
+專案完成日期： 2022/09/12
 '''
 
 from datetime import datetime
@@ -34,8 +32,8 @@ CONFIRM_FAIL = "請輸入學號、密碼及驗證碼...(「淡江大學單一登
                "例如西元生日為1997/01/05，則後6碼為970105※\nE903 驗證碼輸入錯誤,請重新輸入 !!!"
 WRONG_TIME = "E999 登入失敗(非帳號密碼錯誤) ???\nE051 目前不是您的選課開放時間"
 
-ADD_SUCCESS = " I000 加選成功!!!"
-ADD_FAIL = " E999 加選失敗???"
+ADD_SUCCESS = "加選成功"
+ADD_FAIL = "加選失敗"
 
 
 class AutoClassChoosing:
@@ -47,6 +45,12 @@ class AutoClassChoosing:
         self.driver = driver
 
     def run(self) -> int:
+
+        # get user's student number and password
+        self.student_num = input('請輸入學號：')
+        self.password = input('請輸入密碼：')
+        self.starting_time = input('請輸入選課起始時間(例如： 2022/08/07 12:30): ')
+
         self.starting_time = datetime.strptime(
             self.starting_time, '%Y/%m/%d %H:%M')
 
@@ -193,9 +197,9 @@ class AutoClassChoosing:
 
                     print(msg.text)
 
-                    if msg_in_line[0] == ADD_SUCCESS:
+                    if ADD_SUCCESS in msg:
                         line += msg_in_line[0].split(' ')[1]
-                    elif msg_in_line[0] == ADD_FAIL:
+                    elif ADD_FAIL in msg:
                         line += msg_in_line[0].split(' ')[1]
                         line += msg_in_line[1]
                     else:
@@ -204,3 +208,8 @@ class AutoClassChoosing:
                     result_file.write(line + '\n')
 
         return 0
+
+
+if __name__ == "__main__":
+    bot = AutoClassChoosing()
+    bot.run()
