@@ -44,12 +44,12 @@ class AutoClassChoosing:
         self.expiry_time = expiry_time
         self.driver = driver
 
-    def run(self) -> int:
-
-        # get user's student number and password
-        self.student_num = input('請輸入學號：')
-        self.password = input('請輸入密碼：')
-        self.starting_time = input('請輸入選課起始時間(例如： 2022/08/07 12:30): ')
+    def run(self, entries=-1) -> int:
+        if entries != -1:
+            # get user's student number and password
+            self.student_num = input('請輸入學號：')
+            self.password = input('請輸入密碼：')
+            self.starting_time = input('請輸入選課起始時間(例如： 2022/08/07 12:30): ')
 
         self.starting_time = datetime.strptime(
             self.starting_time, '%Y/%m/%d %H:%M')
@@ -87,7 +87,10 @@ class AutoClassChoosing:
                 print('登入錯誤，程式將中斷執行')
                 exit(1)
 
-        class_choosing_status = self.choose_classes()
+        if entries == -1:
+            class_choosing_status = self.choose_classes()
+        else:
+            class_choosing_status = self.choose_classes(entries=entries)
 
         if class_choosing_status == 0:  # class choosing successfully
             print('完成自動選課，詳細結果紀錄於 result.txt')
@@ -195,21 +198,45 @@ class AutoClassChoosing:
 
                     msg_in_line = msg.text.split('\n')
 
-                    print(msg_in_line)
-
                     if ADD_SUCCESS in msg.text:
                         line += ADD_SUCCESS
                     elif ADD_FAIL in msg.text:
                         line += (ADD_FAIL + " ")
                         line += msg_in_line[1]
                     else:
-                        return 1
+                        line += "ERROR"
 
                     result_file.write(line + '\n')
 
         return 0
 
+    def choose_classes(self, entries) -> int:
+        for entry in entries:
+            id = entry.value.get()
+            line = '開課序號：' + id + ' '
 
-if __name__ == "__main__":
-    bot = AutoClassChoosing()
-    bot.run()
+            # class id input
+            class_id_input = self.driver.find_element(
+                By.XPATH, '//*[@id="txtCosEleSeq"]')
+            class_id_input.clear()
+            class_id_input.send_keys(id)
+
+            # add button click
+            add_btn = self.driver.find_element(
+                By.XPATH, '//*[@id="btnAdd"]')
+            add_btn.click()
+
+            msg = self.driver.find_element(
+                By.XPATH, '//*[@id="form1"]/div[3]/table/tbody/tr[2]/td[3]')
+
+            msg_in_line = msg.text.split('\n')
+
+            if ADD_SUCCESS in msg.text:
+                line += ADD_SUCCESS
+            elif ADD_FAIL in msg.text:
+                line += (ADD_FAIL + " ")
+                line += msg_in_line[1]
+            else:
+                line += "ERROR"
+
+        return 0
