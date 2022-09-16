@@ -1,3 +1,4 @@
+import threading
 from tkinter import *
 from tkinter import ttk
 from datetime import datetime
@@ -329,6 +330,7 @@ class InputObject:
 
 
 entries = [InputObject(window_frame)]
+threads = []
 
 
 def place_entries():
@@ -337,6 +339,18 @@ def place_entries():
     for i in range(0, len(entries)):
         entries[i].set_label('Class ID ' + str(i + 1))
         entries[i].place(i)
+
+
+def auto_class_choosing():
+    global student_id, password, datetime_str, entries
+
+    bot = AutoClassChoosing(
+        student_num=student_id.get(),
+        password=password.get(),
+        starting_time=datetime_str.get()
+    )
+
+    bot.run(entries=entries)
 
 
 def add_btn_onclick():
@@ -360,15 +374,21 @@ def del_btn_onclick():
 
 
 def start_btn_onclick():
-    global student_id, password, datetime_str, entries
+    global threads
 
-    bot = AutoClassChoosing(
-        student_num=student_id.get(),
-        password=password.get(),
-        starting_time=datetime_str.get()
-    )
+    threads.append(threading.Thread(target=auto_class_choosing))
+    threads[-1].start()
 
-    bot.run(entries=entries)
+
+def quit_btn_onclick():
+    global root, threads
+
+    size = len(threads)
+
+    for i in range(0, size):
+        threads.pop()
+
+    root.quit()
 
 
 add_btn = Button(root)
@@ -388,7 +408,7 @@ start_btn.pack(side=LEFT, padx=20)
 
 quit_btn = Button(root)
 quit_btn.config(text='quit', font=(ENGLISH, 14, 'bold'),
-                height=2, width=8, command=root.quit)
+                height=2, width=8, command=quit_btn_onclick)
 quit_btn.pack(side=LEFT, padx=20)
 
 place_entries()
