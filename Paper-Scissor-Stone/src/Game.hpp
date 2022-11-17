@@ -15,12 +15,10 @@
 class Game{
 private:
     sf::RenderWindow* root;
-    sf::Event* event;
-    sf::Clock* dtClock;
-    sf::Image* icon;
+    sf::Event event;
+    sf::Clock dtClock;
+    sf::Image icon;
     float deltaTime;
-
-    void init();
 
 public:
     Game();

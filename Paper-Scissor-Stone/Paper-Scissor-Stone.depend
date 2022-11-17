@@ -2,7 +2,7 @@
 1668679088 source:c:\users\andre\onedrive\桌面\git_repositories\myprojects\paper-scissor-stone\main.cpp
 	"src/Game.hpp"
 
-1668679395 c:\users\andre\onedrive\桌面\git_repositories\myprojects\paper-scissor-stone\src\game.hpp
+1668704748 c:\users\andre\onedrive\桌面\git_repositories\myprojects\paper-scissor-stone\src\game.hpp
 	<SFML/Graphics/RenderWindow.hpp>
 	<SFML/System/Clock.hpp>
 	<SFML/Window/Event.hpp>
@@ -416,4 +416,7 @@
 	<SFML/Graphics/PrimitiveType.hpp>
 	<SFML/Graphics/Drawable.hpp>
 	<SFML/Window/GlResource.hpp>
+
+1668704780 source:c:\users\andre\onedrive\桌面\git_repositories\myprojects\paper-scissor-stone\src\game.cpp
+	"Game.hpp"
 
