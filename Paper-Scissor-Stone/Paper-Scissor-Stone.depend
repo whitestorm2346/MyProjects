@@ -1,8 +1,8 @@
 # depslib dependency file v1.0
-1668759275 source:c:\users\andre\onedrive\桌面\git_repositories\myprojects\paper-scissor-stone\main.cpp
+1668786026 source:c:\users\andre\onedrive\桌面\git_repositories\myprojects\paper-scissor-stone\main.cpp
 	"src/Game.hpp"
 
-1668773615 c:\users\andre\onedrive\桌面\git_repositories\myprojects\paper-scissor-stone\src\game.hpp
+1668786469 c:\users\andre\onedrive\桌面\git_repositories\myprojects\paper-scissor-stone\src\game.hpp
 	<SFML/Graphics/RenderWindow.hpp>
 	<SFML/System/Clock.hpp>
 	<SFML/Window/Event.hpp>
@@ -420,18 +420,20 @@
 	<SFML/Graphics/Drawable.hpp>
 	<SFML/Window/GlResource.hpp>
 
-1668773592 source:c:\users\andre\onedrive\桌面\git_repositories\myprojects\paper-scissor-stone\src\game.cpp
+1668787316 source:c:\users\andre\onedrive\桌面\git_repositories\myprojects\paper-scissor-stone\src\game.cpp
 	"Game.hpp"
 
-1668774275 c:\users\andre\onedrive\桌面\git_repositories\myprojects\paper-scissor-stone\src\item.hpp
+1668786290 c:\users\andre\onedrive\桌面\git_repositories\myprojects\paper-scissor-stone\src\item.hpp
 	<SFML/System/Vector2.hpp>
 	<SFML/Graphics/Sprite.hpp>
 	<SFML/Graphics/Texture.hpp>
 	<SFML/Graphics/Color.hpp>
 	<SFML/Graphics/RenderWindow.hpp>
 	<iostream>
+	<cstdlib>
+	<ctime>
 
-1668774670 source:c:\users\andre\onedrive\桌面\git_repositories\myprojects\paper-scissor-stone\src\item.cpp
+1668787371 source:c:\users\andre\onedrive\桌面\git_repositories\myprojects\paper-scissor-stone\src\item.cpp
 	"Item.hpp"
 
 1668758157 c:\users\andre\onedrive\桌面\git_repositories\myprojects\paper-scissor-stone\src\texture.hpp

@@ -7,6 +7,8 @@
 #include <SFML/Graphics/Color.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <iostream>
+#include <cstdlib>
+#include <ctime>
 
 #define PAPER_PATH   "src/images/paper.png"
 #define SCISSOR_PATH "src/images/scissor.png"
@@ -23,7 +25,6 @@ enum Type{
 
 class Item{
 private:
-    sf::Vector2f position;
     sf::Vector2f velocity;
     sf::Texture texture;
     sf::Sprite sprite;
@@ -34,7 +35,7 @@ public:
     virtual ~Item();
 
     void setType(int type);
-    void setPosition();
+    void setPosition(float x, float y);
     void print(sf::RenderWindow& window);
     void move();
     bool collision(Item item);

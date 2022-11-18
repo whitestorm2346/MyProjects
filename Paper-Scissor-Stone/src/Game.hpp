@@ -16,7 +16,7 @@
 
 #define ICON_PATH "src/images/icon.png"
 
-#define ITEM_COUNT 1
+#define ITEM_COUNT 30
 
 class Game{
 private:

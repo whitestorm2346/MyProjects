@@ -1,13 +1,11 @@
 #include "Item.hpp"
 
 Item::Item(){
-    position.x = 0.f;
-    position.y = 0.f;
-    velocity.x = 0.f;
-    velocity.y = 0.f;
+    velocity.x = static_cast<float>(rand() % 3 - 1);
+    velocity.y = static_cast<float>(rand() % 3 - 1);
 
     sprite.setTextureRect(sf::IntRect(0, 0, 512, 512));
-    sprite.setScale(sf::Vector2f(0.15f, 0.15f));
+    sprite.setScale(sf::Vector2f(ITEM_WIDTH / 512.f, ITEM_HEIGHT / 512.f));
     sprite.setPosition(sf::Vector2f(0, 0));
 }
 
@@ -39,8 +37,18 @@ void Item::setType(int type){
     sprite.setColor(sf::Color(0, 0, 0));
 }
 
+void Item::setPosition(float x, float y){
+    sprite.setPosition(sf::Vector2f(x, y));
+}
+
 void Item::print(sf::RenderWindow& window){
     window.draw(sprite);
+}
+
+void Item::move(){
+    sf::Vector2f currPos = sprite.getPosition();
+
+    sprite.move(currPos.x + velocity.x, currPos.y + velocity.y);
 }
 
 bool Item::collision(Item item){
