@@ -10,12 +10,15 @@ Game::Game(){
 
     // init fields
     deltaTime = 0.f;
-
     icon.loadFromFile(ICON_PATH);
+
+    // init items
+    items = new Item[ITEM_COUNT];
 }
 
 Game::~Game(){
     delete root;
+    delete [] items;
 }
 
 void Game::run(){

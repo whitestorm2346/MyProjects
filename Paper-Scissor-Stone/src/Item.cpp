@@ -1,29 +1,41 @@
 #include "Item.hpp"
 
-Item::Item(int type){
-    this->type = type;
+Item::Item(){
     position.x = 0.f;
     position.y = 0.f;
     velocity.x = 0.f;
     velocity.y = 0.f;
 
-    switch(type){
-        case PAPER:
-            image.loadFromFile(PAPER_PATH);
-            break;
-
-        case SCISSCOR:
-            image.loadFromFile(SCISSOR_PATH);
-            break;
-
-        case STONE:
-            image.loadFromFile(STONE_PATH);
-            break;
-    }
+    sprite.setScale(sf::Vector2f(ITEM_WIDTH, ITEM_HEIGHT));
 }
 
 Item::~Item(){
 }
 
-void Item::collision(){
+void Item::setType(int type){
+    this->type = type;
+
+    switch(type){
+        case PAPER:
+            texture.loadFromFile(PAPER_PATH);
+            break;
+
+        case SCISSCOR:
+            texture.loadFromFile(SCISSOR_PATH);
+            break;
+
+        case STONE:
+            texture.loadFromFile(STONE_PATH);
+            break;
+    }
+
+    sprite.setTexture(texture);
+}
+
+bool Item::collision(Item item){
+    return sprite.getGlobalBounds().intersects(item.getSprite().getGlobalBounds());
+}
+
+sf::Sprite& Item::getSprite(){
+    return sprite;
 }

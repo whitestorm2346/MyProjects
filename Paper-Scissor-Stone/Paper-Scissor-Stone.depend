@@ -1,12 +1,13 @@
 # depslib dependency file v1.0
-1668679088 source:c:\users\andre\onedrive\桌面\git_repositories\myprojects\paper-scissor-stone\main.cpp
+1668759275 source:c:\users\andre\onedrive\桌面\git_repositories\myprojects\paper-scissor-stone\main.cpp
 	"src/Game.hpp"
 
-1668704748 c:\users\andre\onedrive\桌面\git_repositories\myprojects\paper-scissor-stone\src\game.hpp
+1668760929 c:\users\andre\onedrive\桌面\git_repositories\myprojects\paper-scissor-stone\src\game.hpp
 	<SFML/Graphics/RenderWindow.hpp>
 	<SFML/System/Clock.hpp>
 	<SFML/Window/Event.hpp>
 	<SFML/Graphics/Image.hpp>
+	"Item.hpp"
 
 1525812018 c:\program files\sfml-2.5.1-windows-gcc-7.3.0-mingw-64-bit\sfml-2.5.1\include\sfml\graphics\renderwindow.hpp
 	<SFML/Graphics/Export.hpp>
@@ -417,6 +418,20 @@
 	<SFML/Graphics/Drawable.hpp>
 	<SFML/Window/GlResource.hpp>
 
-1668704780 source:c:\users\andre\onedrive\桌面\git_repositories\myprojects\paper-scissor-stone\src\game.cpp
+1668759420 source:c:\users\andre\onedrive\桌面\git_repositories\myprojects\paper-scissor-stone\src\game.cpp
 	"Game.hpp"
+
+1668761133 c:\users\andre\onedrive\桌面\git_repositories\myprojects\paper-scissor-stone\src\item.hpp
+	<SFML/System/Vector2.hpp>
+	<SFML/Graphics/Sprite.hpp>
+	<SFML/Graphics/Texture.hpp>
+
+1668761135 source:c:\users\andre\onedrive\桌面\git_repositories\myprojects\paper-scissor-stone\src\item.cpp
+	"Item.hpp"
+
+1668758157 c:\users\andre\onedrive\桌面\git_repositories\myprojects\paper-scissor-stone\src\texture.hpp
+	<SFML/Graphics/Texture.hpp>
+
+1668758266 source:c:\users\andre\onedrive\桌面\git_repositories\myprojects\paper-scissor-stone\src\texture.cpp
+	"Texture.hpp"
 
