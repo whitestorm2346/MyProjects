@@ -1,8 +1,0 @@
-12 attacking
-18 casting spells
-15 dying
-12 hurt
-12 idle
-12 idle blink
-18 taunt
-12 walking
