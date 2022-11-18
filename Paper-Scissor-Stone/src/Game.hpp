@@ -5,11 +5,13 @@
 #include <SFML/System/Clock.hpp>
 #include <SFML/Window/Event.hpp>
 #include <SFML/Graphics/Image.hpp>
+#include <SFML/Graphics/RectangleShape.hpp>
+#include <SFML/Graphics/Color.hpp>
 
 #include "Item.hpp"
 
-#define WINDOW_WIDTH  600
-#define WINDOW_HEIGHT 600
+#define WINDOW_WIDTH  800
+#define WINDOW_HEIGHT 800
 #define WINDOW_TITLE "Paper-Scissor-Stone"
 
 #define ICON_PATH "src/images/icon.png"
@@ -22,6 +24,7 @@ private:
     sf::Event event;
     sf::Clock dtClock;
     sf::Image icon;
+    sf::RectangleShape background;
     Item* items;
     float deltaTime;
 

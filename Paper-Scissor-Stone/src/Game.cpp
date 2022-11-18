@@ -10,10 +10,16 @@ Game::Game(){
 
     // init fields
     deltaTime = 0.f;
-    icon.loadFromFile(ICON_PATH);
+    background.setSize(sf::Vector2f(WINDOW_WIDTH, WINDOW_HEIGHT));
+    background.setFillColor(sf::Color(255, 255, 255));
+    //icon.loadFromFile(ICON_PATH);
 
     // init items
     items = new Item[ITEM_COUNT];
+
+    for(int i = 0; i < ITEM_COUNT; i++){
+        items[i].setType(i % 3);
+    }
 }
 
 Game::~Game(){
@@ -28,7 +34,13 @@ void Game::run(){
         }
 
         root->clear();
-        // root->draw();
+
+        root->draw(background);
+
+        for(int i = 0; i < ITEM_COUNT; i++){
+            items[i].print(*root);
+        }
+
         root->display();
     }
 }
