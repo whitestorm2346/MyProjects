@@ -96,6 +96,8 @@ class CPEsignUp:
             print('報名錯誤，程式將中斷執行')
             exit(1)
 
+        self.driver.close()
+
         return 0
 
     def clock_on_time(self) -> bool:
@@ -186,7 +188,10 @@ class CPEsignUp:
             # classroom choosing
             select = Select(self.driver.find_element(
                 By.XPATH, '/html/body/div/form/table[3]/tbody/tr[2]/td[2]/center/select'))
-            select.select_by_value('32')
+
+            for option in select.options:
+                if '淡江大學' in option.text:
+                    select.select_by_value(option.get_attribute("value"))
 
             # sign-up button click
             sign_up_btn = self.driver.find_element(
@@ -196,13 +201,8 @@ class CPEsignUp:
             msg = self.driver.find_element(
                 By.XPATH, '/html/body/div/div[2]')
 
-            msg_in_line = msg.text.split('\n')
-
-            if SIGN_UP_SUCCESS in msg.text:
-                line += SIGN_UP_SUCCESS
-            elif SIGN_UP_FAIL in msg.text:
-                line += (SIGN_UP_FAIL + " ")
-                line += msg_in_line[1]
+            if (SIGN_UP_SUCCESS in msg.text) or (SIGN_UP_FAIL in msg.text):
+                line += msg.text
             else:
                 line += "ERROR"
 
