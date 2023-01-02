@@ -12,11 +12,15 @@ CPE考試自動報名程式
 專案完成日期： 2022/12/
 '''
 
+from tkinter import *
+from tkinter import ttk
 from datetime import datetime
 from time import sleep
 from selenium import webdriver  # for operating the website
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import Select  # for selecting dropdown menu
+from webdriver_manager.microsoft import EdgeChromiumDriverManager
+import threading
 import ddddocr  # for detecting the confirm code
 import base64   # for reading the image present in base 64
 
@@ -45,13 +49,7 @@ class CPEsignUp:
         self.expiry_time = expiry_time
         self.driver = driver
 
-    def run(self, entries=-1) -> int:
-        if entries == -1:
-            # get user's student number and password
-            self.id = input('請輸入身分證字號：')
-            self.password = input('請輸入密碼：')
-            self.starting_time = input('請輸入報名起始時間(例如： 2022/08/07 12:30): ')
-
+    def run(self) -> int:
         self.starting_time = datetime.strptime(
             self.starting_time, '%Y/%m/%d %H:%M')
 
@@ -63,11 +61,8 @@ class CPEsignUp:
         edge_options = webdriver.EdgeOptions()
         edge_options.add_argument('--log-level=3')
 
-        self.driver = webdriver.Edge(
-            options=edge_options,
-            executable_path='msedgedriver.exe',
-            service_log_path='NUL'
-        )
+        if self.driver == None:
+            self.driver = webdriver.Edge(EdgeChromiumDriverManager().install())
 
         while True:
             login_status = self.login()
@@ -89,6 +84,9 @@ class CPEsignUp:
                 exit(1)
 
         sign_up_status = self.sign_up()
+        logout_btn = self.driver.find_element(
+            By.XPATH, '/html/body/div/div[1]/div/ul[2]/li[2]/a')
+        logout_btn.click()
 
         if sign_up_status == 0:  # class choosing successfully
             print('完成自動報名，詳細結果紀錄於 result.txt')
@@ -211,7 +209,99 @@ class CPEsignUp:
         return 0
 
 
-if __name__ == "__main__":
-    sign_up = CPEsignUp()
+ENGLISH = 'Times New Roman'
+CHINESE = '微軟正黑體'
 
-    sign_up.run()
+
+class MainUI:
+    def __init__(self) -> None:
+        self.init_main_frame()
+        self.init_login_frame()
+        self.init_datetime_frame()
+        self.init_buttons()
+
+        self.threads = []  # init thread
+
+    def init_main_frame(self) -> None:
+        self.root = Tk()
+        self.root.resizable(False, False)
+        self.root.geometry("350x400")
+        self.root.title('CPE Auto Sign Up')
+
+    def init_login_frame(self) -> None:
+        self.login_frame = LabelFrame(self.root)
+        self.login_frame.config(text=' Login ', font=(ENGLISH, 12))
+        self.login_frame.pack(side=TOP, fill='x', padx=10, pady=10)
+
+        self.id_label = Label(self.login_frame)
+        self.id_label.config(
+            text='ID Number', font=(ENGLISH, 14, 'bold'))
+        self.id_label.pack(side=TOP, pady=5)
+
+        self.id = StringVar(self.login_frame)
+        self.id_entry = Entry(self.login_frame)
+        self.id_entry.config(
+            font=(ENGLISH, 12), textvariable=self.id)
+        self.id_entry.pack(side=TOP, fill='x', padx=5, pady=10)
+
+        self.password_label = Label(self.login_frame)
+        self.password_label.config(text='Password', font=(ENGLISH, 14, 'bold'))
+        self.password_label.pack(side=TOP, pady=5)
+
+        self.password = StringVar(self.login_frame)
+        self.password_entry = Entry(self.login_frame)
+        self.password_entry.config(
+            font=(ENGLISH, 12), textvariable=self.password)
+        self.password_entry.pack(side=TOP, fill='x', padx=5, pady=10)
+
+    def init_datetime_frame(self) -> None:
+        self.datetime_frame = LabelFrame(self.root)
+        self.datetime_frame.config(
+            text=' Date-time Setting (YYYY/MM/DD hh:mm)', font=(ENGLISH, 12))
+        self.datetime_frame.pack(side=TOP, fill=X, padx=10, pady=10)
+
+        self.datetime_str = StringVar(self.datetime_frame)
+        self.datetime_entry = Entry(self.datetime_frame)
+        self.datetime_entry.config(
+            font=(ENGLISH, 12), textvariable=self.datetime_str)
+        self.datetime_entry.pack(side=TOP, fill='x', padx=5, pady=10)
+
+    def init_buttons(self) -> None:
+        self.start_btn = Button(self.root)
+        self.start_btn.config(text='start', font=(ENGLISH, 14, 'bold'),
+                              height=2, width=8, command=self.start_btn_onclick)
+        self.start_btn.pack(side=LEFT, padx=20)
+
+        self.quit_btn = Button(self.root)
+        self.quit_btn.config(text='quit', font=(ENGLISH, 14, 'bold'),
+                             height=2, width=8, command=self.quit_btn_onclick)
+        self.quit_btn.pack(side=LEFT, padx=20)
+
+    def auto_sign_up(self):
+        self.bot = CPEsignUp(
+            id=self.id.get(),
+            password=self.password.get(),
+            starting_time=self.datetime_str.get()
+        )
+
+        self.bot.run()
+
+    def start_btn_onclick(self):
+        self.threads.append(threading.Thread(target=self.auto_sign_up))
+        self.threads[-1].start()
+
+    def quit_btn_onclick(self):
+        size = len(self.threads)
+
+        for i in range(0, size):
+            self.threads.pop()
+
+        self.root.quit()
+
+    def run(self) -> None:
+        self.root.mainloop()
+
+
+if __name__ == "__main__":
+    main_ui = MainUI()
+    main_ui.run()
